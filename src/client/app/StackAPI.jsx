@@ -1,21 +1,28 @@
 import 'whatwg-fetch';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as RB from 'react-bootstrap';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import * as mui from 'material-ui';
+import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
+
+injectTapEventPlugin();
 
 class StackAPI extends React.Component {
 
 	constructor(props) {
 		super(props);
-        this.onSearch = this.onSearch.bind(this);
-        this.state = {results:[]};
+        this.doSearch = this.doSearch.bind(this);
+        this.onKeyPress = this.onKeyPress.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.state = {results:[],kwords:'nwjs'};
     }
 
-	onSearch(e) {
-		e.preventDefault();
+	doSearch() {
 		var scope = this;
-		let kwords = this.input.value.split(/[ ,]+/).join(';');
-		console.log(kwords);
+		let kwords = this.state.kwords.split(/[ ,]+/).join(';');
+		console.log('searching keywords',kwords);
 		let url = 'http://api.stackexchange.com/2.2/search?order=desc&sort=activity&site=stackoverflow&tagged='+kwords;
 		fetch(url)
 		.then(function(response) {
@@ -28,20 +35,35 @@ class StackAPI extends React.Component {
 		});
 	}
 
+	onKeyPress(e) {
+    // console.log(e.charCode);
+    if(e.charCode !== 13) return;
+    e.preventDefault();
+    this.doSearch();
+	}
+
+	onSubmit(e) {
+		e.preventDefault();
+		this.doSearch();
+	}
+
 	render() {
 		return (
-			<div className="container">
-			<RB.Form inline>
-			<RB.FormGroup>
-			<RB.FormControl type="text" defaultValue="nwjs" placeholder="Search" inputRef={ref => { this.input = ref; }}/>
-			</RB.FormGroup>
-			{' '}
-			<RB.Button type="submit" onClick={this.onSearch} >Submit</RB.Button>
-
-			</RB.Form>	
-			<RB.ListGroup>{this.state.results.map((item, idx)=><Qbox {...item} key={item.question_id} />)}</RB.ListGroup>
-			</div>
-
+			<MuiThemeProvider>
+			  <div onKeyPress={this.onKeyPress}>
+				  <mui.TextField 
+					  id="key-words" 
+					  hintText="key words"
+					  defaultValue={this.state.kwords}
+					  onChange={(e)=>{ this.setState({kwords:e.target.value}); }}
+					  
+				  />
+					<mui.RaisedButton onClick={this.onSubmit} label="submit" />
+					<mui.List>
+					  {this.state.results.map((item, idx)=><Qbox {...item} key={item.question_id} />)}
+					</mui.List>
+				</div>
+			</MuiThemeProvider>
 
 		);
 	}
@@ -74,29 +96,15 @@ class Qbox extends React.Component {
 
     render() {
     	
-    	let pBar = this.state.answers.length === 0 && this.props.answer_count > 0 ? <RB.ProgressBar active striped bsStyle="info" now={100} /> : null;
-
     	return (
-    		<div>
-	    		<RB.Panel 
-	    		onClick={this.onClick}
-	    		bsStyle={this.props.answer_count ? "info" : "danger"}
-	    		header={ <QHeader {...this.props} /> }
-	    		collapsible 
-	    		expanded={this.state.open}>
-
-
+    		<mui.ListItem>
+    		  <mui.Badge
+		    		badgeContent={this.props.answer_count}
+		    		primary={true}
+	    		>
 	    		{this.props.title}
-	    		<br/>date: {new Date(this.props["creation_date"]).toLocaleTimeString()}
-
-	    		{pBar}
-
-	    		<RB.ListGroup>
-	    		  {this.state.answers.map(item=><Abox {...item} key={item.answer_id} />)}
-	    		</RB.ListGroup>
-
-	    		</RB.Panel>
-    		</div>
+	    		</mui.Badge>
+    		</mui.ListItem>
     	);
     }
 
