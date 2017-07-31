@@ -1,0 +1,35 @@
+----------------------------------------------------------
+create a package.json file
+npm init
+
+NB: package.jason name cannot be 'react'
+
+----------------------------------------------------------
+installing webpack and babel
+
+npm i webpack -S
+npm install babel-core babel-loader --save-dev
+
+
+
+add "webpack.config.js" file
+
+var webpack = require('webpack');
+var path = require('path');
+
+var BUILD_DIR = path.resolve(__dirname, '../build/public_html');
+var APP_DIR = path.resolve(__dirname, 'src/client/app');
+
+var config = {
+  entry: APP_DIR + '/index.jsx',
+  output: {
+    path: BUILD_DIR,
+    filename: 'bundle.js'
+  }
+};
+
+module.exports = config;
+
+
+"./node_modules/.bin/webpack" -d
+"./node_modules/.bin/webpack" -d --watch
