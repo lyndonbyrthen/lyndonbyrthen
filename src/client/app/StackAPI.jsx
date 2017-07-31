@@ -95,15 +95,18 @@ class Qbox extends React.Component {
     }
 
     render() {
+    	let bool = this.props.answer_count ? true : false;
     	
     	return (
-    		<mui.ListItem>
-    		  <mui.Badge
-		    		badgeContent={this.props.answer_count}
-		    		primary={true}
-	    		>
+    		<mui.ListItem 
+    		  onClick={this.onClick}
+    		  disabled={!bool}
+    		>
+    		
+    		  <mui.Chip>
+	    		<mui.Avatar size={32}>{this.props.answer_count}</mui.Avatar>
 	    		{this.props.title}
-	    		</mui.Badge>
+	    		</mui.Chip>
     		</mui.ListItem>
     	);
     }
