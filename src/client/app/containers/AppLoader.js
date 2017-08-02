@@ -7,32 +7,34 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import AppBar from 'material-ui/AppBar';
+import RaisedButton from 'material-ui/RaisedButton';
 import Drawer from 'material-ui/Drawer';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
+import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 
 import { default as customTheme} from './ui-theme'
 import AppContainer from './AppContainer'
 
 injectTapEventPlugin();
 
-console.log('module :: AppLoader')
+console.log('AppLoader')
 
 const cp = {
-   app1: require("bundle-loader?lazy!../subapps/app1.js"),
-   app2: require("bundle-loader?lazy!../subapps/app2.js"),
-   Game: require("bundle-loader?lazy!../subapps/Game.js"),
+   'App1': require("bundle-loader?lazy!../subapps/App1.js"),
+   'App2': require("bundle-loader?lazy!../subapps/App2.js"),
+   'App3': require("bundle-loader?lazy!../subapps/App3.js"),
 }
 
 class AppLoader extends React.Component {
   constructor(props) {
 		super(props);
     this.onTap = this.onTap.bind(this);
-    this.onAppBarTap = this.onAppBarTap.bind(this);
+    this.onMenuOpen = this.onMenuOpen.bind(this);
     this.onClose = this.onClose.bind(this);
-    this.state = {curApp:'app1',open:false};
+    this.state = {curApp:'App1',open:false};
   }
 
   onTap(event: object, menuItem: object, index: number) {
@@ -43,7 +45,7 @@ class AppLoader extends React.Component {
     });
   }
 
-  onAppBarTap(event) {
+  onMenuOpen(event) {
   	event.preventDefault();
     this.setState({
       open: true
@@ -59,32 +61,27 @@ class AppLoader extends React.Component {
 
 	render() {
 
-		let paperStyle = {
-			// height: '100%'
-		}
-
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme(customTheme)}>
 			  <div>
-			  <AppBar
-          title="LB"
-          onLeftIconButtonTouchTap={this.onAppBarTap}
-          onTitleTouchTap={this.onAppBarTap}
-          // iconElementRight={<IconButton><FontIcon className="material-icons" >expand_more</FontIcon></IconButton>}
-        />
-			  <span ref='appbar'/>
+			  
+        <IconButton
+         onTouchTap={this.onMenuOpen}
+        >
+          <NavigationMenu />
+        </IconButton>
 
         <Drawer 
           onRequestChange={(open) => this.setState({open})}
           docked={false} width={200} open={this.state.open} >
           <Menu onItemTouchTap={this.onTap}>
-            <MenuItem primaryText="App1" key="app1"/>
-            <MenuItem primaryText="App2" key="app2"/>
-            <MenuItem primaryText="Game" key="Game"/>
+            <MenuItem primaryText="App1" key="App1"/>
+            <MenuItem primaryText="App2" key="App2"/>
+            <MenuItem primaryText="App3" key="App3"/>
           </Menu>
         </Drawer>
 
-      	<div style={paperStyle}>
+      	<div>
             <AppContainer key={this.state.curApp} appkey={this.state.curApp} loadfunc={cp[this.state.curApp]}/>
       	</div>
 

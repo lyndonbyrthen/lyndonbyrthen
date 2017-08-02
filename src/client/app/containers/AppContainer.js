@@ -11,15 +11,19 @@ class AppContainer extends React.Component {
   }
 
   componentWillMount() {
-    this.props.loadfunc(mod=>{
-      this.setState({component:mod.default});
+
+    var func = this.props.loadfunc(mod=>{
+      try {
+         this.setState({component:mod.default});
+       } catch(e) {
+         console.log(e,'setState failed')
+       }
     });
   }
 
   render() {
-  	if (this.state.component)
-  	  return <this.state.component {...this.props} />;
-  	else return <RefreshIndicator
+  	if (this.state.component) return <this.state.component {...this.props} />;
+    else return <RefreshIndicator
       size={40}
       left={10}
       top={0}
