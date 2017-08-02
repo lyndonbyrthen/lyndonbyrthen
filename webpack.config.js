@@ -12,7 +12,7 @@ var config = {
     // app1: APP_DIR + '/subapps/app1.js'
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
+    /*new webpack.optimize.CommonsChunkPlugin({
        name: 'index' // Specify the common bundle's name.
     }),
     new webpack.DefinePlugin({
@@ -20,7 +20,7 @@ var config = {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    // new webpack.optimize.UglifyJsPlugin({minimize: true})
+    new webpack.optimize.UglifyJsPlugin({minimize: true})*/
   ],
   output: {
     filename: '[name].bundle.js',
