@@ -15,7 +15,9 @@ import {
    IconButton,
    FontIcon,
    Popover,
-   PopoverAnimationVertical
+   PopoverAnimationVertical,
+   Card,
+   Drawer
 
 } from 'material-ui';
 
@@ -43,6 +45,7 @@ class AppLoader extends React.Component {
   }
 
   onTap(event: object, menuItem: object, index: number) {
+    console.log( menuItem);
   	this.setState({curApp:menuItem.key});
   	this.setState({
       open: false,
@@ -66,38 +69,35 @@ class AppLoader extends React.Component {
 	render() {
 
 		let paperStyle = {
-			height: '100%'
+			// height: '100%'
 		}
 
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme(customTheme)}>
 			  <div>
 			  <AppBar
-			    title="LB"
-			    onLeftIconButtonTouchTap={this.onAppBarTap}
-			    onTitleTouchTap={this.onAppBarTap}
-			    // iconElementRight={<IconButton><FontIcon className="material-icons" >expand_more</FontIcon></IconButton>}
-			  />
+          title="LB"
+          onLeftIconButtonTouchTap={this.onAppBarTap}
+          onTitleTouchTap={this.onAppBarTap}
+          // iconElementRight={<IconButton><FontIcon className="material-icons" >expand_more</FontIcon></IconButton>}
+        />
 			  <span ref='appbar'/>
 
-      	<Popover
-          open={this.state.open}
-          anchorEl={this.refs.appbar}
-          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-          targetOrigin={{horizontal: 'left', vertical: 'top'}}
-          onRequestClose={this.onClose}
-          animation={PopoverAnimationVertical}
-        >
+        <Drawer 
+          onRequestChange={(open) => this.setState({open})}
+          docked={false} width={200} open={this.state.open} >
           <Menu onItemTouchTap={this.onTap}>
-	          <MenuItem primaryText="App1" key="app1"/>
-		        <MenuItem primaryText="App2" key="app2"/>
-		        <MenuItem primaryText="Game" key="Game"/>
+            <MenuItem primaryText="App1" key="app1"/>
+            <MenuItem primaryText="App2" key="app2"/>
+            <MenuItem primaryText="Game" key="Game"/>
           </Menu>
-        </Popover>
+        </Drawer>
 
-      	<Paper style={paperStyle}>
+      	<Card style={paperStyle}>
             <AppContainer key={this.state.curApp} appkey={this.state.curApp} loadfunc={cp[this.state.curApp]}/>
-      	</Paper>
+      	</Card>
+
+
         </div>
 
 			</MuiThemeProvider>
