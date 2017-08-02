@@ -31,8 +31,14 @@ module.exports = config;
 
 "./node_modules/.bin/webpack" -d
 "./node_modules/.bin/webpack" -d --watch
+----------------------------------------------------------
+install babel support for dynamic import
+
+npm install babel-plugin-dynamic-import-webpack --save-dev
+
 
 ----------------------------------------------------------
 install material-ui component
 
 npm install material-ui
+npm i --save react-tap-event-plugin

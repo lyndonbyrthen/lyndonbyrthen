@@ -1,6 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import StackAPI from './StackAPI.jsx';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { render } from 'react-dom'
+// import Root from './containers/Root'
+import AppLoader from './containers/AppLoader'
 
-
-ReactDOM.render(<StackAPI />, document.getElementById("root"));
+render(
+  <AppLoader/>,
+  document.getElementById('root')
+)
