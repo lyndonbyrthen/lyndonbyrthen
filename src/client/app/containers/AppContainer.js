@@ -31,6 +31,8 @@ class AppContainer extends React.Component {
         position: 'fixed'
       }
     }
+
+    this.transTime = .5
   }
 
   updatePositions() {
@@ -39,13 +41,13 @@ class AppContainer extends React.Component {
 
   transIn() {
     console.log(this.props.menuItem.name,'transin')
-    TweenMax.fromTo(this.refs.page, 1, {y:window.innerHeight}, {y:0});
+    TweenMax.fromTo(this.refs.page, this.transTime, {y:window.innerHeight}, {y:0});
   }
 
   transOut() {
     console.log(this.props.menuItem.name,'transout')
 
-    TweenMax.fromTo(this.refs.page, 1, {y:0}, {y:-window.innerHeight});
+    TweenMax.fromTo(this.refs.page, this.transTime, {y:0}, {y:-window.innerHeight});
   }
 
   componentWillReceiveProps(nextProps) {

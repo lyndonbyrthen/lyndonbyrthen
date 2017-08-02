@@ -6,7 +6,7 @@ const BUILD_DIR = path.resolve(__dirname, 'build/public_html');
 const APP_DIR = path.resolve(__dirname, 'src/client/app');
 
 var config = {
-  devtool: "source-map",
+  // devtool: "source-map",
   entry: {
     index: APP_DIR + '/index.jsx',
     // app1: APP_DIR + '/subapps/app1.js'
