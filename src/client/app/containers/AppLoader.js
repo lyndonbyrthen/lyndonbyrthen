@@ -7,22 +7,13 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import {
-   Paper,
-   AppBar,
-   MenuItem,
-   Menu,
-   IconButton,
-   FontIcon,
-   Popover,
-   PopoverAnimationVertical,
-   Card,
-   Drawer
-
-} from 'material-ui';
+import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+import FontIcon from 'material-ui/FontIcon';
 
 import { default as customTheme} from './ui-theme'
-
 import AppContainer from './AppContainer'
 
 injectTapEventPlugin();
@@ -93,9 +84,9 @@ class AppLoader extends React.Component {
           </Menu>
         </Drawer>
 
-      	<Card style={paperStyle}>
+      	<div style={paperStyle}>
             <AppContainer key={this.state.curApp} appkey={this.state.curApp} loadfunc={cp[this.state.curApp]}/>
-      	</Card>
+      	</div>
 
 
         </div>
