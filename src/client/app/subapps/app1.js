@@ -1,31 +1,42 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Matter from '../libs/matter.min'
+import Matter from '../libs/matter'
 
 class App1 extends React.Component {
   
   constructor(props) {
     super(props);
-  	console.log(Matter);
-  	this.chains = this.chains.bind(this);
+  	this.engine = this.engine.bind(this);
 
   }
 
+  componentWillReceiveProps(nextProps) {
+    // console.log(this.props.menuItem.name,nextProps)
+    if (this.props.isCurApp && !nextProps.isCurApp) {
+    	//console.log('will stop');
+    	this.en.pause();
+    }
+    else if (!this.props.isCurApp && nextProps.isCurApp) {
+    	//console.log('will start');
+    	this.en.resume();
+    }
+  }
+
+
   componentDidMount() {
-  	if (this.ch) return;
+  	if (this.en) return;
   	try {
-  		this.ch = this.chains();
+  		this.en = this.engine();
   	} catch (e) {
-  		console.log(e,'chains error')
+  		console.log(e,'ph error')
   	}
   	
   }
 
   componentWillUnmount() {
-  	this.ch.stop();
   }
 
-  chains() {
+  engine() {
     var Engine = Matter.Engine,
         Render = Matter.Render,
         Runner = Matter.Runner,
@@ -129,20 +140,22 @@ class App1 extends React.Component {
     render.mouse = mouse;
 
     // fit the render viewport to the scene
-    /*Render.lookAt(render, {
+    Render.lookAt(render, {
         min: { x: 0, y: 0 },
         max: { x: 700, y: 600 }
     });
-*/
+
     // context for MatterTools.Demo
     return {
         engine: engine,
         runner: runner,
         render: render,
         canvas: render.canvas,
-        stop: function() {
-            Matter.Render.stop(render);
-            Matter.Runner.stop(runner);
+        pause: () => {
+        	  Runner.stop(runner)
+        },
+        resume: () => {
+        	  Runner.start(runner,engine)
         }
     };
   }

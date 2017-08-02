@@ -6,26 +6,37 @@ class App3 extends React.Component {
   
   constructor(props) {
     super(props);
-  	console.log(Matter);
-  	this.wreckingBall = this.wreckingBall.bind(this);
+    this.engine = this.engine.bind(this);
 
   }
 
+  componentWillReceiveProps(nextProps) {
+    // console.log(this.props.menuItem.name,nextProps)
+    if (this.props.isCurApp && !nextProps.isCurApp) {
+      //console.log('will stop');
+      this.en.pause();
+    }
+    else if (!this.props.isCurApp && nextProps.isCurApp) {
+      //console.log('will start');
+      this.en.resume();
+    }
+  }
+
+
   componentDidMount() {
-  	if (this.ball) return;
-  	try {
-  		this.ball = this.wreckingBall();
-  	} catch (e) {
-  		console.log(e,'ball error')
-  	}
-  	
+    if (this.en) return;
+    try {
+      this.en = this.engine();
+    } catch (e) {
+      console.log(e,'ph error')
+    }
+    
   }
 
   componentWillUnmount() {
-  	this.ball.stop();
   }
 
-  wreckingBall() {
+  engine() {
     var Engine = Matter.Engine,
         Render = Matter.Render,
         Runner = Matter.Runner,
@@ -111,9 +122,11 @@ class App3 extends React.Component {
         runner: runner,
         render: render,
         canvas: render.canvas,
-        stop: function() {
-            Matter.Render.stop(render);
-            Matter.Runner.stop(runner);
+        pause: () => {
+            Runner.stop(runner)
+        },
+        resume: () => {
+            Runner.start(runner,engine)
         }
     };
   }

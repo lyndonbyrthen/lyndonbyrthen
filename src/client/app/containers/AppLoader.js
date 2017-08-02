@@ -20,12 +20,24 @@ import AppContainer from './AppContainer'
 
 injectTapEventPlugin();
 
-console.log('AppLoader')
-
 const cp = {
    'App1': require("bundle-loader?lazy!../subapps/App1.js"),
    'App2': require("bundle-loader?lazy!../subapps/App2.js"),
    'App3': require("bundle-loader?lazy!../subapps/App3.js"),
+}
+
+const menuItems = []
+
+for (let c in cp) {
+  let i = {
+    loadfunc:cp[c],
+    id:c,
+    name:c,
+  }
+  
+  cp[c] = i
+  
+  menuItems.push(i)
 }
 
 class AppLoader extends React.Component {
@@ -33,16 +45,12 @@ class AppLoader extends React.Component {
 		super(props);
     this.onTap = this.onTap.bind(this);
     this.onMenuOpen = this.onMenuOpen.bind(this);
-    this.onClose = this.onClose.bind(this);
     this.state = {curApp:'App1',open:false};
   }
 
   onTap(event: object, menuItem: object, index: number) {
     console.log( menuItem);
-  	this.setState({curApp:menuItem.key});
-  	this.setState({
-      open: false,
-    });
+  	this.setState({curApp:menuItem.key, open:false});
   }
 
   onMenuOpen(event) {
@@ -50,41 +58,38 @@ class AppLoader extends React.Component {
     this.setState({
       open: true
     });
-
-  }
-
-  onClose() {
-    this.setState({
-      open: false,
-    });
   }
 
 	render() {
+
+    console.log('do render',menuItems)
 
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme(customTheme)}>
 			  <div>
 			  
+        {
+          menuItems.map(item=>
+              <AppContainer menuItem={item} key={item.id} isCurApp={this.state.curApp === item.id}/>
+          )
+        }
+
+        <Drawer 
+          onRequestChange={(open) => this.setState({open})}
+          docked={true} width={200} open={this.state.open} >
+          <Menu onItemTouchTap={this.onTap}>
+            {menuItems.map(item=>
+              <MenuItem primaryText={item.name} key={item.id} disabled={this.state.curApp===item.id}/>
+            )}
+          </Menu>
+        </Drawer>
+
+        
         <IconButton
          onTouchTap={this.onMenuOpen}
         >
           <NavigationMenu />
         </IconButton>
-
-        <Drawer 
-          onRequestChange={(open) => this.setState({open})}
-          docked={false} width={200} open={this.state.open} >
-          <Menu onItemTouchTap={this.onTap}>
-            <MenuItem primaryText="App1" key="App1"/>
-            <MenuItem primaryText="App2" key="App2"/>
-            <MenuItem primaryText="App3" key="App3"/>
-          </Menu>
-        </Drawer>
-
-      	<div>
-            <AppContainer key={this.state.curApp} appkey={this.state.curApp} loadfunc={cp[this.state.curApp]}/>
-      	</div>
-
 
         </div>
 
