@@ -34,6 +34,7 @@ class App1 extends React.Component {
   }
 
   componentWillUnmount() {
+  	this.en.kill();
   }
 
   engine() {
@@ -156,6 +157,10 @@ class App1 extends React.Component {
         },
         resume: () => {
         	  Runner.start(runner,engine)
+        },
+        kill: () => {
+            Render.stop(render);
+            Runner.stop(runner);
         }
     };
   }
