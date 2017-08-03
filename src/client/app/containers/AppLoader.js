@@ -54,9 +54,11 @@ class AppLoader extends React.Component {
     this.state = {curApp:'App1',open:false};
   }
 
-  onTap(event: object, menuItem: object, index: number) {
-    console.log( menuItem);
-  	this.setState({curApp:menuItem.key, open:false});
+  onTap(event,id) {
+    event.stopPropagation();
+    //event.preventDefault();
+    console.log('clicked',id);
+    this.setState({curApp:id, open:false});
   }
 
   onMenuOpen(event) {
@@ -72,88 +74,69 @@ class AppLoader extends React.Component {
 
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme(customTheme)}>
-			  <div>
-
         <Router>
-        <div>
-          <ul style={style.topleft}>
-          <li><Link to="/App1">App1</Link></li>
-          <li><Link to="/App2">App2</Link></li>
-          <li><Link to="/App3">App3</Link></li>
-          </ul>
+          <div>
 
-          <Route path="/:id?" component={Child}/>
-        </div>
+            <Route path="/:id?" render={({ match }) => {
+              // console.log('route id',match.params.id)
+              return(
+                <div style={style.fullpage}>
+                  {
+                    menuItems.map((item, idx)=>(
+                      <AppContainer menuItem={item} key={item.id} isCurApp={match.params.id === item.id || (!match.params.id && idx===0) }/>
+                    ))
+                  }
+                </div>
+              )
+            }}/>
+
+            <Drawer 
+              onRequestChange={(open) => this.setState({open})}
+              docked={true} width={200} open={this.state.open} >
+              <Menu onItemTouchTap={this.onTap}>
+                
+                {menuItems.map(item=>(
+                  <Link style={style.link} onClick={e=>this.onTap(e,item.id)} key={item.id} to={'/'+item.id}>
+                  <MenuItem primaryText={item.name} key={item.id} disabled={this.state.curApp===item.id}>
+                  </MenuItem>
+                  </Link>
+                ))}
+
+              </Menu>
+            </Drawer>
+
+            <IconButton onTouchTap={this.onMenuOpen}>
+              <NavigationMenu color='white'/>
+            </IconButton>
+
+          </div>
         </Router>
-			  
-        {
-          /*menuItems.map(item=>(
-            <AppContainer menuItem={item} key={item.id} isCurApp={this.state.curApp === item.id}/>
-          ))*/
-        }
-
-        <Drawer 
-          onRequestChange={(open) => this.setState({open})}
-          docked={true} width={200} open={this.state.open} >
-          <Menu onItemTouchTap={this.onTap}>
-            
-            {menuItems.map(item=>(
-              
-              <MenuItem primaryText={item.name} key={item.id} disabled={this.state.curApp===item.id}/>
-              
-            ))}
-            
-          </Menu>
-        </Drawer>
-
-        
-        <IconButton
-         onTouchTap={this.onMenuOpen}
-        >
-          <NavigationMenu />
-        </IconButton>
-
-        
-
-        </div>
-
 			</MuiThemeProvider>
 		)
 	}
 
 }
 
-const Child = ({ match }) => {
-
-  console.log('route id',match.params.id)
-
-  return(
-  <div style={style.fullpage}>
-    {
-      menuItems.map((item, idx)=>(
-        <AppContainer menuItem={item} key={item.id} isCurApp={match.params.id === item.id || (!match.params.id && idx===0) }/>
-      ))
-    }
-  
-  </div>
-  )
-}
-
-
 const style = {
-      topleft: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        zIndex: 9999999
-      },
-      fullpage: {
-        width:'100%',
-        height:'100%',
-        position: 'fixed',
-        top: 0,
-        left: 0
-      }
+    topleft: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      zIndex: 9999999
+    },
+    fullpage: {
+      width:'100%',
+      height:'100%',
+      position: 'fixed',
+      top: 0,
+      left: 0
+    },
+    link: {
+      textDecoration:'none'
+    },
+    white: {
+      color:'white'
+    }
 }
 
 

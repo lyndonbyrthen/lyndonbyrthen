@@ -18,17 +18,11 @@ class AppContainer extends React.Component {
 	  this.state = {isCurApp:props.isCurApp};
 
     this.style = {
-      container: {
-        position: 'relative',
-      },
-      refresh: {
-        display: 'inline-block',
-        position: 'relative',
-      },
       fullpage: {
         width:'100%',
         height:'100%',
-        position: 'fixed'
+        position: 'fixed',
+        overflow:'hidden'
       }
     }
 
