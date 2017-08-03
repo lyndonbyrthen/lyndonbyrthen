@@ -10,7 +10,6 @@ class AppContainer extends React.Component {
 	constructor(props) {
 		super(props);
     this.loadComponent = this.loadComponent.bind(this);
-    this.updatePositions = this.updatePositions.bind(this);
     this.transOut = this.transOut.bind(this);
     this.transIn = this.transIn.bind(this);
 	  this.state = {isCurApp:props.isCurApp};
@@ -27,10 +26,6 @@ class AppContainer extends React.Component {
     this.transTime = .5
   }
 
-  updatePositions() {
-    
-  }
-
   transIn(dir='up') {
     // console.log(this.props.appData.name,'transin')
     let y = dir==='up' ? window.innerHeight : -window.innerHeight;
@@ -44,7 +39,7 @@ class AppContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log(this.props.appData.name,nextProps)
+    // console.log(this.props.appData.id,nextProps)
     if (this.props.isCurApp && !nextProps.isCurApp) {
       let dir = nextProps.curApp.delta > this.props.appData.delta ? 'up' : 'down';
       this.transOut(dir);
@@ -59,10 +54,11 @@ class AppContainer extends React.Component {
   }
 
   componentWillMount() {
-
     if (!this.props.isCurApp) return
     this.loadComponent();
-    
+  }
+
+  componentWillUnmount() {
   }
 
   componentDidMount() {
@@ -96,7 +92,6 @@ class AppContainer extends React.Component {
 
     let content
 
-    //if (this.state.component && !this.state.isCurApp) content = (<div>loaded but not active</div>)
     if (this.state.component) content = (<this.state.component {...this.props} />)
     else content = (
       <RefreshIndicator
@@ -115,7 +110,5 @@ class AppContainer extends React.Component {
     
   }
 }
-
-
 
 export default AppContainer;

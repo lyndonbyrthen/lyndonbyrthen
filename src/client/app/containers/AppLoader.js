@@ -27,12 +27,14 @@ import AppContainer from './AppContainer'
 injectTapEventPlugin();
 
 const chunks = {
+   'AudioVisualizer': require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer.js"),
    'App1': require("bundle-loader?lazy&name=[name]!../subapps/App1.js"),
    'App2': require("bundle-loader?lazy&name=[name]!../subapps/App2.js"),
    'App3': require("bundle-loader?lazy&name=[name]!../subapps/App3.js"),
 }
 
 const appDataArr = []
+const appDataMap = {};
 
 let d=0
 
@@ -42,15 +44,14 @@ for (let c in chunks) {
     id:c,
     delta:d
   }
-  
-  d++
 
-  chunks[c] = i
-  
+  appDataMap[c] = i;
+  d++
   appDataArr.push(i)
 }
 
 class AppLoader extends React.Component {
+
   constructor(props) {
 		super(props);
     this.onTap = this.onTap.bind(this);
@@ -60,8 +61,11 @@ class AppLoader extends React.Component {
 
   onTap(event,delta) {
     event.stopPropagation();
+    this.setState({
+      open: false
+    });
     //event.preventDefault();
-    this.setState({curApp:appDataArr[delta], open:false});
+    // this.setState({curApp:appDataArr[delta], open:false});
   }
 
   onMenuOpen(event) {
@@ -75,25 +79,24 @@ class AppLoader extends React.Component {
 
     // console.log('render AppLoader',appDataArr)
 
+    let scope = this;
+
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme(customTheme)}>
         <Router>
           <div>
 
-            <Route path="/:id?" render={({ match }) => {
-              // console.log('route id',match.params.id)
-              // console.log('curApp',this.state.curApp)
-
-              return(
-                <div style={style.fullpage}>
-                  {
-                    appDataArr.map((item, idx)=>(
-                      <AppContainer curApp={this.state.curApp} appData={item} key={item.id} isCurApp={this.state.curApp.id===item.id} />
-                    ))
-                  }
-                </div>
-              )
+            <Route path="/:id?" render={props=>{
+              return <RouteToState key={props.match.params.id} scope={scope} {...props} />
             }}/>
+
+            <div style={style.fullpage}>
+            {
+              appDataArr.map((item, idx)=>(
+                <AppContainer curApp={this.state.curApp} appData={item} key={item.id} isCurApp={this.state.curApp.id===item.id} />
+                ))
+            }
+            </div>
 
             <Drawer 
               onRequestChange={(open) => this.setState({open})}
@@ -101,7 +104,7 @@ class AppLoader extends React.Component {
               <Menu onItemTouchTap={this.onTap}>
                 
                 {appDataArr.map(item=>(
-                  <Link style={style.link} onClick={e=>this.onTap(e,item.delta)} key={item.delta} to={'/'+item.id}>
+                  <Link style={style.link} onClick={this.onTap} key={item.delta} to={ item.delta===0? '/' : '/'+item.id}>
                   <MenuItem primaryText={item.id} key={item.id} disabled={this.state.curApp.id===item.id}>
                   </MenuItem>
                   </Link>
@@ -120,6 +123,21 @@ class AppLoader extends React.Component {
 		)
 	}
 
+}
+
+
+class RouteToState extends React.Component {
+
+  componentDidMount() {
+    let id = this.props.match.params.id;
+    console.log('route to state',id);
+    if (!id) id = appDataArr[0].id;
+    this.props.scope.setState({curApp:appDataMap[id]})
+  }
+
+  render() {
+    return <span/>
+  }
 }
 
 const style = {
