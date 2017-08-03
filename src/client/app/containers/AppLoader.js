@@ -26,24 +26,28 @@ import AppContainer from './AppContainer'
 
 injectTapEventPlugin();
 
-const cp = {
-   'App1': require("bundle-loader?lazy!../subapps/App1.js"),
-   'App2': require("bundle-loader?lazy!../subapps/App2.js"),
-   'App3': require("bundle-loader?lazy!../subapps/App3.js"),
+const chunks = {
+   'App1': require("bundle-loader?lazy&name=[name]!../subapps/App1.js"),
+   'App2': require("bundle-loader?lazy&name=[name]!../subapps/App2.js"),
+   'App3': require("bundle-loader?lazy&name=[name]!../subapps/App3.js"),
 }
 
-const menuItems = []
+const appDataArr = []
 
-for (let c in cp) {
+let d=0
+
+for (let c in chunks) {
   let i = {
-    loadfunc:cp[c],
+    loadfunc:chunks[c],
     id:c,
-    name:c,
+    delta:d
   }
   
-  cp[c] = i
+  d++
+
+  chunks[c] = i
   
-  menuItems.push(i)
+  appDataArr.push(i)
 }
 
 class AppLoader extends React.Component {
@@ -51,14 +55,13 @@ class AppLoader extends React.Component {
 		super(props);
     this.onTap = this.onTap.bind(this);
     this.onMenuOpen = this.onMenuOpen.bind(this);
-    this.state = {curApp:'App1',open:false};
+    this.state = {curApp:appDataArr[0],open:false};
   }
 
-  onTap(event,id) {
+  onTap(event,delta) {
     event.stopPropagation();
     //event.preventDefault();
-    console.log('clicked',id);
-    this.setState({curApp:id, open:false});
+    this.setState({curApp:appDataArr[delta], open:false});
   }
 
   onMenuOpen(event) {
@@ -70,7 +73,7 @@ class AppLoader extends React.Component {
 
 	render() {
 
-    console.log('do render',menuItems)
+    // console.log('render AppLoader',appDataArr)
 
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme(customTheme)}>
@@ -79,11 +82,13 @@ class AppLoader extends React.Component {
 
             <Route path="/:id?" render={({ match }) => {
               // console.log('route id',match.params.id)
+              // console.log('curApp',this.state.curApp)
+
               return(
                 <div style={style.fullpage}>
                   {
-                    menuItems.map((item, idx)=>(
-                      <AppContainer menuItem={item} key={item.id} isCurApp={match.params.id === item.id || (!match.params.id && idx===0) }/>
+                    appDataArr.map((item, idx)=>(
+                      <AppContainer curApp={this.state.curApp} appData={item} key={item.id} isCurApp={this.state.curApp.id===item.id} />
                     ))
                   }
                 </div>
@@ -95,9 +100,9 @@ class AppLoader extends React.Component {
               docked={true} width={200} open={this.state.open} >
               <Menu onItemTouchTap={this.onTap}>
                 
-                {menuItems.map(item=>(
-                  <Link style={style.link} onClick={e=>this.onTap(e,item.id)} key={item.id} to={'/'+item.id}>
-                  <MenuItem primaryText={item.name} key={item.id} disabled={this.state.curApp===item.id}>
+                {appDataArr.map(item=>(
+                  <Link style={style.link} onClick={e=>this.onTap(e,item.delta)} key={item.delta} to={'/'+item.id}>
+                  <MenuItem primaryText={item.id} key={item.id} disabled={this.state.curApp.id===item.id}>
                   </MenuItem>
                   </Link>
                 ))}
@@ -118,12 +123,6 @@ class AppLoader extends React.Component {
 }
 
 const style = {
-    topleft: {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      zIndex: 9999999
-    },
     fullpage: {
       width:'100%',
       height:'100%',
@@ -133,9 +132,6 @@ const style = {
     },
     link: {
       textDecoration:'none'
-    },
-    white: {
-      color:'white'
     }
 }
 

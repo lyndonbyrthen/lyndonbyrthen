@@ -23,7 +23,8 @@ var config = {
     new webpack.optimize.UglifyJsPlugin({minimize: true})*/
   ],
   output: {
-    filename: '[name].bundle.js',
+    filename: 'main.js',
+    chunkFilename : 'chunk.[name].js',
     path: BUILD_DIR
   },
   module : {

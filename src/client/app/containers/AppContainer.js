@@ -13,8 +13,6 @@ class AppContainer extends React.Component {
     this.updatePositions = this.updatePositions.bind(this);
     this.transOut = this.transOut.bind(this);
     this.transIn = this.transIn.bind(this);
-    /*this.transOutComplete = this.transOutComplete.bind(this);
-    this.transInComplete = this.transInComplete.bind(this);*/
 	  this.state = {isCurApp:props.isCurApp};
 
     this.style = {
@@ -33,21 +31,27 @@ class AppContainer extends React.Component {
     
   }
 
-  transIn() {
-    console.log(this.props.menuItem.name,'transin')
-    TweenMax.fromTo(this.refs.page, this.transTime, {y:window.innerHeight}, {y:0});
+  transIn(dir='up') {
+    // console.log(this.props.appData.name,'transin')
+    let y = dir==='up' ? window.innerHeight : -window.innerHeight;
+    TweenMax.fromTo(this.refs.page, this.transTime, {y:y}, {y:0});
   }
 
-  transOut() {
-    console.log(this.props.menuItem.name,'transout')
-
-    TweenMax.fromTo(this.refs.page, this.transTime, {y:0}, {y:-window.innerHeight});
+  transOut(dir='up') {
+    // console.log(this.props.appData.name,'transout')
+    let y = dir==='up' ? -window.innerHeight : window.innerHeight;
+    TweenMax.fromTo(this.refs.page, this.transTime, {y:0}, {y:y});
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log(this.props.menuItem.name,nextProps)
-    if (this.props.isCurApp && !nextProps.isCurApp) this.transOut();
-    else if (!this.props.isCurApp && nextProps.isCurApp) this.transIn();
+    // console.log(this.props.appData.name,nextProps)
+    if (this.props.isCurApp && !nextProps.isCurApp) {
+      let dir = nextProps.curApp.delta > this.props.appData.delta ? 'up' : 'down';
+      this.transOut(dir);
+    } else if (!this.props.isCurApp && nextProps.isCurApp) {
+      let dir = this.props.curApp.delta > this.props.appData.delta ? 'down' : 'up';
+      this.transIn(dir);
+    }
     
     if (nextProps.isCurApp && !this.state.component) {
       this.loadComponent()
@@ -62,7 +66,7 @@ class AppContainer extends React.Component {
   }
 
   componentDidMount() {
-    // console.log('componentDidUpdate',this.props.menuItem.name,this.state.isCurApp,this.state.component)
+    // console.log('componentDidUpdate',this.props.appData.name,this.state.isCurApp,this.state.component)
 
     if (!this.state.isCurApp) TweenMax.to(this.refs.page, 0, {x:0,y:-999999});
     else TweenMax.to(this.refs.page, 0, {x:0,y:0});
@@ -73,7 +77,7 @@ class AppContainer extends React.Component {
 
     if (this.state.component) return
 
-    let loadfunc = this.props.menuItem.loadfunc
+    let loadfunc = this.props.appData.loadfunc
     let scope = this
 
     loadfunc(mod=>{
@@ -82,13 +86,13 @@ class AppContainer extends React.Component {
        } catch(e) {
          console.log(e,'setState failed')
        }
-       scope.props.menuItem.loaded = true;
+       scope.props.appData.loaded = true;
     })
   }
 
   render() {
 
-    // console.log('render',this.props.menuItem.name,this.state.isCurApp)
+    // console.log('render',this.props.appData.name,this.state.isCurApp)
 
     let content
 
