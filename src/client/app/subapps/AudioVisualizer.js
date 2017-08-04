@@ -17,9 +17,9 @@ const {
     Mouse,
     World,
     Bodies,
-    Vertices
+    Vertices,
+    Events
 } = Matter
-
 
 class App1 extends React.Component {
   
@@ -30,9 +30,19 @@ class App1 extends React.Component {
     this.toggle = this.toggle.bind(this);
     this.resume = this.resume.bind(this);
     this.kill = this.kill.bind(this);
+    this.addAudio = this.addAudio.bind(this);
   	this.engine = this.engine.bind(this);
     this.update = this.update.bind(this);
     this.onResize = debounce(this.onResize.bind(this),200);
+
+    this.barHeight = 5;
+    this.barWidthFactor = 2.5
+    this.yFactor = 1.2;
+    this.barRes = 512;
+    this.yOffset = .75
+
+    this.ballFillStyle = 'rgba(0,0,0,.15)'
+    this.barFillStyle = 'rgba(0,0,0,.25)'
 
     this.style = {
       fullpage: {
@@ -41,18 +51,40 @@ class App1 extends React.Component {
         position: 'fixed',
         overflow:'hidden'
       },
-      ontop: {
-        position:'fixed',
+      play: {
+        position:'absolute',
+        top:0,
         right: 0,
         zIndex: 999999
-      }
+      },
+      choose: {
+        position:'absolute',
+        top:50,
+        right: 0,
+        zIndex: 999999
+      },
+      input: {
+        cursor: 'pointer',
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        width: '100%',
+        opacity: 0,
+      },
     }
+  }
+
+  addAudio(event) {
+    this.audio.src = URL.createObjectURL(this.file.files[0]);
+    this.audio.play();
   }
 
   toggle() {
     if (this.audio.paused) {
         this.audio.play()
-        this.audio.currentTime = Math.random()*90;
+        // this.audio.currentTime = Math.random()*90;
     }
     else this.audio.pause()
   }
@@ -88,25 +120,36 @@ class App1 extends React.Component {
   }
 
   start() {
-    this.audio = new Audio('/Guardian_Legend_Naju_Overture_OC_ReMix.mp3');
-    // this.audio.play();
-    this.audio.currentTime = Math.random()*90;
-
     
-    this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-    let src = this.audioCtx.createMediaElementSource(this.audio);
-    this.analyser = this.audioCtx.createAnalyser();
+    // 
+    // this.audio.currentTime = Math.random()*90;
 
-    src.connect(this.analyser);
-    this.analyser.connect(this.audioCtx.destination);
+    if (!this.audioInitialized) {
+      this.file = this.refs.audiofile;
+      this.audio = this.refs.audio;
+      this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 
-    this.analyser.fftSize = 256;
-    this.bufferLength = this.analyser.frequencyBinCount;
+      this.src = this.audioCtx.createMediaElementSource(this.audio);
+      this.analyser = this.audioCtx.createAnalyser();
+      this.src.connect(this.analyser);
+      this.analyser.connect(this.audioCtx.destination);
 
+      this.analyser.fftSize = this.barRes;
+      this.bufferLength = this.analyser.frequencyBinCount;
+      this.dataArray = new Uint8Array(this.bufferLength);
+
+      this.audioInitialized = true;
+
+    }
+
+    try {
+      this.audio.play();
+    } catch (e) {
+
+    }
+    
     // console.log(this.bufferLength);
 
-    this.dataArray = new Uint8Array(this.bufferLength);
-    this.analyser.getByteFrequencyData(this.dataArray);
 
     this.en = this.engine();
 
@@ -123,44 +166,50 @@ class App1 extends React.Component {
 
   resume() {
     this.audio.play();
-    this.updateInterval = setInterval(this.update,10);
+    this.updateInterval = setInterval(this.update,20);
   }
 
   kill() {
     
     this.en.kill();
     this.audio.pause();
-    this.audioCtx.close();
+    // this.audioCtx.close();
   }
 
   update() {
-
+    // this.analyser.getByteTimeDomainData(this.dataArray);
     this.analyser.getByteFrequencyData(this.dataArray);
     // console.log(this.dataArray);
 
     let WIDTH = window.innerWidth;
     let HEIGHT = window.innerHeight;
 
-    let barWidth = (WIDTH / this.bufferLength);
     let barSpace = (WIDTH / this.bufferLength);
-    let barHeight;
-    let x = barWidth/2;
 
     for (let i = 0; i < this.bufferLength; i++) {
-        barHeight = this.dataArray[i] > 20 ?this.dataArray[i] : 20;
 
-        let v = Vertices.fromPath('L 0 0 L ' + barWidth + ' 0 L ' + barWidth + ' ' + barHeight + ' L 0 ' + barHeight)
-        // let y = HEIGHT - barHeight/2;
+      let y = this.dataArray[i] > 20 ?this.dataArray[i] : 20;
+      y = HEIGHT*this.yOffset - y*this.yFactor;
 
-        let y = 500;
+      let rgba = [];
 
-        Body.set(this.bars[i],{vertices:v,position:{x:x,y:y}})
-        x += barSpace;
+      rgba.push(Math.round(this.dataArray[i] + (15 * (i/this.bufferLength))));
+      rgba.push(Math.round(250 * (i/this.bufferLength)));
+      rgba.push(50)
+      rgba.push(.25)
+
+      this.bars[i].render.fillStyle = 'rgba('+rgba.join(',')+')'
+
+      Body.set(this.bars[i],{position:{x:this.bars[i].position.x,y:y}})
+
     }
+
 
   }
 
   engine() {
+
+    let scope = this;
    
     // create engine
     let engine = Engine.create(),
@@ -174,11 +223,14 @@ class App1 extends React.Component {
         options: {
             width: window.innerWidth,
             height: window.innerHeight,
-            showAngleIndicator: true,
-            showCollisions: true,
-            showVelocity: true
+            background: 'transparent',
+            wireframeBackground:"transparent",
+            wireframes: false,
+
         }
     });
+
+    console.log(render.options)
 
     Render.run(render);
 
@@ -186,9 +238,16 @@ class App1 extends React.Component {
     let runner = Runner.create();
     Runner.run(runner, engine);
 
-    let stack = Composites.stack(20, 20, 10, 5, 0, 0, function(x, y) {
-        return Bodies.circle(x, y, Common.random(10, 25), { friction:0, frictionStatic:0, frictionAir:0, restitution:1, density: 1 });
+    let stack = Composites.pyramid(35, 0, 20, 8, 0, 0, function(x, y) {
+        return Bodies.circle(x, y, Common.random(7, 15), { 
+          friction:0, frictionAir:0, restitution:.8, density: .02,
+          render : {
+            fillStyle : scope.ballFillStyle
+          }
+        });
     });
+
+    this.balls = Composite.allBodies(stack);
     
     World.add(world, stack);
 
@@ -197,56 +256,39 @@ class App1 extends React.Component {
     let WIDTH = window.innerWidth;
     let HEIGHT = window.innerHeight;
 
-    let barWidth = (WIDTH / this.bufferLength) * 2.5;
-    let barHeight = 10;
-    let x = barWidth/2;
+    let barWidth = (WIDTH / this.bufferLength)*this.barWidthFactor;
+    
+    let x = 0;
 
     for (let i = 0; i < this.bufferLength; i++) {
         
-        this.bars.push(Bodies.rectangle(x, 500, barWidth, barHeight, { slop:0, isStatic: true,friction:0, frictionStatic:0, frictionAir:0, restitution:1, density: 1 }))
+        this.bars.push(Bodies.rectangle(x, 500, barWidth, this.barHeight, { 
+          isStatic: true,
+          render: {
+            fillStyle: scope.barFillStyle,
+          }
+        }))
         x+=barWidth
     }
 
-    var group = Body.nextGroup(true);
-
-    var bridge = Composites.stack(0, 10, 128, 1, 0, 0, function(x, y) {
-        return Bodies.rectangle(x - 20, y, 53, 20, { 
-            collisionFilter: { group: group },
-            chamfer: 5,
-            density: 0.005,
-            frictionAir: 0.05,
-            static:true,
-            render: {
-              fillStyle: '#575375'
-            }
-        });
-    });
-    
-    Composites.chain(bridge, 0.3, 0, -0.3, 0, { 
-        stiffness: 1,
-        length: 0,
-        render: {
-            visible: false
-        }
-    });
-
-    // World.add(world, bridge);
-
     World.add(world, this.bars);
 
-    World.add(world, [
-        Bodies.rectangle(window.innerWidth/2, -50, window.innerWidth, 20, { isStatic: true }),
-        Bodies.rectangle(window.innerWidth/2, window.innerHeight-20, window.innerWidth, 20, { isStatic: true }),
-        Bodies.rectangle(0, -10, 20, window.innerHeight*2, { isStatic: true }),
-        Bodies.rectangle(window.innerWidth, -10, 20, window.innerHeight*2, { isStatic: true })
-    ]);
-
-    for (let i = 0; i < this.bufferLength; i++) {
-        barHeight = 50
-
-        let v = Vertices.fromPath('L 0 0 L ' + barWidth + ' 0 L ' + barWidth + ' ' + barHeight + ' L 0 ' + barHeight)
-        Body.set(this.bars[i],{vertices:v})
+    let wallRender = {
+      fillStyle: 'transparent'
     }
+
+    let bottom =  Bodies.rectangle(window.innerWidth/2, window.innerHeight-30, window.innerWidth, 20, { 
+      isStatic: true,
+      render: wallRender
+    });
+    bottom.label = 'bwall'
+
+    World.add(world, [
+        bottom,
+        Bodies.rectangle(window.innerWidth/2, -50, window.innerWidth, 20, { isStatic: true, render: wallRender }),
+        Bodies.rectangle(0, -10, 20, window.innerHeight*2, { isStatic: true, render: wallRender }),
+        Bodies.rectangle(window.innerWidth, -10, 20, window.innerHeight*2, { isStatic: true, render: wallRender })
+    ]);
 
     // add mouse control
     let mouse = Mouse.create(render.canvas),
@@ -264,7 +306,19 @@ class App1 extends React.Component {
 
     // keep the mouse in sync with rendering
     render.mouse = mouse;
-    console.log(render.options)
+
+
+
+    Events.on(engine, 'collisionStart', function(event) {
+        var pairs = event.pairs;
+        // change object colours to show those ending a collision
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i];
+            if (pair.bodyB.label == 'bwall') {
+              Body.set(pair.bodyA,{position:{x:Common.random(55, window.innerWidth-55),y:20}})
+            }
+        }
+    });
 
     // fit the render viewport to the scene
     /*Render.lookAt(render, {
@@ -298,7 +352,14 @@ class App1 extends React.Component {
 
   	return (
   		<div ref='root' style={this.style.fullpage} >
-  		  <RaisedButton style={this.style.ontop} label='music' onTouchTap={this.toggle}/>
+  		  <RaisedButton style={this.style.play} label='pause/play' onTouchTap={this.toggle}/>
+        <RaisedButton style={this.style.choose} label='choose' labelPosition="before" containerElement='label'>
+          <input ref='audiofile' onChange={this.addAudio} type="file" style={this.style.input}/>
+        </RaisedButton>
+        <audio ref="audio"></audio>
+
+
+
   		</div>
   	)
   }

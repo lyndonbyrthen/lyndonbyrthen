@@ -28087,7 +28087,7 @@ var AppLoader = function (_React$Component) {
             _react2.default.createElement(
               _IconButton2.default,
               { onTouchTap: this.onMenuOpen },
-              _react2.default.createElement(_menu2.default, { color: 'white' })
+              _react2.default.createElement(_menu2.default, null)
             )
           )
         )

@@ -114,7 +114,7 @@ class AppLoader extends React.Component {
             </Drawer>
 
             <IconButton onTouchTap={this.onMenuOpen}>
-              <NavigationMenu color='white'/>
+              <NavigationMenu />
             </IconButton>
 
           </div>
