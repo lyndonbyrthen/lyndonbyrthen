@@ -414,7 +414,7 @@ var App1 = function (_React$Component) {
         key: 'render',
         value: function render() {
 
-            var icon = this.state.isMute ? _react2.default.createElement(_volumeUp2.default, null) : _react2.default.createElement(_volumeOff2.default, null);
+            var icon = this.state.isMute ? _react2.default.createElement(_volumeOff2.default, null) : _react2.default.createElement(_volumeMute2.default, null);
 
             return _react2.default.createElement(
                 'div',

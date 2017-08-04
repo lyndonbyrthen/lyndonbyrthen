@@ -365,7 +365,7 @@ class App1 extends React.Component {
 
   render() {
 
-    let icon = this.state.isMute ? <VolumeUp /> : <VolumeOff />
+    let icon = this.state.isMute ? <VolumeOff /> : <VolumeMute />
 
   	return (
   		<div ref='root' style={this.style.fullpage} >
