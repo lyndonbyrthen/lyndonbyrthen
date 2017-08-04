@@ -7,7 +7,7 @@ import IconButton from 'material-ui/IconButton';
 import VolumeOff from 'material-ui/svg-icons/AV/volume-off';
 import VolumeMute from 'material-ui/svg-icons/AV/volume-mute';
 import VolumeUp from 'material-ui/svg-icons/AV/volume-up';
-
+import 'whatwg-fetch';
 
 const {
     Engine,
@@ -38,18 +38,28 @@ class App1 extends React.Component {
     this.addAudio = this.addAudio.bind(this);
   	this.engine = this.engine.bind(this);
     this.update = this.update.bind(this);
+    this.loadjson = this.loadjson.bind(this);
     this.onResize = debounce(this.onResize.bind(this),200);
+
+    this.loadjson();
+
+    this.recording = {};
+    this.recordingMap = null
+    this.mapIdx = 0;
+
+    this.loop = false;
 
     this.barHeight = 5;
     this.barWidthFactor = 2.5
     this.yFactor = 1.5;
     this.barRes = 512;
     this.yOffset = .75
+    this.refreshTime = 30
 
     this.ballFillStyle = 'rgba(0,0,0,.15)'
     this.barFillStyle = 'rgba(0,0,0,.25)'
 
-    this.state = {isMute:false}
+    this.state = {isMute:true}
 
     this.style = {
       fullpage: {
@@ -83,6 +93,16 @@ class App1 extends React.Component {
     }
   }
 
+
+  loadjson() {
+    let scope = this;
+    fetch('/recording.json').then(function(response) {
+      return response.json()
+    }).then((json)=>{
+      scope.recordingMap = json;
+    })
+  }
+
   addAudio(event) {
     this.audio.src = URL.createObjectURL(this.file.files[0]);
     this.audio.play();
@@ -91,6 +111,7 @@ class App1 extends React.Component {
   onToggleMute() {
     this.setState({isMute:!this.state.isMute})
     this.audio.muted = !this.state.isMute
+    // console.log(this.recording)
   }
 
   onResize(event) {
@@ -133,6 +154,13 @@ class App1 extends React.Component {
       this.audio = this.refs.audio;
       this.audio.muted = this.state.isMute
 
+      let scope = this;
+
+      /*this.audio.addEventListener("ended", () => {
+        // clearInterval(scope.updateInterval)
+        // console.log(scope.recording)
+      });*/
+
       this.audio.src = '/Actraiser_Thy_Followers_OC_ReMix'
       this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 
@@ -143,6 +171,8 @@ class App1 extends React.Component {
 
       this.analyser.fftSize = this.barRes;
       this.bufferLength = this.analyser.frequencyBinCount;
+      this.barsNum = this.bufferLength >> 1
+      // console.log(this.barsNum)
       this.dataArray = new Uint8Array(this.bufferLength);
 
       this.audioInitialized = true;
@@ -151,7 +181,7 @@ class App1 extends React.Component {
 
     try {
       this.audio.play();
-      this.audio.loop = true;
+      this.audio.loop = this.loop;
     } catch (e) {
 
     }
@@ -161,7 +191,7 @@ class App1 extends React.Component {
 
     this.en = this.engine();
 
-    this.updateInterval = setInterval(this.update,20);
+    this.updateInterval = setInterval(this.update,this.refreshTime);
 
   }
 
@@ -174,29 +204,45 @@ class App1 extends React.Component {
 
   resume() {
     this.audio.play();
-    this.audio.loop = true;
-    this.updateInterval = setInterval(this.update,20);
+    this.audio.loop = this.loop;
+    this.updateInterval = setInterval(this.update,this.refreshTime);
   }
 
   kill() {
     
     this.en.kill();
     this.audio.pause();
+    clearInterval(this.updateInterval);
+    
     // this.audioCtx.close();
   }
 
   update() {
+
     // this.analyser.getByteTimeDomainData(this.dataArray);
-    this.analyser.getByteFrequencyData(this.dataArray);
-    // console.log(this.dataArray);
+    // console.log(this.audio.currentTime,Array.from(this.dataArray));
+    // this.recording[this.audio.currentTime+''] = Array.from(this.dataArray)
+
+    let arr;
+
+    if (this.state.isMute && this.recordingMap) {
+       if (this.mapIdx >= this.recordingMap.length) this.mapIdx = 0;
+       arr = this.recordingMap[this.mapIdx]
+       this.mapIdx++
+    } else {
+       this.analyser.getByteFrequencyData(this.dataArray);
+       arr = this.dataArray;
+    }
+
+    // console.log(arr)
 
     let HEIGHT = window.innerHeight
-
     let barHeight
 
-    for (let i = 0; i < this.bufferLength; i++) {
 
-      barHeight = this.dataArray[i] > this.barHeight ?this.dataArray[i] : this.barHeight; 
+    for (let i = 0; i < this.barsNum; i++) {
+
+      barHeight = arr[i] > this.barHeight ? arr[i] : this.barHeight; 
 
       let v = Vertices.fromPath('L 0 0 L ' + this.barWidth + ' 0 L ' + this.barWidth + ' ' + barHeight + ' L 0 ' + barHeight) 
       // Body.set(this.bars[i],{vertices:v}) 
@@ -208,10 +254,10 @@ class App1 extends React.Component {
 
       let rgba = [];
 
-      rgba.push(Math.round(barHeight + (15 * (i/this.bufferLength))));
-      rgba.push(Math.round(150 * (i/this.bufferLength)));
-      rgba.push(150)
-      rgba.push(.15)
+      rgba.push(Math.round(barHeight + (22 * (i/this.barsNum))));
+      rgba.push(Math.round(200 * (i/this.barsNum)));
+      rgba.push(205)
+      rgba.push(.20)
 
       this.bars[i].render.fillStyle = 'rgba('+rgba.join(',')+')'
 
@@ -229,7 +275,7 @@ class App1 extends React.Component {
     // create engine
     let engine = Engine.create(),
         world = engine.world;
-        world.gravity.y = 1;
+        world.gravity.y = .6;
 
     // create renderer
     let render = Render.create({
@@ -245,17 +291,15 @@ class App1 extends React.Component {
         }
     });
 
-    console.log(render.options)
-
     Render.run(render);
 
     // create runner
     let runner = Runner.create();
     Runner.run(runner, engine);
 
-    let stack = Composites.pyramid(35, 0, 20, 8, 0, 0, function(x, y) {
-        return Bodies.circle(x, y, Common.random(7, 15), { 
-          friction:0, frictionAir:0, restitution:.8, density: .02,
+    let stack = Composites.pyramid(35, 0, 33, 3, 0, 0, function(x, y) {
+        return Bodies.circle(x, y, Common.random(5, 18), { 
+          friction:0, frictionAir:0, restitution:1, density: .00002,
           render : {
             fillStyle : scope.ballFillStyle
           }
@@ -275,7 +319,7 @@ class App1 extends React.Component {
     
     let x = 0;
 
-    for (let i = 0; i < this.bufferLength; i++) {
+    for (let i = 0; i < this.barsNum; i++) {
         
         this.bars.push(Bodies.rectangle(x, 500, this.barWidth, this.barHeight, { 
           isStatic: true,
