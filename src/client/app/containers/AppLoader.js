@@ -31,6 +31,7 @@ const chunks = {
    'App1': require("bundle-loader?lazy&name=[name]!../subapps/App1.js"),
    'App2': require("bundle-loader?lazy&name=[name]!../subapps/App2.js"),
    'App3': require("bundle-loader?lazy&name=[name]!../subapps/App3.js"),
+
 }
 
 const appDataArr = []
@@ -100,7 +101,7 @@ class AppLoader extends React.Component {
 
             <Drawer 
               onRequestChange={(open) => this.setState({open})}
-              docked={true} width={200} open={this.state.open} >
+              docked={false} width={200} open={this.state.open} >
               <Menu onItemTouchTap={this.onTap}>
                 
                 {appDataArr.map(item=>(

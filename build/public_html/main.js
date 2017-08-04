@@ -27986,6 +27986,7 @@ var chunks = {
   'App1': __webpack_require__(463),
   'App2': __webpack_require__(464),
   'App3': __webpack_require__(465)
+
 };
 
 var appDataArr = [];
@@ -28071,7 +28072,7 @@ var AppLoader = function (_React$Component) {
                 onRequestChange: function onRequestChange(open) {
                   return _this2.setState({ open: open });
                 },
-                docked: true, width: 200, open: this.state.open },
+                docked: false, width: 200, open: this.state.open },
               _react2.default.createElement(
                 _Menu2.default,
                 { onItemTouchTap: this.onTap },

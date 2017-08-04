@@ -32,6 +32,22 @@ var _RaisedButton = __webpack_require__(189);
 
 var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
+var _IconButton = __webpack_require__(184);
+
+var _IconButton2 = _interopRequireDefault(_IconButton);
+
+var _volumeOff = __webpack_require__(476);
+
+var _volumeOff2 = _interopRequireDefault(_volumeOff);
+
+var _volumeMute = __webpack_require__(477);
+
+var _volumeMute2 = _interopRequireDefault(_volumeMute);
+
+var _volumeUp = __webpack_require__(478);
+
+var _volumeUp2 = _interopRequireDefault(_volumeUp);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -65,7 +81,7 @@ var App1 = function (_React$Component) {
 
         _this.start = _this.start.bind(_this);
         _this.pause = _this.pause.bind(_this);
-        _this.toggle = _this.toggle.bind(_this);
+        _this.onToggleMute = _this.onToggleMute.bind(_this);
         _this.resume = _this.resume.bind(_this);
         _this.kill = _this.kill.bind(_this);
         _this.addAudio = _this.addAudio.bind(_this);
@@ -75,12 +91,14 @@ var App1 = function (_React$Component) {
 
         _this.barHeight = 5;
         _this.barWidthFactor = 2.5;
-        _this.yFactor = 1.2;
+        _this.yFactor = 1.5;
         _this.barRes = 512;
         _this.yOffset = .75;
 
         _this.ballFillStyle = 'rgba(0,0,0,.15)';
         _this.barFillStyle = 'rgba(0,0,0,.25)';
+
+        _this.state = { isMute: false };
 
         _this.style = {
             fullpage: {
@@ -89,7 +107,7 @@ var App1 = function (_React$Component) {
                 position: 'fixed',
                 overflow: 'hidden'
             },
-            play: {
+            mute: {
                 position: 'absolute',
                 top: 0,
                 right: 0,
@@ -122,12 +140,10 @@ var App1 = function (_React$Component) {
             this.audio.play();
         }
     }, {
-        key: 'toggle',
-        value: function toggle() {
-            if (this.audio.paused) {
-                this.audio.play();
-                // this.audio.currentTime = Math.random()*90;
-            } else this.audio.pause();
+        key: 'onToggleMute',
+        value: function onToggleMute() {
+            this.setState({ isMute: !this.state.isMute });
+            this.audio.muted = !this.state.isMute;
         }
     }, {
         key: 'onResize',
@@ -173,6 +189,9 @@ var App1 = function (_React$Component) {
             if (!this.audioInitialized) {
                 this.file = this.refs.audiofile;
                 this.audio = this.refs.audio;
+                this.audio.muted = this.state.isMute;
+
+                this.audio.src = '/Actraiser_Thy_Followers_OC_ReMix';
                 this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
                 this.src = this.audioCtx.createMediaElementSource(this.audio);
@@ -189,6 +208,7 @@ var App1 = function (_React$Component) {
 
             try {
                 this.audio.play();
+                this.audio.loop = true;
             } catch (e) {}
 
             // console.log(this.bufferLength);
@@ -209,6 +229,7 @@ var App1 = function (_React$Component) {
         key: 'resume',
         value: function resume() {
             this.audio.play();
+            this.audio.loop = true;
             this.updateInterval = setInterval(this.update, 20);
         }
     }, {
@@ -226,26 +247,32 @@ var App1 = function (_React$Component) {
             this.analyser.getByteFrequencyData(this.dataArray);
             // console.log(this.dataArray);
 
-            var WIDTH = window.innerWidth;
             var HEIGHT = window.innerHeight;
 
-            var barSpace = WIDTH / this.bufferLength;
+            var barHeight = void 0;
 
             for (var i = 0; i < this.bufferLength; i++) {
 
-                var y = this.dataArray[i] > 20 ? this.dataArray[i] : 20;
-                y = HEIGHT * this.yOffset - y * this.yFactor;
+                barHeight = this.dataArray[i] > this.barHeight ? this.dataArray[i] : this.barHeight;
+
+                var v = Vertices.fromPath('L 0 0 L ' + this.barWidth + ' 0 L ' + this.barWidth + ' ' + barHeight + ' L 0 ' + barHeight);
+                // Body.set(this.bars[i],{vertices:v}) 
+                var y = HEIGHT * this.yOffset;
+                // let y = HEIGHT*this.yOffset-barHeight/2; 
+
+                /*let y = this.dataArray[i] > 20 ?this.dataArray[i] : 20;
+                y = HEIGHT*this.yOffset - y*this.yFactor;*/
 
                 var rgba = [];
 
-                rgba.push(Math.round(this.dataArray[i] + 15 * (i / this.bufferLength)));
-                rgba.push(Math.round(250 * (i / this.bufferLength)));
-                rgba.push(50);
-                rgba.push(.25);
+                rgba.push(Math.round(barHeight + 15 * (i / this.bufferLength)));
+                rgba.push(Math.round(150 * (i / this.bufferLength)));
+                rgba.push(150);
+                rgba.push(.15);
 
                 this.bars[i].render.fillStyle = 'rgba(' + rgba.join(',') + ')';
 
-                Body.set(this.bars[i], { position: { x: this.bars[i].position.x, y: y } });
+                Body.set(this.bars[i], { vertices: v, position: { x: this.bars[i].position.x, y: y } });
             }
         }
     }, {
@@ -299,19 +326,19 @@ var App1 = function (_React$Component) {
             var WIDTH = window.innerWidth;
             var HEIGHT = window.innerHeight;
 
-            var barWidth = WIDTH / this.bufferLength * this.barWidthFactor;
+            this.barWidth = WIDTH / this.bufferLength * this.barWidthFactor;
 
             var x = 0;
 
             for (var i = 0; i < this.bufferLength; i++) {
 
-                this.bars.push(Bodies.rectangle(x, 500, barWidth, this.barHeight, {
+                this.bars.push(Bodies.rectangle(x, 500, this.barWidth, this.barHeight, {
                     isStatic: true,
                     render: {
                         fillStyle: scope.barFillStyle
                     }
                 }));
-                x += barWidth;
+                x += this.barWidth;
             }
 
             World.add(world, this.bars);
@@ -387,16 +414,17 @@ var App1 = function (_React$Component) {
         key: 'render',
         value: function render() {
 
+            var icon = this.state.isMute ? _react2.default.createElement(_volumeUp2.default, null) : _react2.default.createElement(_volumeOff2.default, null);
+
             return _react2.default.createElement(
                 'div',
                 { ref: 'root', style: this.style.fullpage },
-                _react2.default.createElement(_RaisedButton2.default, { style: this.style.play, label: 'pause/play', onTouchTap: this.toggle }),
+                _react2.default.createElement('audio', { ref: 'audio' }),
                 _react2.default.createElement(
-                    _RaisedButton2.default,
-                    { style: this.style.choose, label: 'choose', labelPosition: 'before', containerElement: 'label' },
-                    _react2.default.createElement('input', { ref: 'audiofile', onChange: this.addAudio, type: 'file', style: this.style.input })
-                ),
-                _react2.default.createElement('audio', { ref: 'audio' })
+                    _IconButton2.default,
+                    { style: this.style.mute, onTouchTap: this.onToggleMute },
+                    icon
+                )
             );
         }
     }]);
@@ -10535,6 +10563,123 @@ module.exports = function debounce(func, wait, immediate){
   return debounced;
 };
 
+
+/***/ }),
+
+/***/ 476:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _pure = __webpack_require__(74);
+
+var _pure2 = _interopRequireDefault(_pure);
+
+var _SvgIcon = __webpack_require__(75);
+
+var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AvVolumeOff = function AvVolumeOff(props) {
+  return _react2.default.createElement(
+    _SvgIcon2.default,
+    props,
+    _react2.default.createElement('path', { d: 'M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z' })
+  );
+};
+AvVolumeOff = (0, _pure2.default)(AvVolumeOff);
+AvVolumeOff.displayName = 'AvVolumeOff';
+AvVolumeOff.muiName = 'SvgIcon';
+
+exports.default = AvVolumeOff;
+
+/***/ }),
+
+/***/ 477:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _pure = __webpack_require__(74);
+
+var _pure2 = _interopRequireDefault(_pure);
+
+var _SvgIcon = __webpack_require__(75);
+
+var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AvVolumeMute = function AvVolumeMute(props) {
+  return _react2.default.createElement(
+    _SvgIcon2.default,
+    props,
+    _react2.default.createElement('path', { d: 'M7 9v6h4l5 5V4l-5 5H7z' })
+  );
+};
+AvVolumeMute = (0, _pure2.default)(AvVolumeMute);
+AvVolumeMute.displayName = 'AvVolumeMute';
+AvVolumeMute.muiName = 'SvgIcon';
+
+exports.default = AvVolumeMute;
+
+/***/ }),
+
+/***/ 478:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _pure = __webpack_require__(74);
+
+var _pure2 = _interopRequireDefault(_pure);
+
+var _SvgIcon = __webpack_require__(75);
+
+var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AvVolumeUp = function AvVolumeUp(props) {
+  return _react2.default.createElement(
+    _SvgIcon2.default,
+    props,
+    _react2.default.createElement('path', { d: 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z' })
+  );
+};
+AvVolumeUp = (0, _pure2.default)(AvVolumeUp);
+AvVolumeUp.displayName = 'AvVolumeUp';
+AvVolumeUp.muiName = 'SvgIcon';
+
+exports.default = AvVolumeUp;
 
 /***/ })
 

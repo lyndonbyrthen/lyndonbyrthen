@@ -3,6 +3,11 @@ import PropTypes from 'prop-types'
 import Matter from '../libs/matter'
 import debounce from 'debounce'
 import RaisedButton from 'material-ui/RaisedButton';
+import IconButton from 'material-ui/IconButton';
+import VolumeOff from 'material-ui/svg-icons/AV/volume-off';
+import VolumeMute from 'material-ui/svg-icons/AV/volume-mute';
+import VolumeUp from 'material-ui/svg-icons/AV/volume-up';
+
 
 const {
     Engine,
@@ -27,7 +32,7 @@ class App1 extends React.Component {
     super(props);
     this.start = this.start.bind(this);
     this.pause = this.pause.bind(this);
-    this.toggle = this.toggle.bind(this);
+    this.onToggleMute = this.onToggleMute.bind(this);
     this.resume = this.resume.bind(this);
     this.kill = this.kill.bind(this);
     this.addAudio = this.addAudio.bind(this);
@@ -37,12 +42,14 @@ class App1 extends React.Component {
 
     this.barHeight = 5;
     this.barWidthFactor = 2.5
-    this.yFactor = 1.2;
+    this.yFactor = 1.5;
     this.barRes = 512;
     this.yOffset = .75
 
     this.ballFillStyle = 'rgba(0,0,0,.15)'
     this.barFillStyle = 'rgba(0,0,0,.25)'
+
+    this.state = {isMute:false}
 
     this.style = {
       fullpage: {
@@ -51,7 +58,7 @@ class App1 extends React.Component {
         position: 'fixed',
         overflow:'hidden'
       },
-      play: {
+      mute: {
         position:'absolute',
         top:0,
         right: 0,
@@ -81,12 +88,9 @@ class App1 extends React.Component {
     this.audio.play();
   }
 
-  toggle() {
-    if (this.audio.paused) {
-        this.audio.play()
-        // this.audio.currentTime = Math.random()*90;
-    }
-    else this.audio.pause()
+  onToggleMute() {
+    this.setState({isMute:!this.state.isMute})
+    this.audio.muted = !this.state.isMute
   }
 
   onResize(event) {
@@ -127,6 +131,9 @@ class App1 extends React.Component {
     if (!this.audioInitialized) {
       this.file = this.refs.audiofile;
       this.audio = this.refs.audio;
+      this.audio.muted = this.state.isMute
+
+      this.audio.src = '/Actraiser_Thy_Followers_OC_ReMix'
       this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 
       this.src = this.audioCtx.createMediaElementSource(this.audio);
@@ -144,6 +151,7 @@ class App1 extends React.Component {
 
     try {
       this.audio.play();
+      this.audio.loop = true;
     } catch (e) {
 
     }
@@ -166,6 +174,7 @@ class App1 extends React.Component {
 
   resume() {
     this.audio.play();
+    this.audio.loop = true;
     this.updateInterval = setInterval(this.update,20);
   }
 
@@ -181,26 +190,32 @@ class App1 extends React.Component {
     this.analyser.getByteFrequencyData(this.dataArray);
     // console.log(this.dataArray);
 
-    let WIDTH = window.innerWidth;
-    let HEIGHT = window.innerHeight;
+    let HEIGHT = window.innerHeight
 
-    let barSpace = (WIDTH / this.bufferLength);
+    let barHeight
 
     for (let i = 0; i < this.bufferLength; i++) {
 
-      let y = this.dataArray[i] > 20 ?this.dataArray[i] : 20;
-      y = HEIGHT*this.yOffset - y*this.yFactor;
+      barHeight = this.dataArray[i] > this.barHeight ?this.dataArray[i] : this.barHeight; 
+
+      let v = Vertices.fromPath('L 0 0 L ' + this.barWidth + ' 0 L ' + this.barWidth + ' ' + barHeight + ' L 0 ' + barHeight) 
+      // Body.set(this.bars[i],{vertices:v}) 
+      let y = HEIGHT*this.yOffset; 
+      // let y = HEIGHT*this.yOffset-barHeight/2; 
+
+      /*let y = this.dataArray[i] > 20 ?this.dataArray[i] : 20;
+      y = HEIGHT*this.yOffset - y*this.yFactor;*/
 
       let rgba = [];
 
-      rgba.push(Math.round(this.dataArray[i] + (15 * (i/this.bufferLength))));
-      rgba.push(Math.round(250 * (i/this.bufferLength)));
-      rgba.push(50)
-      rgba.push(.25)
+      rgba.push(Math.round(barHeight + (15 * (i/this.bufferLength))));
+      rgba.push(Math.round(150 * (i/this.bufferLength)));
+      rgba.push(150)
+      rgba.push(.15)
 
       this.bars[i].render.fillStyle = 'rgba('+rgba.join(',')+')'
 
-      Body.set(this.bars[i],{position:{x:this.bars[i].position.x,y:y}})
+      Body.set(this.bars[i],{vertices:v,position:{x:this.bars[i].position.x,y:y}})
 
     }
 
@@ -256,19 +271,19 @@ class App1 extends React.Component {
     let WIDTH = window.innerWidth;
     let HEIGHT = window.innerHeight;
 
-    let barWidth = (WIDTH / this.bufferLength)*this.barWidthFactor;
+    this.barWidth = (WIDTH / this.bufferLength)*this.barWidthFactor;
     
     let x = 0;
 
     for (let i = 0; i < this.bufferLength; i++) {
         
-        this.bars.push(Bodies.rectangle(x, 500, barWidth, this.barHeight, { 
+        this.bars.push(Bodies.rectangle(x, 500, this.barWidth, this.barHeight, { 
           isStatic: true,
           render: {
             fillStyle: scope.barFillStyle,
           }
         }))
-        x+=barWidth
+        x+=this.barWidth
     }
 
     World.add(world, this.bars);
@@ -350,16 +365,19 @@ class App1 extends React.Component {
 
   render() {
 
+    let icon = this.state.isMute ? <VolumeUp /> : <VolumeOff />
+
   	return (
   		<div ref='root' style={this.style.fullpage} >
-  		  <RaisedButton style={this.style.play} label='pause/play' onTouchTap={this.toggle}/>
-        <RaisedButton style={this.style.choose} label='choose' labelPosition="before" containerElement='label'>
+  		  {/*<RaisedButton style={this.style.play} label='pause/play' onTouchTap={this.toggle}/>*/}
+        
+        {/*<RaisedButton style={this.style.choose} label='load music' labelPosition="before" containerElement='label'>
           <input ref='audiofile' onChange={this.addAudio} type="file" style={this.style.input}/>
-        </RaisedButton>
+        </RaisedButton>*/}
         <audio ref="audio"></audio>
-
-
-
+        <IconButton style={this.style.mute} onTouchTap={this.onToggleMute}>
+              {icon}
+        </IconButton>
   		</div>
   	)
   }
