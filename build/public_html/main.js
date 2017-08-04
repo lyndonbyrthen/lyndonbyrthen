@@ -43707,6 +43707,10 @@ var _TweenMax = __webpack_require__(460);
 
 var _TweenMax2 = _interopRequireDefault(_TweenMax);
 
+var _debounce = __webpack_require__(472);
+
+var _debounce2 = _interopRequireDefault(_debounce);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -43726,6 +43730,8 @@ var AppContainer = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (AppContainer.__proto__ || Object.getPrototypeOf(AppContainer)).call(this, props));
 
     _this.loadComponent = _this.loadComponent.bind(_this);
+    // this.onResize = debounce(this.onResize.bind(this),200);
+    _this.offView = _this.offView.bind(_this);
     _this.transOut = _this.transOut.bind(_this);
     _this.transIn = _this.transIn.bind(_this);
     _this.state = { isCurApp: props.isCurApp };
@@ -43759,8 +43765,17 @@ var AppContainer = function (_React$Component) {
 
       // console.log(this.props.appData.name,'transout')
       var y = dir === 'up' ? -window.innerHeight : window.innerHeight;
-      _TweenMax2.default.fromTo(this.refs.page, this.transTime, { y: 0 }, { y: y });
+      _TweenMax2.default.fromTo(this.refs.page, this.transTime, { y: 0 }, { y: y, onComplete: this.offView });
     }
+  }, {
+    key: 'offView',
+    value: function offView() {
+      _TweenMax2.default.to(this.refs.page, 0, { x: 0, y: -999999 });
+    }
+
+    /*onResize(event) {
+    }*/
+
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
@@ -43780,12 +43795,16 @@ var AppContainer = function (_React$Component) {
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
+      // window.addEventListener("resize", this.onResize);
+
       if (!this.props.isCurApp) return;
       this.loadComponent();
     }
   }, {
     key: 'componentWillUnmount',
-    value: function componentWillUnmount() {}
+    value: function componentWillUnmount() {
+      window.removeEventListener("resize", this.onResize);
+    }
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
@@ -46636,6 +46655,74 @@ module.exports = function(cb) {
 		cb(__webpack_require__(469));
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }
+
+/***/ }),
+/* 466 */,
+/* 467 */,
+/* 468 */,
+/* 469 */,
+/* 470 */,
+/* 471 */,
+/* 472 */
+/***/ (function(module, exports) {
+
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing. The function also has a property 'clear' 
+ * that is a function which will clear the timer to prevent previously scheduled executions. 
+ *
+ * @source underscore.js
+ * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
+ * @param {Function} function to wrap
+ * @param {Number} timeout in ms (`100`)
+ * @param {Boolean} whether to execute at the beginning (`false`)
+ * @api public
+ */
+
+module.exports = function debounce(func, wait, immediate){
+  var timeout, args, context, timestamp, result;
+  if (null == wait) wait = 100;
+
+  function later() {
+    var last = Date.now() - timestamp;
+
+    if (last < wait && last >= 0) {
+      timeout = setTimeout(later, wait - last);
+    } else {
+      timeout = null;
+      if (!immediate) {
+        result = func.apply(context, args);
+        context = args = null;
+      }
+    }
+  };
+
+  var debounced = function(){
+    context = this;
+    args = arguments;
+    timestamp = Date.now();
+    var callNow = immediate && !timeout;
+    if (!timeout) timeout = setTimeout(later, wait);
+    if (callNow) {
+      result = func.apply(context, args);
+      context = args = null;
+    }
+
+    return result;
+  };
+
+  debounced.clear = function() {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+  };
+
+  return debounced;
+};
+
 
 /***/ })
 /******/ ]);

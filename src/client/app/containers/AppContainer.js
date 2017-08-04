@@ -4,12 +4,16 @@ import PropTypes from 'prop-types'
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 // import FullPage from '../components/FullPage'
 import TweenMax from '../libs/gasp/TweenMax.min'
+import debounce from 'debounce'
+
 
 class AppContainer extends React.Component {
 	
 	constructor(props) {
 		super(props);
     this.loadComponent = this.loadComponent.bind(this);
+    // this.onResize = debounce(this.onResize.bind(this),200);
+    this.offView = this.offView.bind(this)
     this.transOut = this.transOut.bind(this);
     this.transIn = this.transIn.bind(this);
 	  this.state = {isCurApp:props.isCurApp};
@@ -35,8 +39,15 @@ class AppContainer extends React.Component {
   transOut(dir='up') {
     // console.log(this.props.appData.name,'transout')
     let y = dir==='up' ? -window.innerHeight : window.innerHeight;
-    TweenMax.fromTo(this.refs.page, this.transTime, {y:0}, {y:y});
+    TweenMax.fromTo(this.refs.page, this.transTime, {y:0}, {y:y,onComplete:this.offView});
   }
+
+  offView() {
+    TweenMax.to(this.refs.page, 0, {x:0,y:-999999});
+  }
+
+  /*onResize(event) {
+  }*/
 
   componentWillReceiveProps(nextProps) {
     // console.log(this.props.appData.id,nextProps)
@@ -54,11 +65,14 @@ class AppContainer extends React.Component {
   }
 
   componentWillMount() {
+    // window.addEventListener("resize", this.onResize);
+
     if (!this.props.isCurApp) return
     this.loadComponent();
   }
 
   componentWillUnmount() {
+    window.removeEventListener("resize", this.onResize);
   }
 
   componentDidMount() {
