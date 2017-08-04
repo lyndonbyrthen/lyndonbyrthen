@@ -43,11 +43,10 @@ class App1 extends React.Component {
 
     this.loadjson();
 
-    this.recording = {};
     this.recordingMap = null
     this.mapIdx = 0;
 
-    this.loop = false;
+    this.loop = true;
 
     this.barHeight = 5;
     this.barWidthFactor = 2.5
@@ -57,7 +56,7 @@ class App1 extends React.Component {
     this.refreshTime = 30
 
     this.ballFillStyle = 'rgba(0,0,0,.15)'
-    this.barFillStyle = 'rgba(0,0,0,.25)'
+    this.barFillStyle = 'rgba(0,0,0,0)'
 
     this.state = {isMute:true}
 
@@ -93,12 +92,12 @@ class App1 extends React.Component {
     }
   }
 
-
   loadjson() {
     let scope = this;
-    fetch('/recording.json').then(function(response) {
+    fetch('/assets/recording.json').then(function(response) {
       return response.json()
     }).then((json)=>{
+      // console.log(json)
       scope.recordingMap = json;
     })
   }
@@ -111,7 +110,6 @@ class App1 extends React.Component {
   onToggleMute() {
     this.setState({isMute:!this.state.isMute})
     this.audio.muted = !this.state.isMute
-    // console.log(this.recording)
   }
 
   onResize(event) {
@@ -128,7 +126,13 @@ class App1 extends React.Component {
     }
     else if (!this.props.isCurApp && nextProps.isCurApp) {
     	//console.log('will start');
-        this.resume();
+        if ((this.en.canvas.OffsetWidth !== window.innerWidth)
+          ||(this.en.canvas.offsetHeight !== window.innerHeight)) {
+          this.kill();
+          this.start();
+        } else {
+          this.resume();
+        }
     }
   }
 
@@ -146,7 +150,6 @@ class App1 extends React.Component {
 
   start() {
     
-    // 
     // this.audio.currentTime = Math.random()*90;
 
     if (!this.audioInitialized) {
@@ -161,7 +164,7 @@ class App1 extends React.Component {
         // console.log(scope.recording)
       });*/
 
-      this.audio.src = '/Actraiser_Thy_Followers_OC_ReMix'
+      this.audio.src = '/assets/Actraiser.mp3'
       this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 
       this.src = this.audioCtx.createMediaElementSource(this.audio);

@@ -1,8 +1,8 @@
 export default {
 	"palette": {
-		"primary1Color": "rgba(0, 121, 107, 0.7)",
-		"primary2Color": "rgba(38, 166, 154, 0.7)",
-		"accent1Color": "#ffab40",
-		"pickerHeaderColor": "#cddc39"
+		"primary1Color": "#0091EA",
+		"primary2Color": "#00B0FF",
+		"accent1Color": "#EC407A",
+		"pickerHeaderColor": "#FFE082"
 	}
 };

@@ -1,20 +1,33 @@
 const webpack = require('webpack');
 const path = require('path');
 // const HTMLWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const BUILD_DIR = path.resolve(__dirname, 'build/public_html');
-const APP_DIR = path.resolve(__dirname, 'src/client/app');
+const build_dir = path.resolve(__dirname, 'build/public_html');
+const app_dir = path.resolve(__dirname, 'src/client/app');
 
 var config = {
   // devtool: "source-map",
   entry: {
-    index: APP_DIR + '/index.jsx',
-    // app1: APP_DIR + '/subapps/app1.js'
+    index: app_dir + '/index.jsx',
+    // app1: app_dir + '/subapps/app1.js'
   },
   plugins: [
-    /*new webpack.optimize.CommonsChunkPlugin({
+    new CopyWebpackPlugin([
+      {from:'src/server/CodeIgniter3.1.5/application',to:'../application'},
+      {from:'src/server/CodeIgniter3.1.5/index.php'},
+      {from:'src/server/CodeIgniter3.1.5/.htaccess'},
+
+      {from:'src/client/app/assets',to:'assets'},
+
+
+      // {from:'src/server/CodeIgniter3.1.5/system',to:'system'} 
+
+    ]),
+    new webpack.optimize.CommonsChunkPlugin({
        name: 'index' // Specify the common bundle's name.
     }),
+    /*
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
@@ -23,15 +36,15 @@ var config = {
     new webpack.optimize.UglifyJsPlugin({minimize: true})*/
   ],
   output: {
-    filename: 'main.js',
-    chunkFilename : 'chunk.[name].js',
-    path: BUILD_DIR
+    filename: 'js/main.js',
+    chunkFilename : 'js/chunk.[name].js',
+    path: build_dir
   },
   module : {
     loaders : [
       {
         test : /\.jsx?/,
-        include : APP_DIR,
+        include : app_dir,
         loader : ['babel-loader']
       }
     ],

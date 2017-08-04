@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import RefreshIndicator from 'material-ui/RefreshIndicator';
-// import FullPage from '../components/FullPage'
+import LinearProgress from 'material-ui/LinearProgress'
 import TweenMax from '../libs/gasp/TweenMax.min'
 import debounce from 'debounce'
 
@@ -107,15 +106,7 @@ class AppContainer extends React.Component {
     let content
 
     if (this.state.component) content = (<this.state.component {...this.props} />)
-    else content = (
-      <RefreshIndicator
-          size={40}
-          left={10}
-          top={0}
-          status="loading"
-          style={this.style.container}
-          />
-          )
+    else content = (<LinearProgress/>)
     return (
       <div ref='page' style={this.style.fullpage}>
           {content}
