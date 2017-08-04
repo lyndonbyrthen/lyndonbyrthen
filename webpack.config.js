@@ -20,8 +20,7 @@ var config = {
 
       {from:'src/client/app/assets',to:'assets'},
 
-
-      // {from:'src/server/CodeIgniter3.1.5/system',to:'system'} 
+      //{from:'src/server/CodeIgniter3.1.5/system',to:'../system'} 
 
     ]),
     new webpack.optimize.CommonsChunkPlugin({

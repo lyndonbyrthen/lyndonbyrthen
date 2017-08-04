@@ -28486,7 +28486,9 @@ var AppLoader = function (_React$Component) {
 
     _this.onTap = _this.onTap.bind(_this);
     _this.onMenuOpen = _this.onMenuOpen.bind(_this);
-    _this.state = { curApp: appDataArr[0], open: false };
+    var curApp = window.appid ? appDataMap[appid] : appDataArr[0];
+
+    _this.state = { curApp: curApp, open: false };
     return _this;
   }
 

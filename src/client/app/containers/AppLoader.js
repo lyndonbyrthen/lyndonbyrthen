@@ -57,7 +57,9 @@ class AppLoader extends React.Component {
 		super(props);
     this.onTap = this.onTap.bind(this);
     this.onMenuOpen = this.onMenuOpen.bind(this);
-    this.state = {curApp:appDataArr[0],open:false};
+    let curApp = window.appid? appDataMap[appid] : appDataArr[0];
+
+    this.state = {curApp:curApp,open:false};
   }
 
   onTap(event,delta) {
