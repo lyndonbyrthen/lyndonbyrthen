@@ -6,14 +6,25 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { default as theme} from '../styles/ui-theme'
+
 
 import RaisedButton from 'material-ui/RaisedButton';
 import Drawer from 'material-ui/Drawer';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
-import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+import Dialog from 'material-ui/Dialog';
+import Paper from 'material-ui/Paper';
+
+import InfoOutline from 'material-ui/svg-icons/action/info-outline';
+import HighlightOff from 'material-ui/svg-icons/action/Highlight-off';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+
+
+
 
 import {
   BrowserRouter as Router,
@@ -21,7 +32,6 @@ import {
   Link
 } from 'react-router-dom'
 
-import { default as customTheme} from './ui-theme'
 import AppContainer from './AppContainer'
 
 injectTapEventPlugin();
@@ -57,15 +67,19 @@ class AppLoader extends React.Component {
 		super(props);
     this.onTap = this.onTap.bind(this);
     this.onMenuOpen = this.onMenuOpen.bind(this);
+    this.onInfoOpen = this.onInfoOpen.bind(this);
+
     let curApp = window.appid? appDataMap[appid] : appDataArr[0];
 
-    this.state = {curApp:curApp,open:false};
+    this.state = {curApp:curApp,
+                  menuOpen:false,
+                  infoOpen:false};
   }
 
   onTap(event,delta) {
     event.stopPropagation();
     this.setState({
-      open: false
+      menuOpen: false
     });
     //event.preventDefault();
     // this.setState({curApp:appDataArr[delta], open:false});
@@ -74,7 +88,16 @@ class AppLoader extends React.Component {
   onMenuOpen(event) {
   	event.preventDefault();
     this.setState({
-      open: true
+      menuOpen: true,
+      infoOpen: false
+    });
+  }
+
+  onInfoOpen(event) {
+    event.preventDefault();
+    this.setState({
+      infoOpen: true,
+      menuOpen: false
     });
   }
 
@@ -85,7 +108,7 @@ class AppLoader extends React.Component {
     let scope = this;
 
 		return (
-			<MuiThemeProvider muiTheme={getMuiTheme(customTheme)}>
+			<MuiThemeProvider muiTheme={getMuiTheme(theme)}>
         <Router>
           <div>
 
@@ -102,23 +125,84 @@ class AppLoader extends React.Component {
             </div>
 
             <Drawer 
-              onRequestChange={(open) => this.setState({open})}
-              docked={false} width={200} open={this.state.open} >
+              overlayStyle={{backgroundColor:'transparent'}}
+              bodyStyle={{backgroundColor:'transparent'}}
+              style={{backgroundColor:'transparent'}}
+              onRequestChange={(open) => this.setState({menuOpen:open})}
+              docked={false} width={200} open={this.state.menuOpen} >
               <Menu onItemTouchTap={this.onTap}>
-                
-                {appDataArr.map(item=>(
-                  <Link style={style.link} onClick={this.onTap} key={item.delta} to={ item.delta===0? '/' : '/'+item.id}>
-                  <MenuItem primaryText={item.id} key={item.id} disabled={this.state.curApp.id===item.id}>
-                  </MenuItem>
-                  </Link>
-                ))}
+                 <IconButton 
+                   style={{
+                    position:'absolute',
+                    right: 0
+                   }}
+                   onTouchTap={() => this.setState({menuOpen:false})}
+                 
+                 >
+                   <HighlightOff color={theme.icon.color}/>
+                 </IconButton>
+                <Subheader>Apps</Subheader>
+                {appDataArr.map(item=>{
+                  
+                  return (
+                    <Link style={style.link} onClick={this.onTap} key={item.delta} to={ item.delta===0? '/' : '/'+item.id}>
+                      <MenuItem primaryText={item.id} key={item.id} disabled={this.state.curApp.id===item.id}>
+                      </MenuItem>
+                    </Link>
+                  )
+
+                })}
+
+                <Divider />
 
               </Menu>
             </Drawer>
 
-            <IconButton onTouchTap={this.onMenuOpen}>
-              <NavigationMenu />
-            </IconButton>
+            <Dialog
+              title={
+                <div>
+                <span>{this.state.curApp.id}</span>
+                  <IconButton 
+                  style={{
+                    position:'absolute',
+                    right: 0,
+                    top:0
+                  }}
+                  onTouchTap={() => this.setState({infoOpen:false})}
+
+                  >
+                  <HighlightOff color={theme.icon.color}/>
+                  </IconButton>
+
+                </div>
+              }
+              overlayStyle={{backgroundColor:'transparent'}}
+              bodyStyle={{backgroundColor:'transparent'}}
+              style={{backgroundColor:'transparent'}}
+              // actions={actions}
+              paperProps={{zDepth:2}}
+              modal={false}
+              open={this.state.infoOpen}
+              onRequestClose={()=>{this.setState({infoOpen:false})}}
+              >
+              
+              {JSON.stringify(this.state.curApp)}
+            </Dialog>
+
+            <Paper
+             style={{backgroundColor:'rgba(225,225,225,.5)',
+                     position:'fixed',
+                     width:'auto'}}
+             zDepth={2}
+            >
+              <IconButton onTouchTap={this.onMenuOpen}>
+                <NavigationMenu color={theme.icon.color} />
+              </IconButton>
+
+              <IconButton onTouchTap={this.onInfoOpen}>
+                <InfoOutline color={theme.icon.color} />
+              </IconButton>
+            </Paper>
 
           </div>
         </Router>

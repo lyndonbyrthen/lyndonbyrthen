@@ -7,6 +7,10 @@ import IconButton from 'material-ui/IconButton';
 import VolumeOff from 'material-ui/svg-icons/AV/volume-off';
 import VolumeMute from 'material-ui/svg-icons/AV/volume-mute';
 import VolumeUp from 'material-ui/svg-icons/AV/volume-up';
+import { default as theme} from '../styles/ui-theme'
+import Paper from 'material-ui/Paper';
+
+
 import 'whatwg-fetch';
 
 const {
@@ -69,8 +73,8 @@ class App1 extends React.Component {
       },
       mute: {
         position:'absolute',
-        top:0,
-        right: 0,
+        top:10,
+        right: 10,
         zIndex: 999999
       },
       choose: {
@@ -123,8 +127,7 @@ class App1 extends React.Component {
     if (this.props.isCurApp && !nextProps.isCurApp) {
     	//console.log('will stop');
         this.pause();
-    }
-    else if (!this.props.isCurApp && nextProps.isCurApp) {
+    } else if (!this.props.isCurApp && nextProps.isCurApp) {
     	//console.log('will start');
         if ((this.en.canvas.OffsetWidth !== window.innerWidth)
           ||(this.en.canvas.offsetHeight !== window.innerHeight)) {
@@ -201,6 +204,7 @@ class App1 extends React.Component {
   pause() {
     
     this.audio.pause();
+    this.en.pause();
     clearInterval(this.updateInterval);
     
   }
@@ -208,6 +212,7 @@ class App1 extends React.Component {
   resume() {
     this.audio.play();
     this.audio.loop = this.loop;
+    this.en.resume();
     this.updateInterval = setInterval(this.update,this.refreshTime);
   }
 
@@ -369,9 +374,7 @@ class App1 extends React.Component {
     // keep the mouse in sync with rendering
     render.mouse = mouse;
 
-
-
-    Events.on(engine, 'collisionStart', function(event) {
+    let onCollisionStart = (event)=> {
         var pairs = event.pairs;
         // change object colours to show those ending a collision
         for (var i = 0; i < pairs.length; i++) {
@@ -380,7 +383,11 @@ class App1 extends React.Component {
               Body.set(pair.bodyA,{position:{x:Common.random(55, window.innerWidth-55),y:20}})
             }
         }
-    });
+    }
+
+
+
+    Events.on(engine, 'collisionStart', onCollisionStart);
 
     // fit the render viewport to the scene
     /*Render.lookAt(render, {
@@ -396,11 +403,14 @@ class App1 extends React.Component {
         canvas: render.canvas,
         pause: () => {
         	  Runner.stop(runner)
+            Events.off(engine, 'collisionStart', onCollisionStart);
         },
         resume: () => {
         	  Runner.start(runner,engine)
+            Events.on(engine, 'collisionStart', onCollisionStart);
         },
         kill: () => {
+            Events.off(engine, 'collisionStart', onCollisionStart);
             Render.stop(render);
             Runner.stop(runner);
             World.clear(engine.world);
@@ -412,7 +422,7 @@ class App1 extends React.Component {
 
   render() {
 
-    let icon = this.state.isMute ? <VolumeOff /> : <VolumeMute />
+    let icon = this.state.isMute ? <VolumeOff color={theme.icon.color}/> : <VolumeMute color={theme.icon.color}/>
 
   	return (
   		<div ref='root' style={this.style.fullpage} >
@@ -422,9 +432,11 @@ class App1 extends React.Component {
           <input ref='audiofile' onChange={this.addAudio} type="file" style={this.style.input}/>
         </RaisedButton>*/}
         <audio ref="audio"></audio>
-        <IconButton style={this.style.mute} onTouchTap={this.onToggleMute}>
+        <Paper style={this.style.mute} >
+        <IconButton onTouchTap={this.onToggleMute}>
               {icon}
         </IconButton>
+        </Paper>
   		</div>
   	)
   }

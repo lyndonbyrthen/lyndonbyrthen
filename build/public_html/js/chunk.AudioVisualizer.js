@@ -48,6 +48,14 @@ var _volumeUp = __webpack_require__(468);
 
 var _volumeUp2 = _interopRequireDefault(_volumeUp);
 
+var _uiTheme = __webpack_require__(475);
+
+var _uiTheme2 = _interopRequireDefault(_uiTheme);
+
+var _Paper = __webpack_require__(74);
+
+var _Paper2 = _interopRequireDefault(_Paper);
+
 __webpack_require__(186);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -120,8 +128,8 @@ var App1 = function (_React$Component) {
             },
             mute: {
                 position: 'absolute',
-                top: 0,
-                right: 0,
+                top: 10,
+                right: 10,
                 zIndex: 999999
             },
             choose: {
@@ -258,6 +266,7 @@ var App1 = function (_React$Component) {
         value: function pause() {
 
             this.audio.pause();
+            this.en.pause();
             clearInterval(this.updateInterval);
         }
     }, {
@@ -265,6 +274,7 @@ var App1 = function (_React$Component) {
         value: function resume() {
             this.audio.play();
             this.audio.loop = this.loop;
+            this.en.resume();
             this.updateInterval = setInterval(this.update, this.refreshTime);
         }
     }, {
@@ -420,7 +430,7 @@ var App1 = function (_React$Component) {
             // keep the mouse in sync with rendering
             render.mouse = mouse;
 
-            Events.on(engine, 'collisionStart', function (event) {
+            var onCollisionStart = function onCollisionStart(event) {
                 var pairs = event.pairs;
                 // change object colours to show those ending a collision
                 for (var i = 0; i < pairs.length; i++) {
@@ -429,7 +439,9 @@ var App1 = function (_React$Component) {
                         Body.set(pair.bodyA, { position: { x: Common.random(55, window.innerWidth - 55), y: 20 } });
                     }
                 }
-            });
+            };
+
+            Events.on(engine, 'collisionStart', onCollisionStart);
 
             // fit the render viewport to the scene
             /*Render.lookAt(render, {
@@ -445,11 +457,14 @@ var App1 = function (_React$Component) {
                 canvas: render.canvas,
                 pause: function pause() {
                     Runner.stop(runner);
+                    Events.off(engine, 'collisionStart', onCollisionStart);
                 },
                 resume: function resume() {
                     Runner.start(runner, engine);
+                    Events.on(engine, 'collisionStart', onCollisionStart);
                 },
                 kill: function kill() {
+                    Events.off(engine, 'collisionStart', onCollisionStart);
                     Render.stop(render);
                     Runner.stop(runner);
                     World.clear(engine.world);
@@ -462,16 +477,20 @@ var App1 = function (_React$Component) {
         key: 'render',
         value: function render() {
 
-            var icon = this.state.isMute ? _react2.default.createElement(_volumeOff2.default, null) : _react2.default.createElement(_volumeMute2.default, null);
+            var icon = this.state.isMute ? _react2.default.createElement(_volumeOff2.default, { color: _uiTheme2.default.icon.color }) : _react2.default.createElement(_volumeMute2.default, { color: _uiTheme2.default.icon.color });
 
             return _react2.default.createElement(
                 'div',
                 { ref: 'root', style: this.style.fullpage },
                 _react2.default.createElement('audio', { ref: 'audio' }),
                 _react2.default.createElement(
-                    _IconButton2.default,
-                    { style: this.style.mute, onTouchTap: this.onToggleMute },
-                    icon
+                    _Paper2.default,
+                    { style: this.style.mute },
+                    _react2.default.createElement(
+                        _IconButton2.default,
+                        { onTouchTap: this.onToggleMute },
+                        icon
+                    )
                 )
             );
         }
