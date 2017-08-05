@@ -68,7 +68,7 @@ class App1 extends React.Component {
     this.ballFillStyle2 = 'rgba(0,0,0,.25)'
     this.barFillStyle = 'rgba(0,0,0,0)'
 
-    this.state = {isMute:true}
+    this.state = {isMute:true,audioLoaded:false}
 
     this.style = {
       fullpage: {
@@ -120,6 +120,7 @@ class App1 extends React.Component {
   onToggleMute() {
     this.setState({isMute:!this.state.isMute})
     this.audio.muted = !this.state.isMute
+    if (!this.audio.muted) this.audio.play();
   }
 
   onResize(event) {
@@ -164,7 +165,7 @@ class App1 extends React.Component {
     if (!this.audioInitialized) {
       this.file = this.refs.audiofile;
       this.audio = this.refs.audio;
-      this.audio.muted = this.state.isMute
+      // this.audio.muted = this.state.isMute
 
       let scope = this;
 
@@ -174,7 +175,8 @@ class App1 extends React.Component {
       });*/
 
       this.audio.addEventListener("loadeddata", () => {
-        if (scope.state.isMute && scope.props.isCurApp) scope.audio.play()
+        scope.setState({audioLoaded:true})
+        if (!scope.state.isMute && scope.props.isCurApp) scope.audio.play()
       });
 
       this.audio.src = '/assets/Actraiser.mp3'
@@ -196,7 +198,6 @@ class App1 extends React.Component {
     }
 
     try {
-      this.audio.play();
       this.audio.loop = this.loop;
     } catch (e) {
 
@@ -459,6 +460,7 @@ class App1 extends React.Component {
   render() {
 
     let icon = this.state.isMute ? <VolumeOff color={theme.icon.color}/> : <VolumeMute color={theme.icon.color}/>
+    if (!this.state.audioLoaded) icon = null
 
   	return (
   		<div ref='root' style={this.style.fullpage} >
