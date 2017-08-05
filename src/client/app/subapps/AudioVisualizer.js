@@ -35,10 +35,13 @@ class App1 extends React.Component {
   constructor(props) {
     super(props);
     this.start = this.start.bind(this);
-    this.pause = this.pause.bind(this);
-    this.onToggleMute = this.onToggleMute.bind(this);
-    this.resume = this.resume.bind(this);
     this.kill = this.kill.bind(this);
+
+    this.pause = this.pause.bind(this);
+    this.resume = this.resume.bind(this);
+    this.onToggleMute = this.onToggleMute.bind(this);
+    
+    
     this.addAudio = this.addAudio.bind(this);
   	this.engine = this.engine.bind(this);
     this.update = this.update.bind(this);
@@ -127,22 +130,18 @@ class App1 extends React.Component {
     if (!this.props.isCurApp) return
     this.kill();
     this.start();
+    if (!this.audio.muted) this.audio.play();
+
   }
 
   componentWillReceiveProps(nextProps) {
     // console.log(this.props.menuItem.name,nextProps)
     if (this.props.isCurApp && !nextProps.isCurApp) {
     	//console.log('will stop');
-        this.pause();
+        this.kill();
     } else if (!this.props.isCurApp && nextProps.isCurApp) {
-    	//console.log('will start');
-        if ((this.en.canvas.OffsetWidth !== window.innerWidth)
-          ||(this.en.canvas.offsetHeight !== window.innerHeight)) {
-          this.kill();
-          this.start();
-        } else {
-          this.resume();
-        }
+        this.start();
+        if (!this.audio.muted) this.audio.play();
     }
   }
 
@@ -214,21 +213,10 @@ class App1 extends React.Component {
   }
 
   pause() {
-    
-    this.audio.pause();
-    this.en.pause();
-    clearInterval(this.updateInterval);
-    clearInterval(this.auditInterval);
 
-    
   }
 
   resume() {
-    this.audio.play();
-    this.audio.loop = this.loop;
-    this.en.resume();
-    this.updateInterval = setInterval(this.update,this.refreshTime);
-    this.auditInterval = setInterval(this.auditBodies,2000);
 
   }
 
