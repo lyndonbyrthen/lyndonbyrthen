@@ -12,6 +12,13 @@ export default {
 
     "link": {
       "textDecoration":"none",
+    },
+
+    "aboutRoot": {
+    	"max-width":"500px",
+    	"position":"relative",
+    	"margin":"20px auto 20px auto",
+    	"font-size":"16px"
     }
 
 };
