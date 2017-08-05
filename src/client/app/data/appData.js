@@ -27,7 +27,7 @@ let infoFootnote = (
     <div>
     This site is build on React with a PHP backend. To read more about it,
     please see the 
-    <Link style={theme.link} to='/About'>
+    <Link style={theme.link} to='/about'>
     <FlatButton primary={true} style={theme.inlineButton}>
       About
     </FlatButton>

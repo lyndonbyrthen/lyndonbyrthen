@@ -4,9 +4,13 @@ import Matter from '../libs/matter'
 import debounce from 'debounce'
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
+import FlatButton from 'material-ui/FlatButton';
+
 import VolumeOff from 'material-ui/svg-icons/AV/volume-off';
 import VolumeMute from 'material-ui/svg-icons/AV/volume-mute';
 import VolumeUp from 'material-ui/svg-icons/AV/volume-up';
+import FileUpload from 'material-ui/svg-icons/file/file-upload';
+
 import { default as theme} from '../styles/ui-theme'
 import Paper from 'material-ui/Paper';
 
@@ -80,18 +84,14 @@ class App1 extends React.Component {
         position: 'fixed',
         overflow:'hidden'
       },
-      mute: {
+      controls: {
         position:'absolute',
         top:10,
         right: 10,
-        zIndex: 999999
+        zIndex: 999999,
+        width:'auto'
       },
-      choose: {
-        position:'absolute',
-        top:50,
-        right: 0,
-        zIndex: 999999
-      },
+      
       input: {
         cursor: 'pointer',
         position: 'absolute',
@@ -116,22 +116,21 @@ class App1 extends React.Component {
   }
 
   addAudio(event) {
+    console.log('on change')
     this.audio.src = URL.createObjectURL(this.file.files[0]);
-    this.audio.play();
+    this.setState({isMute:false})
   }
 
   onToggleMute() {
+    if (this.state.isMute) this.audio.play();
+    else this.audio.pause();
     this.setState({isMute:!this.state.isMute})
-    this.audio.muted = !this.state.isMute
-    if (!this.audio.muted) this.audio.play();
   }
 
   onResize(event) {
     if (!this.props.isCurApp) return
     this.kill();
     this.start();
-    if (!this.audio.muted) this.audio.play();
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -141,7 +140,7 @@ class App1 extends React.Component {
         this.kill();
     } else if (!this.props.isCurApp && nextProps.isCurApp) {
         this.start();
-        if (!this.audio.muted) this.audio.play();
+        if (!this.state.isMute) this.audio.play();
     }
   }
 
@@ -164,7 +163,6 @@ class App1 extends React.Component {
     if (!this.audioInitialized) {
       this.file = this.refs.audiofile;
       this.audio = this.refs.audio;
-      this.audio.muted = this.state.isMute
 
       let scope = this;
 
@@ -173,8 +171,12 @@ class App1 extends React.Component {
         // console.log(scope.recording)
       });*/
 
-      this.audio.addEventListener("loadeddata", () => {
+      this.audio.addEventListener("loadeddata", (e) => {
+        
         scope.setState({audioLoaded:true})
+        console.log('loadeddata mute '+scope.state.isMute)
+        console.log('loadeddata curApp '+scope.props.isCurApp)
+        console.log('loadeddata play?',(!scope.state.isMute && scope.props.isCurApp))
         if (!scope.state.isMute && scope.props.isCurApp) scope.audio.play()
       });
 
@@ -194,9 +196,10 @@ class App1 extends React.Component {
 
       this.audioInitialized = true;
 
-    }
+    } 
 
     try {
+      if (!this.state.isMute) this.audio.play();
       this.audio.loop = this.loop;
     } catch (e) {
 
@@ -454,14 +457,16 @@ class App1 extends React.Component {
   		<div ref='root' style={this.style.fullpage} >
   		  {/*<RaisedButton style={this.style.play} label='pause/play' onTouchTap={this.toggle}/>*/}
         
-        {/*<RaisedButton style={this.style.choose} label='load music' labelPosition="before" containerElement='label'>
-          <input ref='audiofile' onChange={this.addAudio} type="file" style={this.style.input}/>
-        </RaisedButton>*/}
         <audio ref="audio"></audio>
-        <Paper style={this.style.mute} >
-        <IconButton onTouchTap={this.onToggleMute}>
-              {icon}
-        </IconButton>
+        <Paper style={this.style.controls} zDepth={2}>
+          
+          <FlatButton onTouchTap={this.onToggleMute} style={theme.toolButton}>
+            {icon}<span/>
+          </FlatButton>
+          <FlatButton style={theme.toolButton}>
+            <FileUpload color={theme.icon.color}  />
+            <input ref='audiofile' onChange={this.addAudio} type="file" style={this.style.input}/>
+          </FlatButton>
         </Paper>
   		</div>
   	)

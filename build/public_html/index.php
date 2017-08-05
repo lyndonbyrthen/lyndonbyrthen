@@ -57,7 +57,7 @@
 	if (preg_match('/stage/',$_SERVER['HTTP_HOST'])) {
 		define('ENVIRONMENT', 'stage');
 	} else if (preg_match('/local/',$_SERVER['HTTP_HOST'])) {
-		define('ENVIRONMENT', 'local');
+		define('ENVIRONMENT', 'development');
 	}else {
 		define('ENVIRONMENT', 'production');
 }

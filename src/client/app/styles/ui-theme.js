@@ -41,6 +41,11 @@ export default {
 
     "cardFont": {
         "fontSize":"16px"
-    }
+    },
+
+    "toolButton": {
+        "minWidth":'42px',
+        "minHeight":'42px',
+    },
 
 };
