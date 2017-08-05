@@ -53,8 +53,8 @@ class MainMenu extends React.Component {
                   applist.map((item,idx)=>{
 
                   return (
-                    <Link style={theme.link} onClick={this.props.onTap} key={item.delta} to={ item.delta===0? '/' : '/'+item.id}>
-                      <MenuItem primaryText={item.id} key={item.id} disabled={this.props.curApp.id===item.id}>
+                    <Link style={theme.link} onClick={this.props.onTap} key={item.delta} to={ item.delta==0 ? '/' : '/'+item.id}>
+                      <MenuItem primaryText={item.name} key={item.id} disabled={this.props.curApp.id===item.id}>
                       </MenuItem>
                     </Link>
                   )
@@ -68,7 +68,7 @@ class MainMenu extends React.Component {
 
                   return (
                     <Link style={theme.link} onClick={this.props.onTap} key={item.delta} to={ item.delta===0? '/' : '/'+item.id}>
-                      <MenuItem primaryText={item.id} key={item.id} disabled={this.props.curApp.id===item.id}>
+                      <MenuItem primaryText={item.name} key={item.id} disabled={this.props.curApp.id===item.id}>
                       </MenuItem>
                     </Link>
                   )

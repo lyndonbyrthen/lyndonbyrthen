@@ -46,7 +46,7 @@ class AppLoader extends React.Component {
     this.onMenuOpen = this.onMenuOpen.bind(this);
     this.onInfoOpen = this.onInfoOpen.bind(this);
 
-    let curApp = window.appid? appDataMap[appid] : appDataArr[0];
+    let curApp = window.appid ? appDataMap[window.appid.toLowerCase()] : appDataArr[0];
 
     if (!curApp) curApp = {id:'404'}
 
@@ -188,6 +188,7 @@ class RouteToState extends React.Component {
     let id = this.props.match.params.id;
     console.log('route to state',id);
     if (!id) id = appDataArr[0].id;
+    id = id.toLowerCase();
 
     let curApp = appDataMap[id]
 

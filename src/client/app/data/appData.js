@@ -53,27 +53,6 @@ let apps = [
      loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer.js"),
    },
 
-   /*{ 
-   	 name: 'App1',
-   	 id: 'App1',
-   	 description: '',
-     loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/App1.js"),
-   },
-
-   { 
-   	 name: 'App2',
-   	 id: 'App2',
-   	 description: '',
-     loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/App2.js"),
-   },
-
-   { 
-   	 name: 'App3',
-   	 id: 'App3',
-   	 description: '',
-     loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/App3.js"),
-   },*/
-
    { 
    	 name: 'About',
    	 id: 'About',
@@ -86,6 +65,7 @@ let apps = [
 let map={}, arr=[]
 
 for (let i in apps) {
+  apps[i].id = apps[i].id.toLowerCase()
   apps[i].delta = i
   map[apps[i].id] = apps[i]
   arr.push(apps[i])
