@@ -42,8 +42,13 @@ class App1 extends React.Component {
     this.addAudio = this.addAudio.bind(this);
   	this.engine = this.engine.bind(this);
     this.update = this.update.bind(this);
+    this.auditBodies = this.auditBodies.bind(this);
+
     this.loadjson = this.loadjson.bind(this);
     this.onResize = debounce(this.onResize.bind(this),200);
+
+    this.bouncers = [];
+
 
     this.loadjson();
 
@@ -60,6 +65,7 @@ class App1 extends React.Component {
     this.refreshTime = 30
 
     this.ballFillStyle = 'rgba(0,0,0,.15)'
+    this.ballFillStyle2 = 'rgba(0,0,0,.25)'
     this.barFillStyle = 'rgba(0,0,0,0)'
 
     this.state = {isMute:true}
@@ -167,6 +173,10 @@ class App1 extends React.Component {
         // console.log(scope.recording)
       });*/
 
+      this.audio.addEventListener("loadeddata", () => {
+        if (scope.state.isMute && scope.props.isCurApp) scope.audio.play()
+      });
+
       this.audio.src = '/assets/Actraiser.mp3'
       this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 
@@ -198,6 +208,7 @@ class App1 extends React.Component {
     this.en = this.engine();
 
     this.updateInterval = setInterval(this.update,this.refreshTime);
+    this.auditInterval = setInterval(this.auditBodies,2000);
 
   }
 
@@ -206,6 +217,8 @@ class App1 extends React.Component {
     this.audio.pause();
     this.en.pause();
     clearInterval(this.updateInterval);
+    clearInterval(this.auditInterval);
+
     
   }
 
@@ -214,6 +227,8 @@ class App1 extends React.Component {
     this.audio.loop = this.loop;
     this.en.resume();
     this.updateInterval = setInterval(this.update,this.refreshTime);
+    this.auditInterval = setInterval(this.auditBodies,2000);
+
   }
 
   kill() {
@@ -221,8 +236,19 @@ class App1 extends React.Component {
     this.en.kill();
     this.audio.pause();
     clearInterval(this.updateInterval);
-    
+    clearInterval(this.auditInterval);
     // this.audioCtx.close();
+  }
+
+  auditBodies() {
+    for (let i in this.bouncers) {
+      let b = this.bouncers[i];
+      
+      if (b.position.x < 0 || b.position.x > window.innerWidth
+        || b.position.y < 0 || b.position.y > window.innerHeight) {
+        Body.set(b,{position:{x:70,y:10}});
+      }
+    }
   }
 
   update() {
@@ -305,18 +331,23 @@ class App1 extends React.Component {
     let runner = Runner.create();
     Runner.run(runner, engine);
 
-    let stack = Composites.pyramid(35, 0, 33, 3, 0, 0, function(x, y) {
+    let rowCount = 33 * window.innerWidth/1000;
+
+    let pyramid = Composites.pyramid(35, 0, rowCount, 3, 0, 0, function(x, y) {
         return Bodies.circle(x, y, Common.random(5, 18), { 
-          friction:0, frictionAir:0, restitution:1, density: .00002,
+          restitution:1,
+          friction: 0,
           render : {
             fillStyle : scope.ballFillStyle
           }
         });
     });
 
-    this.balls = Composite.allBodies(stack);
-    
-    World.add(world, stack);
+    this.bouncers = Composite.allBodies(pyramid);
+
+    World.add(world, this.bouncers);
+
+    this.auditBodies();
 
     this.bars = [];
 
@@ -381,6 +412,11 @@ class App1 extends React.Component {
             var pair = pairs[i];
             if (pair.bodyB.label == 'bwall') {
               Body.set(pair.bodyA,{position:{x:Common.random(55, window.innerWidth-55),y:20}})
+              if (pair.bodyA.render.fillStyle == this.ballFillStyle) {
+                pair.bodyA.render.fillStyle = this.ballFillStyle2
+              } else {
+                pair.bodyA.render.fillStyle = this.ballFillStyle
+              }
             }
         }
     }
@@ -413,7 +449,7 @@ class App1 extends React.Component {
             Events.off(engine, 'collisionStart', onCollisionStart);
             Render.stop(render);
             Runner.stop(runner);
-            World.clear(engine.world);
+            World.clear(engine.world,false,true);
             Engine.clear(engine);
             render.canvas.remove();
         }

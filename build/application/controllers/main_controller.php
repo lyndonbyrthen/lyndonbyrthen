@@ -10,9 +10,7 @@ class Main_Controller extends CI_Controller {
 		$this->load->view('templates/header', $data);
 		$this->load->view('templates/body', $data);
 		$this->load->view('templates/footer', $data);
-
 	}
-
-}
+} 
 
 ?>
