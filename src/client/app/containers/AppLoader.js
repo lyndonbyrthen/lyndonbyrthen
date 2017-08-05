@@ -18,13 +18,11 @@ import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import Dialog from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
+import FlatButton from 'material-ui/FlatButton';
 
 import InfoOutline from 'material-ui/svg-icons/action/info-outline';
 import HighlightOff from 'material-ui/svg-icons/action/Highlight-off';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-
-
-
 
 import {
   BrowserRouter as Router,
@@ -33,33 +31,12 @@ import {
 } from 'react-router-dom'
 
 import AppContainer from './AppContainer'
+import {appDataArr, appDataMap} from '../data/appData'
+import MainMenu from '../components/MainMenu'
+import MainToolBar from '../components/MainToolBar'
+
 
 injectTapEventPlugin();
-
-const chunks = {
-   'AudioVisualizer': require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer.js"),
-   'App1': require("bundle-loader?lazy&name=[name]!../subapps/App1.js"),
-   'App2': require("bundle-loader?lazy&name=[name]!../subapps/App2.js"),
-   'App3': require("bundle-loader?lazy&name=[name]!../subapps/App3.js"),
-
-}
-
-const appDataArr = []
-const appDataMap = {};
-
-let d=0
-
-for (let c in chunks) {
-  let i = {
-    loadfunc:chunks[c],
-    id:c,
-    delta:d
-  }
-
-  appDataMap[c] = i;
-  d++
-  appDataArr.push(i)
-}
 
 class AppLoader extends React.Component {
 
@@ -70,6 +47,8 @@ class AppLoader extends React.Component {
     this.onInfoOpen = this.onInfoOpen.bind(this);
 
     let curApp = window.appid? appDataMap[appid] : appDataArr[0];
+
+    if (!curApp) curApp = {id:'404'}
 
     this.state = {curApp:curApp,
                   menuOpen:false,
@@ -107,6 +86,16 @@ class AppLoader extends React.Component {
 
     let scope = this;
 
+    const actions = [
+      <Link style={theme.link} to='/'>
+
+      <RaisedButton
+        label="OK"
+        primary={true}
+      />
+      </Link>
+    ];
+
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme(theme)}>
         <Router>
@@ -116,6 +105,23 @@ class AppLoader extends React.Component {
               return <RouteToState key={props.match.params.id} scope={scope} {...props} />
             }}/>
 
+
+            <Dialog
+              title="404 Page not found"
+              // overlayStyle={{backgroundColor:'transparent'}}
+              // bodyStyle={{backgroundColor:'transparent'}}
+              style={{backgroundColor:'transparent'}}
+              actions={actions}
+              paperProps={{zDepth:2}}
+              modal={false}
+              open={this.state.curApp.id==='404'}
+              onRequestClose={()=>{}}
+              >
+
+              Go to home page?
+              
+            </Dialog>
+
             <div style={style.fullpage}>
             {
               appDataArr.map((item, idx)=>(
@@ -124,44 +130,12 @@ class AppLoader extends React.Component {
             }
             </div>
 
-            <Drawer 
-              overlayStyle={{backgroundColor:'transparent'}}
-              bodyStyle={{backgroundColor:'transparent'}}
-              style={{backgroundColor:'transparent'}}
-              onRequestChange={(open) => this.setState({menuOpen:open})}
-              docked={false} width={200} open={this.state.menuOpen} >
-              <Menu onItemTouchTap={this.onTap}>
-                 <IconButton 
-                   style={{
-                    position:'absolute',
-                    right: 0
-                   }}
-                   onTouchTap={() => this.setState({menuOpen:false})}
-                 
-                 >
-                   <HighlightOff color={theme.icon.color}/>
-                 </IconButton>
-                <Subheader>Apps</Subheader>
-                {appDataArr.map(item=>{
-                  
-                  return (
-                    <Link style={style.link} onClick={this.onTap} key={item.delta} to={ item.delta===0? '/' : '/'+item.id}>
-                      <MenuItem primaryText={item.id} key={item.id} disabled={this.state.curApp.id===item.id}>
-                      </MenuItem>
-                    </Link>
-                  )
-
-                })}
-
-                <Divider />
-
-              </Menu>
-            </Drawer>
+            <MainMenu parent={scope} appDataArr={appDataArr} curApp={this.state.curApp} onTap={this.onTap} menuOpen={this.state.menuOpen} />
 
             <Dialog
               title={
                 <div>
-                <span>{this.state.curApp.id}</span>
+                <span>{this.state.curApp.name}</span>
                   <IconButton 
                   style={{
                     position:'absolute',
@@ -186,23 +160,18 @@ class AppLoader extends React.Component {
               onRequestClose={()=>{this.setState({infoOpen:false})}}
               >
               
-              {JSON.stringify(this.state.curApp)}
+              {this.state.curApp.description}
             </Dialog>
 
-            <Paper
-             style={{backgroundColor:'rgba(225,225,225,.5)',
-                     position:'fixed',
-                     width:'auto'}}
-             zDepth={2}
-            >
-              <IconButton onTouchTap={this.onMenuOpen}>
-                <NavigationMenu color={theme.icon.color} />
-              </IconButton>
+            <MainToolBar parent={scope} 
+              appDataArr={appDataArr} 
+              curApp={this.state.curApp} 
+              onMenuOpen={this.onMenuOpen}
+              onInfoOpen={this.onInfoOpen} 
+            />
 
-              <IconButton onTouchTap={this.onInfoOpen}>
-                <InfoOutline color={theme.icon.color} />
-              </IconButton>
-            </Paper>
+
+            
 
           </div>
         </Router>
@@ -219,7 +188,12 @@ class RouteToState extends React.Component {
     let id = this.props.match.params.id;
     console.log('route to state',id);
     if (!id) id = appDataArr[0].id;
-    this.props.scope.setState({curApp:appDataMap[id]})
+
+    let curApp = appDataMap[id]
+
+    if (!curApp) curApp = {id:'404'}
+
+    this.props.scope.setState({curApp:curApp})
   }
 
   render() {

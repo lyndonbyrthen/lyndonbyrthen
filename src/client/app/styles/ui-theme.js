@@ -10,4 +10,8 @@ export default {
         "color": "grey",
     },
 
+    "link": {
+      "textDecoration":"none",
+    }
+
 };
