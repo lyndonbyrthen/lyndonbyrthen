@@ -14,11 +14,33 @@ export default {
       "textDecoration":"none",
     },
 
+    "fullpage": {
+      "width":"100%",
+      "height":"100%",
+      "position": "absolute",
+      "top": 0,
+      "left": 0
+    },
+
     "aboutRoot": {
-    	"maxWidth":"500px",
+    	"maxWidth":"600px",
     	"position":"relative",
-    	"margin":"20px auto 20px auto",
-    	"fontSize":"16px"
+    	"margin":"50px auto 20px auto",
+    },
+
+    "inlineButton": {
+        "minWidth":"0",
+        "padding":"0px 9px"
+    },
+
+    "CardHeader": {
+        "titleStyle":{
+            "fontSize":"28px"
+        }
+    },
+
+    "cardFont": {
+        "fontSize":"16px"
     }
 
 };

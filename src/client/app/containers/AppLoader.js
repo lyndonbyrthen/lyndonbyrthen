@@ -85,10 +85,10 @@ class AppLoader extends React.Component {
     // console.log('render AppLoader',appDataArr)
 
     let scope = this;
+    let infoState = (this.state.infoOpen && this.state.curApp.description !== '');
 
     const actions = [
       <Link style={theme.link} to='/'>
-
       <RaisedButton
         label="OK"
         primary={true}
@@ -122,7 +122,7 @@ class AppLoader extends React.Component {
               
             </Dialog>
 
-            <div style={style.fullpage}>
+            <div style={theme.fullpage}>
             {
               appDataArr.map((item, idx)=>(
                 <AppContainer curApp={this.state.curApp} appData={item} key={item.id} isCurApp={this.state.curApp.id===item.id} />
@@ -156,7 +156,7 @@ class AppLoader extends React.Component {
               // actions={actions}
               paperProps={{zDepth:2}}
               modal={false}
-              open={this.state.infoOpen}
+              open={infoState}
               onRequestClose={()=>{this.setState({infoOpen:false})}}
               >
               
@@ -200,19 +200,5 @@ class RouteToState extends React.Component {
     return <span/>
   }
 }
-
-const style = {
-    fullpage: {
-      width:'100%',
-      height:'100%',
-      position: 'fixed',
-      top: 0,
-      left: 0
-    },
-    link: {
-      textDecoration:'none'
-    }
-}
-
 
 export default AppLoader

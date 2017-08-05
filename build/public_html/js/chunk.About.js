@@ -1,4 +1,4 @@
-webpackJsonp([0],{
+webpackJsonp([1],{
 
 /***/ 471:
 /***/ (function(module, exports, __webpack_require__) {
@@ -16,51 +16,53 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _uiTheme = __webpack_require__(81);
+var _uiTheme = __webpack_require__(117);
 
 var _uiTheme2 = _interopRequireDefault(_uiTheme);
 
 var _Card = __webpack_require__(477);
 
-var _RaisedButton = __webpack_require__(82);
+var _RaisedButton = __webpack_require__(118);
 
 var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
-var _Drawer = __webpack_require__(84);
+var _Drawer = __webpack_require__(120);
 
 var _Drawer2 = _interopRequireDefault(_Drawer);
 
-var _Menu = __webpack_require__(85);
+var _Menu = __webpack_require__(122);
 
 var _Menu2 = _interopRequireDefault(_Menu);
 
-var _MenuItem = __webpack_require__(65);
+var _MenuItem = __webpack_require__(78);
 
 var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
-var _IconButton = __webpack_require__(63);
+var _IconButton = __webpack_require__(79);
 
 var _IconButton2 = _interopRequireDefault(_IconButton);
 
-var _Subheader = __webpack_require__(64);
+var _Subheader = __webpack_require__(77);
 
 var _Subheader2 = _interopRequireDefault(_Subheader);
 
-var _Divider = __webpack_require__(86);
+var _Divider = __webpack_require__(123);
 
 var _Divider2 = _interopRequireDefault(_Divider);
 
-var _Dialog = __webpack_require__(87);
+var _Dialog = __webpack_require__(124);
 
 var _Dialog2 = _interopRequireDefault(_Dialog);
 
-var _Paper = __webpack_require__(29);
+var _Paper = __webpack_require__(33);
 
 var _Paper2 = _interopRequireDefault(_Paper);
 
-var _FlatButton = __webpack_require__(199);
+var _FlatButton = __webpack_require__(430);
 
 var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+var _reactRouterDom = __webpack_require__(194);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -89,15 +91,43 @@ var About = function (_React$Component) {
         _react2.default.createElement(
           _Card.Card,
           null,
-          _react2.default.createElement(_Card.CardTitle, { title: 'Thanks for dropping by!' }),
+          _react2.default.createElement(_Card.CardHeader, { title: 'Lyndon Byrthen' }),
           _react2.default.createElement(
             _Card.CardText,
-            null,
-            'I am a software engineer in trade and many other things in life. I studied Fine Arts(Sculpture) for undergrad and then later received my Master\'s in Computer Science.',
+            { style: _uiTheme2.default.cardFont },
+            'I am a software engineer and a few other things in life. Just so you have a vague idea, I have a Bachelor\'s in Fine Arts (Sculpture) and a Master\'s in Computer Science.',
+            _react2.default.createElement('p', null),
+            'I am reachable via email, LyndonByrthen@gmail.com.'
+          ),
+          _react2.default.createElement(_Card.CardHeader, { title: 'This site' }),
+          _react2.default.createElement(
+            _Card.CardText,
+            { style: _uiTheme2.default.cardFont },
+            'I built this site on React with a PHP backend. The main building blocks also include Router and Greensock. Other tools used are more individual to each app, so they are mentioned in each app\'s own info section.',
+            _react2.default.createElement('p', null),
+            'This site demonstrates:',
             _react2.default.createElement('br', null),
-            'I am reachable via email, LyndonByrthen@gmail.com.',
+            '- With Router, it is possible to do animated transitions of components without unmounting them.',
             _react2.default.createElement('br', null),
-            'Also, I just renovated my site more contents are on the way.'
+            '- A single page app can be optimized to load only the requested features on demand.',
+            _react2.default.createElement('br', null),
+            '- Server side rendering with PHP. (in progress)',
+            _react2.default.createElement('br', null),
+            '- Using Redux to persist app states. (in progress)',
+            _react2.default.createElement('p', null),
+            'This is an on going project and more contents are on the way.',
+            _react2.default.createElement('p', null),
+            'The',
+            _react2.default.createElement(
+              _reactRouterDom.Link,
+              { style: _uiTheme2.default.link, to: 'https://github.com/lyndonbyrthen/lyndonbyrthen', target: '_blank' },
+              _react2.default.createElement(
+                _FlatButton2.default,
+                { primary: true, style: _uiTheme2.default.inlineButton },
+                'source code'
+              )
+            ),
+            'can be found on GitHub.'
           )
         )
       );
@@ -129,7 +159,7 @@ var _classCallCheck2 = __webpack_require__(5);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(6);
+var _createClass2 = __webpack_require__(7);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -161,7 +191,7 @@ var _keyboardArrowDown = __webpack_require__(480);
 
 var _keyboardArrowDown2 = _interopRequireDefault(_keyboardArrowDown);
 
-var _IconButton = __webpack_require__(63);
+var _IconButton = __webpack_require__(79);
 
 var _IconButton2 = _interopRequireDefault(_IconButton);
 
@@ -288,11 +318,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends2 = __webpack_require__(14);
+var _extends2 = __webpack_require__(15);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _objectWithoutProperties2 = __webpack_require__(12);
+var _objectWithoutProperties2 = __webpack_require__(13);
 
 var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
@@ -304,7 +334,7 @@ var _classCallCheck2 = __webpack_require__(5);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(6);
+var _createClass2 = __webpack_require__(7);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -328,7 +358,7 @@ var _propTypes = __webpack_require__(2);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Paper = __webpack_require__(29);
+var _Paper = __webpack_require__(33);
 
 var _Paper2 = _interopRequireDefault(_Paper);
 
@@ -519,11 +549,11 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _pure = __webpack_require__(40);
+var _pure = __webpack_require__(53);
 
 var _pure2 = _interopRequireDefault(_pure);
 
-var _SvgIcon = __webpack_require__(41);
+var _SvgIcon = __webpack_require__(54);
 
 var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
 
@@ -558,11 +588,11 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _pure = __webpack_require__(40);
+var _pure = __webpack_require__(53);
 
 var _pure2 = _interopRequireDefault(_pure);
 
-var _SvgIcon = __webpack_require__(41);
+var _SvgIcon = __webpack_require__(54);
 
 var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
 
@@ -593,11 +623,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends2 = __webpack_require__(14);
+var _extends2 = __webpack_require__(15);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _objectWithoutProperties2 = __webpack_require__(12);
+var _objectWithoutProperties2 = __webpack_require__(13);
 
 var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
@@ -609,7 +639,7 @@ var _classCallCheck2 = __webpack_require__(5);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(6);
+var _createClass2 = __webpack_require__(7);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -852,11 +882,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends2 = __webpack_require__(14);
+var _extends2 = __webpack_require__(15);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _objectWithoutProperties2 = __webpack_require__(12);
+var _objectWithoutProperties2 = __webpack_require__(13);
 
 var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
@@ -868,7 +898,7 @@ var _classCallCheck2 = __webpack_require__(5);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(6);
+var _createClass2 = __webpack_require__(7);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -1030,11 +1060,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends2 = __webpack_require__(14);
+var _extends2 = __webpack_require__(15);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _objectWithoutProperties2 = __webpack_require__(12);
+var _objectWithoutProperties2 = __webpack_require__(13);
 
 var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
@@ -1046,7 +1076,7 @@ var _classCallCheck2 = __webpack_require__(5);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(6);
+var _createClass2 = __webpack_require__(7);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -1216,11 +1246,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends2 = __webpack_require__(14);
+var _extends2 = __webpack_require__(15);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _objectWithoutProperties2 = __webpack_require__(12);
+var _objectWithoutProperties2 = __webpack_require__(13);
 
 var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
@@ -1232,7 +1262,7 @@ var _classCallCheck2 = __webpack_require__(5);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(6);
+var _createClass2 = __webpack_require__(7);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -1433,11 +1463,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends2 = __webpack_require__(14);
+var _extends2 = __webpack_require__(15);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _objectWithoutProperties2 = __webpack_require__(12);
+var _objectWithoutProperties2 = __webpack_require__(13);
 
 var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
@@ -1449,7 +1479,7 @@ var _classCallCheck2 = __webpack_require__(5);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(6);
+var _createClass2 = __webpack_require__(7);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -1562,11 +1592,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends2 = __webpack_require__(14);
+var _extends2 = __webpack_require__(15);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
-var _objectWithoutProperties2 = __webpack_require__(12);
+var _objectWithoutProperties2 = __webpack_require__(13);
 
 var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
@@ -1578,7 +1608,7 @@ var _classCallCheck2 = __webpack_require__(5);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(6);
+var _createClass2 = __webpack_require__(7);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 

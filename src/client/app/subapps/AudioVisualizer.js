@@ -164,7 +164,7 @@ class App1 extends React.Component {
     if (!this.audioInitialized) {
       this.file = this.refs.audiofile;
       this.audio = this.refs.audio;
-      // this.audio.muted = this.state.isMute
+      this.audio.muted = this.state.isMute
 
       let scope = this;
 

@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import LinearProgress from 'material-ui/LinearProgress'
+import { default as theme} from '../styles/ui-theme'
+
 import TweenMax from '../libs/gasp/TweenMax.min'
 import debounce from 'debounce'
 
@@ -31,12 +33,14 @@ class AppContainer extends React.Component {
 
   transIn(dir='up') {
     // console.log(this.props.appData.name,'transin')
+    this.refs.page.style.position = 'fixed';
     let y = dir==='up' ? window.innerHeight : -window.innerHeight;
-    TweenMax.fromTo(this.refs.page, this.transTime, {y:y}, {y:0});
+    TweenMax.fromTo(this.refs.page, this.transTime, {y:y}, {y:0, onComplete:()=>{this.refs.page.style.position = 'absolute'}});
   }
 
   transOut(dir='up') {
     // console.log(this.props.appData.name,'transout')
+    this.refs.page.style.position = 'fixed';
     let y = dir==='up' ? -window.innerHeight : window.innerHeight;
     TweenMax.fromTo(this.refs.page, this.transTime, {y:0}, {y:y,onComplete:this.offView});
   }
@@ -108,7 +112,7 @@ class AppContainer extends React.Component {
     if (this.state.component) content = (<this.state.component {...this.props} />)
     else content = (<LinearProgress/>)
     return (
-      <div ref='page' style={this.style.fullpage}>
+      <div ref='page' style={theme.fullpage}>
           {content}
       </div>
     )
