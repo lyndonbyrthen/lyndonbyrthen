@@ -14,6 +14,8 @@ import FileUpload from 'material-ui/svg-icons/file/file-upload';
 import { default as theme} from '../styles/ui-theme'
 import Paper from 'material-ui/Paper';
 
+import ToolBarButton from '../components/ToolBarButton'
+
 
 import 'whatwg-fetch';
 
@@ -459,14 +461,16 @@ class App1 extends React.Component {
         
         <audio ref="audio"></audio>
         <Paper style={this.style.controls} zDepth={2}>
+
+          <ToolBarButton onTouchTap={this.onToggleMute}>
+            {icon}
+          </ToolBarButton>
+        
+          <ToolBarButton>
+            <FileUpload/>
+            <input ref='audiofile' onChange={this.addAudio} type="file" />
+          </ToolBarButton>
           
-          <FlatButton onTouchTap={this.onToggleMute} style={theme.toolButton}>
-            {icon}<span/>
-          </FlatButton>
-          <FlatButton style={theme.toolButton}>
-            <FileUpload color={theme.icon.color}  />
-            <input ref='audiofile' onChange={this.addAudio} type="file" style={this.style.input}/>
-          </FlatButton>
         </Paper>
   		</div>
   	)

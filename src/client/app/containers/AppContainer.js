@@ -109,6 +109,8 @@ class AppContainer extends React.Component {
 
     let content
 
+    // console.log('this.state.component',this.state.component)
+
     if (this.state.component) content = (<this.state.component {...this.props} />)
     else content = (<LinearProgress/>)
     return (

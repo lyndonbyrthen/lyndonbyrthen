@@ -17,37 +17,34 @@ import Paper from 'material-ui/Paper';
 import InfoOutline from 'material-ui/svg-icons/action/info-outline';
 import HighlightOff from 'material-ui/svg-icons/action/Highlight-off';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-import ToolBarButton from '../components/ToolBarButton'
 
 
-class MainToolBar extends React.Component {
+class ToolBarButton extends React.Component {
 
   render() {
+      console.log(this.props.children)
+      let children = React.Children.map(this.props.children,
+       (child) => {
 
-    let infoButton = (
-      <ToolBarButton onTouchTap={this.props.onInfoOpen}>
-        <InfoOutline/>
-      </ToolBarButton>
-    )
+        if (!child.type) return child
 
-    let info = this.props.curApp.description ? infoButton : null;
+        let props = {...child.props}
 
+        if (child.type == 'input') {
+          props = {...props, style:theme.hiddenInput}
+        } else if (child.type.muiName && child.type.muiName == 'SvgIcon') {
+          props = {...props, color:theme.icon.color}
+        } else return child
+
+         return React.cloneElement(child, props)
+      });
+    
   	return (
-  		<Paper
-       style={{position:'fixed',
-       width:'auto'}}
-       zDepth={2}
-       >
-       
-       <ToolBarButton onTouchTap={this.props.onMenuOpen}>
-        <NavigationMenu/>
-       </ToolBarButton>
-
-       {info}
-       
-     </Paper>
+  		<FlatButton {...this.props} style={theme.toolBarButton} >
+          {children}
+      </FlatButton>
     )
   }
 }
 
-export default MainToolBar
+export default ToolBarButton
