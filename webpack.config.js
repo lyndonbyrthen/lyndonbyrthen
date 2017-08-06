@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
-// const HTMLWebpackPlugin = require('html-webpack-plugin');
+//const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const build_dir = path.resolve(__dirname, 'build/public_html');
@@ -26,6 +27,7 @@ var config = {
     new webpack.optimize.CommonsChunkPlugin({
        name: 'index' // Specify the common bundle's name.
     }),
+    // new HtmlWebpackPlugin(),
     /*
     new webpack.DefinePlugin({
       'process.env': {

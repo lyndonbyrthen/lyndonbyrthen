@@ -22,7 +22,7 @@ import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 class ToolBarButton extends React.Component {
 
   render() {
-      console.log(this.props.children)
+      // console.log(this.props.children)
       let children = React.Children.map(this.props.children,
        (child) => {
 
@@ -41,7 +41,7 @@ class ToolBarButton extends React.Component {
     
   	return (
   		<FlatButton {...this.props} style={theme.toolBarButton} >
-          {children}
+          {children}<span/>
       </FlatButton>
     )
   }

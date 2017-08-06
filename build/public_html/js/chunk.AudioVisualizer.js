@@ -1,6 +1,6 @@
 webpackJsonp([1],{
 
-/***/ 470:
+/***/ 471:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20,7 +20,7 @@ var _propTypes = __webpack_require__(2);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _matter = __webpack_require__(473);
+var _matter = __webpack_require__(474);
 
 var _matter2 = _interopRequireDefault(_matter);
 
@@ -28,43 +28,43 @@ var _debounce = __webpack_require__(200);
 
 var _debounce2 = _interopRequireDefault(_debounce);
 
-var _RaisedButton = __webpack_require__(67);
+var _RaisedButton = __webpack_require__(59);
 
 var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
-var _IconButton = __webpack_require__(55);
+var _IconButton = __webpack_require__(42);
 
 var _IconButton2 = _interopRequireDefault(_IconButton);
 
-var _FlatButton = __webpack_require__(90);
+var _FlatButton = __webpack_require__(75);
 
 var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
-var _volumeOff = __webpack_require__(474);
+var _volumeOff = __webpack_require__(475);
 
 var _volumeOff2 = _interopRequireDefault(_volumeOff);
 
-var _volumeMute = __webpack_require__(475);
+var _volumeMute = __webpack_require__(476);
 
 var _volumeMute2 = _interopRequireDefault(_volumeMute);
 
-var _volumeUp = __webpack_require__(476);
+var _volumeUp = __webpack_require__(477);
 
 var _volumeUp2 = _interopRequireDefault(_volumeUp);
 
-var _fileUpload = __webpack_require__(477);
+var _fileUpload = __webpack_require__(478);
 
 var _fileUpload2 = _interopRequireDefault(_fileUpload);
 
-var _uiTheme = __webpack_require__(56);
+var _uiTheme = __webpack_require__(43);
 
 var _uiTheme2 = _interopRequireDefault(_uiTheme);
 
-var _Paper = __webpack_require__(28);
+var _Paper = __webpack_require__(25);
 
 var _Paper2 = _interopRequireDefault(_Paper);
 
-var _ToolBarButton = __webpack_require__(478);
+var _ToolBarButton = __webpack_require__(201);
 
 var _ToolBarButton2 = _interopRequireDefault(_ToolBarButton);
 
@@ -93,13 +93,13 @@ var Engine = _matter2.default.Engine,
     Vertices = _matter2.default.Vertices,
     Events = _matter2.default.Events;
 
-var App1 = function (_React$Component) {
-    _inherits(App1, _React$Component);
+var AudioVisualizer = function (_React$Component) {
+    _inherits(AudioVisualizer, _React$Component);
 
-    function App1(props) {
-        _classCallCheck(this, App1);
+    function AudioVisualizer(props) {
+        _classCallCheck(this, AudioVisualizer);
 
-        var _this = _possibleConstructorReturn(this, (App1.__proto__ || Object.getPrototypeOf(App1)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (AudioVisualizer.__proto__ || Object.getPrototypeOf(AudioVisualizer)).call(this, props));
 
         _this.start = _this.start.bind(_this);
         _this.kill = _this.kill.bind(_this);
@@ -167,11 +167,12 @@ var App1 = function (_React$Component) {
         return _this;
     }
 
-    _createClass(App1, [{
+    _createClass(AudioVisualizer, [{
         key: 'loadjson',
         value: function loadjson() {
             var scope = this;
-            fetch('/assets/recording.json').then(function (response) {
+
+            fetch('./assets/recording.json').then(function (response) {
                 return response.json();
             }).then(function (json) {
                 // console.log(json)
@@ -245,8 +246,6 @@ var App1 = function (_React$Component) {
                 this.audio.addEventListener("loadeddata", function (e) {
 
                     scope.setState({ audioLoaded: true });
-                    console.log('loadeddata mute ' + scope.state.isMute);
-                    console.log('loadeddata curApp ' + scope.props.isCurApp);
                     console.log('loadeddata play?', !scope.state.isMute && scope.props.isCurApp);
                     if (!scope.state.isMute && scope.props.isCurApp) scope.audio.play();
                 });
@@ -535,14 +534,14 @@ var App1 = function (_React$Component) {
         }
     }]);
 
-    return App1;
+    return AudioVisualizer;
 }(_react2.default.Component);
 
-exports.default = App1;
+exports.default = AudioVisualizer;
 
 /***/ }),
 
-/***/ 473:
+/***/ 474:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10609,7 +10608,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 /***/ }),
 
-/***/ 474:
+/***/ 475:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10648,7 +10647,7 @@ exports.default = AvVolumeOff;
 
 /***/ }),
 
-/***/ 475:
+/***/ 476:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10687,7 +10686,7 @@ exports.default = AvVolumeMute;
 
 /***/ }),
 
-/***/ 476:
+/***/ 477:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10726,7 +10725,7 @@ exports.default = AvVolumeUp;
 
 /***/ }),
 
-/***/ 477:
+/***/ 478:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

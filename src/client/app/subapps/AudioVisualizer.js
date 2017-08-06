@@ -36,7 +36,7 @@ const {
     Events
 } = Matter
 
-class App1 extends React.Component {
+class AudioVisualizer extends React.Component {
   
   constructor(props) {
     super(props);
@@ -109,7 +109,8 @@ class App1 extends React.Component {
 
   loadjson() {
     let scope = this;
-    fetch('/assets/recording.json').then(function(response) {
+
+    fetch('./assets/recording.json').then(function(response) {
       return response.json()
     }).then((json)=>{
       // console.log(json)
@@ -176,8 +177,6 @@ class App1 extends React.Component {
       this.audio.addEventListener("loadeddata", (e) => {
         
         scope.setState({audioLoaded:true})
-        console.log('loadeddata mute '+scope.state.isMute)
-        console.log('loadeddata curApp '+scope.props.isCurApp)
         console.log('loadeddata play?',(!scope.state.isMute && scope.props.isCurApp))
         if (!scope.state.isMute && scope.props.isCurApp) scope.audio.play()
       });
@@ -477,4 +476,4 @@ class App1 extends React.Component {
   }
 }
 
-export default App1;
+export default AudioVisualizer;

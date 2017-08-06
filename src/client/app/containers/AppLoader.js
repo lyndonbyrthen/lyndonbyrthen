@@ -1,6 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import lbapp from '../reducers/lbapp'
+
 import 'whatwg-fetch';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -53,6 +57,9 @@ class AppLoader extends React.Component {
     this.state = {curApp:curApp,
                   menuOpen:false,
                   infoOpen:false};
+
+    this.store = createStore(lbapp);
+
   }
 
   onTap(event,delta) {
@@ -97,6 +104,7 @@ class AppLoader extends React.Component {
     ];
 
 		return (
+      <Provider store={this.store}>
 			<MuiThemeProvider muiTheme={getMuiTheme(theme)}>
         <Router>
           <div>
@@ -176,6 +184,7 @@ class AppLoader extends React.Component {
           </div>
         </Router>
 			</MuiThemeProvider>
+      </Provider>
 		)
 	}
 

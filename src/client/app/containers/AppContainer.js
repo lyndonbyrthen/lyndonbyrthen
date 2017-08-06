@@ -96,10 +96,10 @@ class AppContainer extends React.Component {
     loadfunc(mod=>{
       try {
          this.setState({component:mod.default});
+         scope.props.appData.loaded = true;
        } catch(e) {
-         console.log(e,'setState failed')
+         console.log('AppContainer :: loadComponent() failed',e)
        }
-       scope.props.appData.loaded = true;
     })
   }
 
