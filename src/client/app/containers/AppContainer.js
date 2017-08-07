@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { connect } from 'react-redux'
+
 import LinearProgress from 'material-ui/LinearProgress'
 import { default as theme} from '../styles/ui-theme'
 
@@ -13,11 +15,13 @@ class AppContainer extends React.Component {
 	constructor(props) {
 		super(props);
     this.loadComponent = this.loadComponent.bind(this);
-    // this.onResize = debounce(this.onResize.bind(this),200);
+    this.isCurApp = this.isCurApp.bind(this);
+
     this.offView = this.offView.bind(this)
     this.transOut = this.transOut.bind(this);
     this.transIn = this.transIn.bind(this);
-	  this.state = {isCurApp:props.isCurApp};
+    
+    this.state = {component:null}
 
     this.style = {
       fullpage: {
@@ -29,6 +33,10 @@ class AppContainer extends React.Component {
     }
 
     this.transTime = .5
+  }
+
+  isCurApp() {
+    return this.props.curAppId === this.props.appId
   }
 
   transIn(dir='up') {
@@ -53,50 +61,49 @@ class AppContainer extends React.Component {
   }*/
 
   componentWillReceiveProps(nextProps) {
-    // console.log(this.props.appData.id,nextProps)
-    if (this.props.isCurApp && !nextProps.isCurApp) {
-      let dir = nextProps.curApp.delta > this.props.appData.delta ? 'up' : 'down';
+    // console.log('AppContainer :: nextProps',nextProps)
+    // console.log('AppContainer :: isCurApp',this.isCurApp())
+    
+    if (nextProps.curAppId === '404') return
+    
+    let curDelta = this.props.appsMap[this.props.appId].delta;
+    let nextDelta = this.props.appsMap[this.props.appId].delta;
+
+    //if isCurApp but new curApp is different
+    if (this.isCurApp() && nextProps.curAppId !== this.props.appId) {
+      let dir = nextDelta > curDelta ? 'up' : 'down';
       this.transOut(dir);
-    } else if (!this.props.isCurApp && nextProps.isCurApp) {
-      let dir = this.props.curApp.delta > this.props.appData.delta ? 'down' : 'up';
+    } else if (!this.isCurApp() && nextProps.curAppId === this.props.appId) {
+      let dir = curDelta > nextDelta ? 'down' : 'up';
       this.transIn(dir);
+      this.loadComponent()
     }
     
-    if (nextProps.isCurApp && !this.state.component) {
-      this.loadComponent()
-    } 
   }
 
   componentWillMount() {
-    // window.addEventListener("resize", this.onResize);
-
-    if (!this.props.isCurApp) return
+    if (!this.isCurApp()) return
     this.loadComponent();
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.onResize);
   }
 
   componentDidMount() {
-    // console.log('componentDidUpdate',this.props.appData.name,this.state.isCurApp,this.state.component)
-
-    if (!this.state.isCurApp) TweenMax.to(this.refs.page, 0, {x:0,y:-999999});
+    if (!this.isCurApp()) TweenMax.to(this.refs.page, 0, {x:0,y:-999999});
     else TweenMax.to(this.refs.page, 0, {x:0,y:0});
-
   }
 
   loadComponent() {
 
     if (this.state.component) return
 
-    let loadfunc = this.props.appData.loadfunc
+    let loadfunc = this.props.appsMap[this.props.appId].loadfunc
     let scope = this
 
     loadfunc(mod=>{
       try {
          this.setState({component:mod.default});
-         scope.props.appData.loaded = true;
        } catch(e) {
          console.log('AppContainer :: loadComponent() failed',e)
        }
@@ -111,15 +118,25 @@ class AppContainer extends React.Component {
 
     // console.log('this.state.component',this.state.component)
 
-    if (this.state.component) content = (<this.state.component {...this.props} />)
+    if (this.state.component) content = (<this.state.component isCurApp={this.isCurApp()} />)
     else content = (<LinearProgress/>)
     return (
-      <div ref='page' style={theme.fullpage}>
+      <div ref='page' style={theme.fullpage} >
           {content}
       </div>
     )
     
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    curAppId : state.curAppId,
+    apps: state.apps,
+    appsMap: state.appsMap
+  }
+}
+
+AppContainer = connect(mapStateToProps)(AppContainer)
 
 export default AppContainer;

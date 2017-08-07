@@ -1,9 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import lbapp from '../reducers/lbapp'
+import { connect } from 'react-redux'
+import { setCurApp, setMenuOpen, setInfoOpen } from '../actions'
 
 import 'whatwg-fetch';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -34,11 +33,13 @@ import {
   Link
 } from 'react-router-dom'
 
+import RouteToState from '../tools/RouteToState'
+
 import AppContainer from './AppContainer'
-import {appDataArr, appDataMap} from '../data/appData'
 import MainMenu from '../components/MainMenu'
 import MainToolBar from '../components/MainToolBar'
-
+import InfoDialog from '../components/InfoDialog'
+import Page404Dialog from '../components/Page404Dialog'
 
 injectTapEventPlugin();
 
@@ -46,169 +47,72 @@ class AppLoader extends React.Component {
 
   constructor(props) {
 		super(props);
-    this.onTap = this.onTap.bind(this);
-    this.onMenuOpen = this.onMenuOpen.bind(this);
-    this.onInfoOpen = this.onInfoOpen.bind(this);
-
-    let curApp = window.appid ? appDataMap[window.appid.toLowerCase()] : appDataArr[0];
-
-    if (!curApp) curApp = {id:'404'}
-
-    this.state = {curApp:curApp,
-                  menuOpen:false,
-                  infoOpen:false};
-
-    this.store = createStore(lbapp);
-
-  }
-
-  onTap(event,delta) {
-    event.stopPropagation();
-    this.setState({
-      menuOpen: false
-    });
-    //event.preventDefault();
-    // this.setState({curApp:appDataArr[delta], open:false});
-  }
-
-  onMenuOpen(event) {
-  	event.preventDefault();
-    this.setState({
-      menuOpen: true,
-      infoOpen: false
-    });
-  }
-
-  onInfoOpen(event) {
-    event.preventDefault();
-    this.setState({
-      infoOpen: true,
-      menuOpen: false
-    });
   }
 
 	render() {
 
-    // console.log('render AppLoader',appDataArr)
-
-    let scope = this;
-    let infoState = (this.state.infoOpen && this.state.curApp.description !== '');
-
-    const actions = [
-      <Link style={theme.link} to='/'>
-      <RaisedButton
-        label="OK"
-        primary={true}
-      />
-      </Link>
-    ];
-
 		return (
-      <Provider store={this.store}>
 			<MuiThemeProvider muiTheme={getMuiTheme(theme)}>
         <Router>
           <div>
 
             <Route path="/:id?" render={props=>{
-              return <RouteToState key={props.match.params.id} scope={scope} {...props} />
+              return <RouteToState key={props.match.params.id} {...props} />
             }}/>
-
-
-            <Dialog
-              title="404 Page not found"
-              // overlayStyle={{backgroundColor:'transparent'}}
-              // bodyStyle={{backgroundColor:'transparent'}}
-              style={{backgroundColor:'transparent'}}
-              actions={actions}
-              paperProps={{zDepth:2}}
-              modal={false}
-              open={this.state.curApp.id==='404'}
-              onRequestClose={()=>{}}
-              >
-
-              Go to home page?
-              
-            </Dialog>
 
             <div style={theme.fullpage}>
             {
-              appDataArr.map((item, idx)=>(
-                <AppContainer curApp={this.state.curApp} appData={item} key={item.id} isCurApp={this.state.curApp.id===item.id} />
-                ))
+              this.props.apps.map(item=>(
+                <AppContainer key={item.id} appId={item.id} />
+              ))
             }
             </div>
 
-            <MainMenu parent={scope} appDataArr={appDataArr} curApp={this.state.curApp} onTap={this.onTap} menuOpen={this.state.menuOpen} />
+            <MainMenu menuOpen={()=>{this.props.setMenuOpen(true)}} {...this.props} />
 
-            <Dialog
-              title={
-                <div>
-                <span>{this.state.curApp.name}</span>
-                  <IconButton 
-                  style={{
-                    position:'absolute',
-                    right: 0,
-                    top:0
-                  }}
-                  onTouchTap={() => this.setState({infoOpen:false})}
+            <Page404Dialog {...this.props}/>
 
-                  >
-                  <HighlightOff color={theme.icon.color}/>
-                  </IconButton>
+            <InfoDialog {...this.props}/>
 
-                </div>
-              }
-              overlayStyle={{backgroundColor:'transparent'}}
-              bodyStyle={{backgroundColor:'transparent'}}
-              style={{backgroundColor:'transparent'}}
-              // actions={actions}
-              paperProps={{zDepth:2}}
-              modal={false}
-              open={infoState}
-              onRequestClose={()=>{this.setState({infoOpen:false})}}
-              >
-              
-              {this.state.curApp.description}
-            </Dialog>
-
-            <MainToolBar parent={scope} 
-              appDataArr={appDataArr} 
-              curApp={this.state.curApp} 
-              onMenuOpen={this.onMenuOpen}
-              onInfoOpen={this.onInfoOpen} 
-            />
-
-
-            
+            <MainToolBar {...this.props}/>
 
           </div>
         </Router>
 			</MuiThemeProvider>
-      </Provider>
 		)
 	}
 
 }
 
 
-class RouteToState extends React.Component {
-
-  componentDidMount() {
-    let id = this.props.match.params.id;
-    console.log('route to state',id);
-    if (!id) id = appDataArr[0].id;
-    id = id.toLowerCase();
-
-    let curApp = appDataMap[id]
-
-    if (!curApp) curApp = {id:'404'}
-
-    this.props.scope.setState({curApp:curApp})
-  }
-
-  render() {
-    return <span/>
+const mapStateToProps = state => {
+  return {
+    curAppId : state.curAppId,
+    apps: state.apps,
+    appsMap: state.appsMap,
+    menuOpen:state.menuOpen,
+    infoOpen:state.infoOpen,
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setMenuOpen : (bool) => {
+      dispatch(setMenuOpen(bool))
+    },
+    setInfoOpen : (bool) => {
+      dispatch(setInfoOpen(bool))
+    },
+    onTap: (event) => {
+      event.stopPropagation();
+      dispatch(setMenuOpen(false));
+    }
+  }
+}
+
+AppLoader = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppLoader)
 
 export default AppLoader

@@ -34,10 +34,10 @@ class About extends React.Component {
           </CardText>
           <CardHeader title="This site"/>
           <CardText style={theme.cardFont}>
-            I built this site on React with a PHP backend.
+            This site is built on React with a PHP backend.
 
             The main building blocks also include
-            Router and Greensock. Other tools used are more individual to each app,
+            Router, Router and Greensock. Other tools used are more individual to each app,
             so they are mentioned in each app's own info section.
 
             <p/>This site demonstrates:
@@ -45,8 +45,8 @@ class About extends React.Component {
              transitions of components without unmounting them.
             <br/>- A single page app can be optimized to
             load only the requested features on demand.
+            <br/>- Using Redux to persist app states.            
             <br/>- Server side rendering with PHP. (in progress)
-            <br/>- Using Redux to persist app states. (in progress)
 
             <p/>This is an on going project and more contents are on the way.
 

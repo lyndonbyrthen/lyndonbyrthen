@@ -17,37 +17,44 @@ import Paper from 'material-ui/Paper';
 import InfoOutline from 'material-ui/svg-icons/action/info-outline';
 import HighlightOff from 'material-ui/svg-icons/action/Highlight-off';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-import ToolBarButton from '../components/ToolBarButton'
 
+import { Link } from 'react-router-dom'
 
-class MainToolBar extends React.Component {
+class Page404Dialog extends React.Component {
 
   render() {
 
-    let infoButton = (
-      <ToolBarButton onTouchTap={(e)=>{this.props.setInfoOpen(true)}}>
-        <InfoOutline/>
-      </ToolBarButton>
-    )
+      const actions = [
+        <Link style={theme.link} to='/'>
+        <RaisedButton
+          label="OK"
+          primary={true}
+        />
+        </Link>
+      ];
 
-    let info = this.props.appsMap[this.props.curAppId].description ? infoButton : null;
+     return(
+      <Dialog
+        title="404 Page not found"
+        // overlayStyle={{backgroundColor:'transparent'}}
+        // bodyStyle={{backgroundColor:'transparent'}}
+        style={{backgroundColor:'transparent'}}
+        actions={actions}
+        paperProps={{zDepth:2}}
+        modal={false}
+        open={this.props.curAppId==='404'}
+        onRequestClose={()=>{}}
+        >
 
-  	return (
-  		<Paper
-       style={{position:'fixed',
-       width:'auto'}}
-       zDepth={2}
-       >
-       
-       <ToolBarButton onTouchTap={()=>{this.props.setMenuOpen(true)}}>
-        <NavigationMenu/>
-       </ToolBarButton>
-
-       {info}
-       
-     </Paper>
+        Go to home page?
+        
+      </Dialog>
     )
   }
 }
 
-export default MainToolBar
+export default Page404Dialog
+
+
+
+

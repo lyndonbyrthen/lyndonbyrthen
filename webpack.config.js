@@ -24,9 +24,9 @@ var config = {
       //{from:'src/server/CodeIgniter3.1.5/system',to:'../system'} 
 
     ]),
-    new webpack.optimize.CommonsChunkPlugin({
-       name: 'index' // Specify the common bundle's name.
-    }),
+    /*new webpack.optimize.CommonsChunkPlugin({
+       name: 'main' // Specify the common bundle's name.
+    }),*/
     // new HtmlWebpackPlugin(),
     /*
     new webpack.DefinePlugin({

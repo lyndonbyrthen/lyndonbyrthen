@@ -26,16 +26,16 @@ class MainMenu extends React.Component {
 
   render() {
 
-    let appDataArr = this.props.appDataArr
-    let applist = appDataArr.slice(0,appDataArr.length-1);
-    let pagelist = appDataArr.slice(appDataArr.length-1);
+    let apps = this.props.apps
+    let applist = apps.slice(0,apps.length-1);
+    let pagelist = apps.slice(apps.length-1);
 
   	return (
   		<Drawer 
               overlayStyle={{backgroundColor:'transparent'}}
               bodyStyle={{backgroundColor:'transparent'}}
               style={{backgroundColor:'transparent'}}
-              onRequestChange={(open) => this.props.parent.setState({menuOpen:open})}
+              onRequestChange={(open) => this.props.setMenuOpen(true)}
               docked={false} width={200} open={this.props.menuOpen} >
               <Menu onItemTouchTap={this.props.onTap}>
                  <IconButton 
@@ -43,7 +43,7 @@ class MainMenu extends React.Component {
                     position:'absolute',
                     right: 0
                    }}
-                   onTouchTap={() => this.props.parent.setState({menuOpen:false})}
+                   onTouchTap={() => this.props.setMenuOpen(false)}
                  
                  >
                    <HighlightOff color={theme.icon.color}/>
@@ -54,7 +54,7 @@ class MainMenu extends React.Component {
 
                   return (
                     <Link style={theme.link} onClick={this.props.onTap} key={item.delta} to={ item.delta==0 ? '/' : '/'+item.id}>
-                      <MenuItem primaryText={item.name} key={item.id} disabled={this.props.curApp.id===item.id}>
+                      <MenuItem primaryText={item.name} key={item.id} disabled={this.props.curAppId===item.id}>
                       </MenuItem>
                     </Link>
                   )
@@ -68,7 +68,7 @@ class MainMenu extends React.Component {
 
                   return (
                     <Link style={theme.link} onClick={this.props.onTap} key={item.delta} to={ item.delta===0? '/' : '/'+item.id}>
-                      <MenuItem primaryText={item.name} key={item.id} disabled={this.props.curApp.id===item.id}>
+                      <MenuItem primaryText={item.name} key={item.id} disabled={this.props.curAppId===item.id}>
                       </MenuItem>
                     </Link>
                   )

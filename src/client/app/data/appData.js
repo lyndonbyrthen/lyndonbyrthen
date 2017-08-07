@@ -1,4 +1,5 @@
 import React from 'react'
+import { normalize, schema } from 'normalizr';
 
 import { default as theme} from '../styles/ui-theme'
 
@@ -62,17 +63,26 @@ let apps = [
    
 ]
 
-let map={}, arr=[]
 
+let appsMap={}
 for (let i in apps) {
   apps[i].id = apps[i].id.toLowerCase()
   apps[i].delta = i
-  map[apps[i].id] = apps[i]
-  arr.push(apps[i])
+  appsMap[apps[i].id] = apps[i]
 }
 
-export const appDataArr = arr;
-export const appDataMap = map;
+let curAppId = window.appid ? window.appid.toLowerCase() : apps[0].id;
 
+if (!appsMap[curAppId]) curAppId = '404'
 
+console.log('appData.js run')
 
+const initState = {
+  curAppId:curAppId,
+  apps:apps,
+  appsMap:appsMap,
+  menuOpen:false,
+  infoOpen:false
+}
+
+export default initState
