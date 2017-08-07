@@ -75,7 +75,7 @@ let curAppId = window.appid ? window.appid.toLowerCase() : apps[0].id;
 
 if (!appsMap[curAppId]) curAppId = '404'
 
-console.log('appData.js run')
+// console.log('appData.js run')
 
 const initState = {
   curAppId:curAppId,

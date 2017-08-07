@@ -30,7 +30,8 @@ class MainToolBar extends React.Component {
       </ToolBarButton>
     )
 
-    let info = this.props.appsMap[this.props.curAppId].description ? infoButton : null;
+    let info = this.props.appsMap[this.props.curAppId] && 
+    this.props.appsMap[this.props.curAppId].description ? infoButton : null;
 
   	return (
   		<Paper

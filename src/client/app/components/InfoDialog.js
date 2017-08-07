@@ -22,6 +22,8 @@ import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 class InfoDialog extends React.Component {
 
   render() {
+
+    if (!this.props.appsMap[this.props.curAppId]) return <span/>
     
     return (
       <Dialog
