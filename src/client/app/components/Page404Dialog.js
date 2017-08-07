@@ -24,6 +24,8 @@ class Page404Dialog extends React.Component {
 
   render() {
 
+      if (this.props.curAppId !== '404') return <span/>
+
       const actions = [
         <Link style={theme.link} to='/'>
         <RaisedButton
