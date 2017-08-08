@@ -23,12 +23,17 @@ import {
 
 class MovieBuff extends React.Component {
 
+  constructor(props) {
+    super(props)
+
+  }
+
   render() {
 
   	return (
-      <Paper  style={{...theme.fullpage,backgroundColor:'pink'}}>
+      <div  style={{...theme.fullpage,backgroundColor:'gray'}}>
       
-      </Paper>
+      </div>
     )
   }
 }

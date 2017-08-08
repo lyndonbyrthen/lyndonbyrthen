@@ -13,6 +13,7 @@ var config = {
     index: app_dir + '/index.jsx',
     // app1: app_dir + '/subapps/app1.js'
   },
+  
   plugins: [
     new CopyWebpackPlugin([
       {from:'src/server/CodeIgniter3.1.5/application',to:'../application'},
