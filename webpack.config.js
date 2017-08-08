@@ -48,6 +48,11 @@ var config = {
         test : /\.jsx?/,
         include : app_dir,
         loader : ['babel-loader']
+      },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
+        include: /flexboxgrid/
       }
     ],
 

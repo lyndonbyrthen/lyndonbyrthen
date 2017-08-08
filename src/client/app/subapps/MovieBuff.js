@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducer from './MovieBuff/reducers'
 
+
 import { default as theme} from '../styles/ui-theme'
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton';
@@ -19,6 +20,7 @@ import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 
 import MovieAdder from './MovieBuff/containers/MovieAdder';
+import MoviesContainer from './MovieBuff/containers/MoviesContainer';
 
 
 import {
@@ -32,7 +34,7 @@ import RouteToState from '../tools/RouteToState'
 
 
 let initState = {
-  movies:['Blood Simple']
+  movies:{}
 }
 
 const appstore = createStore(
@@ -47,8 +49,8 @@ class MovieBuff extends React.Component {
     super(props)
     // console.log(props)
     this.onRouteChange = this.onRouteChange.bind(this)
-    
   }
+
 
   onRouteChange(routeData) {
     // console.log('MovieBuff :: Route Change =============>',routeData)
@@ -72,11 +74,14 @@ class MovieBuff extends React.Component {
                 {...routeProps} 
               />)
            }}/>*/}
+          <div style={{top:'100px',position:'absolute', width:'100%'}}>
+             <MoviesContainer />
+          </div>
 
-           <div style={{top:'100px',position:'absolute'}}>
-             <MovieAdder {...this.props} label='add movie 1' title='title 1'/>
-                <RaisedButton label='movie list'/>
-                <RaisedButton label='tv list'/>
+           <div style={{top:'80px',position:'absolute', width:'100%', backgroundColor:"transparent"}}>
+             <MovieAdder label='add movie 1'/>
+             <RaisedButton label='movie list'/>
+             <RaisedButton label='tv list'/>
            </div>
 
            </div>
@@ -91,6 +96,7 @@ const mapStateToProps = state => {
     curAppId : state.curAppId,
   }
 }
+
 const mapDispatchToProps = dispatch => {
   return {
     dispatch:dispatch,

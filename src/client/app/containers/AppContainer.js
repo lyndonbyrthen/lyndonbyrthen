@@ -24,15 +24,6 @@ class AppContainer extends React.Component {
     
     this.state = {component:null}
 
-    this.style = {
-      fullpage: {
-        width:'100%',
-        height:'100%',
-        position: 'fixed',
-        overflow:'hidden'
-      }
-    }
-
     this.transTime = .5
   }
 
@@ -43,13 +34,18 @@ class AppContainer extends React.Component {
   transIn(dir='up') {
     // console.log(this.props.appData.name,'transin')
     this.refs.page.style.position = 'fixed';
+    this.refs.page.style.overflow = 'hidden';
     let y = dir==='up' ? window.innerHeight : -window.innerHeight;
-    TweenMax.fromTo(this.refs.page, this.transTime, {y:y}, {y:0, onComplete:()=>{this.refs.page.style.position = 'absolute'}});
+    TweenMax.fromTo(this.refs.page, this.transTime, {y:y}, {y:0, onComplete:()=>{
+      this.refs.page.style.position = 'absolute'
+      this.refs.page.style.overflow = 'auto'
+    }});
   }
 
   transOut(dir='up') {
     // console.log(this.props.appData.name,'transout')
     this.refs.page.style.position = 'fixed';
+    this.refs.page.style.overflow = 'hidden';
     let y = dir==='up' ? -window.innerHeight : window.innerHeight;
     TweenMax.fromTo(this.refs.page, this.transTime, {y:0}, {y:y,onComplete:this.offView});
   }

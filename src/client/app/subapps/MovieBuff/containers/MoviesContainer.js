@@ -7,7 +7,6 @@ import { addMovies } from '../actions'
 import { normalize, schema } from 'normalizr';
 
 import 'whatwg-fetch';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -28,48 +27,28 @@ import InfoOutline from 'material-ui/svg-icons/action/info-outline';
 import HighlightOff from 'material-ui/svg-icons/action/Highlight-off';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 
-let MovieAdder = (props)=> {
+import MoviesList from '../components/MoviesList'
+
+let MoviesContainer= (props)=> {
 	// console.log(props)
 	return (
-		<div>
-			
-		<RaisedButton onTouchTap={props.onTap} label={props.label} primary={true} />
-		</div>
+		<Paper>
+			<MoviesList movies={props.movies}/>    
+		</Paper>
 	)
 }
 
 const mapStateToProps = state => {
   return {
-    
+    movies:state.movies,
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
-    onTap: () => {
-      let myHeaders = new Headers();
-      let myInit = { method: 'GET',
-       headers: myHeaders,
-      };
-      let myRequest = new Request('https://api.themoviedb.org/3/discover/movie?api_key=9ceb030330a7d13c7e200d7d7489a442&language=en-US&sort_by=primary_release_date.desc&include_adult=false&include_video=true&page=1&primary_release_year=2017&primary_release_date.gte=2017-08-01&primary_release_date.lte=2017-08-07&year=2017&with_original_language=en', myInit);
-
-      fetch(myRequest).then(function(response) {
-        return response.json();
-      }).then(function(json) {
-        
-        let res = json.results
-        let movies = {}
-
-        for (let i in res) {
-          movies[res[i].id] = res[i]
-        }
-        
-        dispatch(addMovies(movies))
-      });
-      
-    }
+     dispatch:dispatch,
   }
 }
 
-MovieAdder = connect(mapStateToProps,mapDispatchToProps)(MovieAdder)
+MoviesContainer = connect(mapStateToProps,mapDispatchToProps)(MoviesContainer)
 
-export default MovieAdder
+export default MoviesContainer
