@@ -86,6 +86,16 @@ for (let i in apps) {
   appsMap[apps[i].id] = apps[i]
 }
 
+const id = new schema.Entity('ids');
+
+const delta = new schema.Entity('deltas', {
+  id: delta
+});
+
+const data1 = normalize(appsMap, id);
+
+console.log(data1)
+
 let curAppId = window.appid ? window.appid.toLowerCase() : apps[0].id;
 
 if (!appsMap[curAppId]) curAppId = '404'

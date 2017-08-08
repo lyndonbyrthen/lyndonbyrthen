@@ -19,3 +19,8 @@ export const setInfoOpen = (bool)=> ({
 	type: 'SET_INFO_OPEN',
 	infoOpen: bool
 })
+
+export const initAppData = (appId,data)=> ({
+	type: 'INIT_APP_DATA',
+	pair: {appId,data}
+})

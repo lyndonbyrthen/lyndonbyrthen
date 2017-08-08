@@ -25,13 +25,14 @@ class MovieBuff extends React.Component {
 
   constructor(props) {
     super(props)
+    console.log(props)
 
   }
 
   render() {
 
   	return (
-      <div  style={{...theme.fullpage,backgroundColor:'gray'}}>
+      <div style={{...theme.fullpage,backgroundColor:'gray'}}>
       
       </div>
     )

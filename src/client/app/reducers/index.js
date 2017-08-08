@@ -20,7 +20,10 @@ const lbapp = (state = {}, action) => {
         ...state,
         infoOpen: action.infoOpen,
       }
-    
+    case 'INIT_APP_DATA':
+    let newState = {...state}
+    newState.appData[action.appId].appData = action.appData
+    return newState
     default:
       return state
   }
