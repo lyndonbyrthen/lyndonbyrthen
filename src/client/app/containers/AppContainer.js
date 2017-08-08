@@ -14,6 +14,7 @@ class AppContainer extends React.Component {
 	
 	constructor(props) {
 		super(props);
+    // console.log('AppContainer ::',props)
     this.loadComponent = this.loadComponent.bind(this);
     this.isCurApp = this.isCurApp.bind(this);
 
@@ -57,9 +58,6 @@ class AppContainer extends React.Component {
     TweenMax.to(this.refs.page, 0, {x:0,y:-999999});
   }
 
-  /*onResize(event) {
-  }*/
-
   componentWillReceiveProps(nextProps) {
 
     let prevDelta = this.props.deltas[this.props.curAppId] !== undefined ? 
@@ -101,7 +99,7 @@ class AppContainer extends React.Component {
   loadComponent() {
 
     if (this.state.component) return
-
+    
     let loadfunc = this.props.loadfuncs[this.props.appId]
     let scope = this
 
@@ -122,7 +120,7 @@ class AppContainer extends React.Component {
 
     // console.log('this.state.component',this.state.component)
 
-    if (this.state.component) content = (<this.state.component isCurApp={this.isCurApp()} />)
+    if (this.state.component) content = (<this.state.component appId={this.props.appId} isCurApp={this.isCurApp()} />)
     else content = (<LinearProgress/>)
     return (
       <div ref='page' style={theme.fullpage} >

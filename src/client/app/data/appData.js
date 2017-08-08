@@ -40,7 +40,7 @@ let apps = [
    
    { 
    	 name: 'Audio Visualizer',
-   	 id: 'AudioVisualizer',
+   	 id: 'audiovisualizer',
    	 description: (
       <div>
         This app uses Matter.js, a physics engine and the AnalyserNode in javascript.
@@ -56,7 +56,7 @@ let apps = [
 
    { 
      name: 'Movie Buff',
-     id: 'MovieBuff',
+     id: 'moviebuff',
      description: (
       <div>
         This app connects to "The Movie DB"
@@ -71,7 +71,7 @@ let apps = [
 
    { 
    	 name: 'About',
-   	 id: 'About',
+   	 id: 'about',
    	 description: '',
      loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/About.js"),
    },
@@ -81,7 +81,8 @@ let apps = [
 
 let appsMap={deltas:{},ids:[],names:{},descriptions:{},loadfuncs:{},appDatas:{}}
 for (let i in apps) {
-  let id = apps[i].id.toLowerCase()
+  apps[i].id = apps[i].id.toLowerCase()
+  let id = apps[i].id
   appsMap['deltas'][id] = Number(i)
   appsMap['ids'][i] = id
   appsMap['names'][id] = apps[i].name

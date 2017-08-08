@@ -30,6 +30,7 @@ import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import {
   BrowserRouter as Router,
   Route,
+  Switch, 
   Link
 } from 'react-router-dom'
 
@@ -44,29 +45,44 @@ import Page404Dialog from '../components/Page404Dialog'
 injectTapEventPlugin();
 
 class AppLoader extends React.Component {
+   
+   constructor(props) {
+     super(props)
+     this.onRouteChange = this.onRouteChange.bind(this)
+   }
 
-  constructor(props) {
-		super(props);
-  }
-
-	render() {
-
+   onRouteChange(routeData) {
+      // console.log(routeData)
+      let id = routeData.match.params.id;
+      if (!id) id = this.props.ids[0]
+      id = id.toLowerCase();
+      if (this.props.deltas[id]===undefined) id = '404'
+      // console.log('=============>',id,' <===>',this.props.curAppId)
+      if (id === this.props.curAppId) return
+      console.log('Route Change =============>',id)
+      this.props.dispatch(setCurApp(id))
+   }
+    
+   render() {
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme(theme)}>
         <Router>
           <div>
-
-            <Route path="/:id?" render={props=>{
-              return <RouteToState key={props.match.params.id} {...props} />
+          
+            <Route path="/:id?" render={routeProps=>{
+              return (
+                  <RouteToState 
+                  onChange={this.onRouteChange}
+                  {...routeProps} 
+                  />
+              )
             }}/>
 
-            <div style={theme.fullpage}>
             {
               this.props.ids.map(id=>(
                 <AppContainer key={id} appId={id} />
               ))
             }
-            </div>
 
             <MainMenu menuOpen={()=>{this.props.setMenuOpen(true)}} {...this.props} />
 
@@ -80,8 +96,8 @@ class AppLoader extends React.Component {
         </Router>
 			</MuiThemeProvider>
 		)
-	}
-
+	
+  }
 }
 
 
@@ -108,7 +124,8 @@ const mapDispatchToProps = dispatch => {
     onTap: (event) => {
       event.stopPropagation();
       dispatch(setMenuOpen(false));
-    }
+    },
+    dispatch:dispatch,
   }
 }
 
