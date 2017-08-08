@@ -26,9 +26,9 @@ class MainMenu extends React.Component {
 
   render() {
 
-    let apps = this.props.apps
-    let applist = apps.slice(0,apps.length-1);
-    let pagelist = apps.slice(apps.length-1);
+    let ids = this.props.ids
+    let applist = ids.slice(0,ids.length-1);
+    let pagelist = ids.slice(ids.length-1);
 
   	return (
   		<Drawer 
@@ -50,11 +50,11 @@ class MainMenu extends React.Component {
                  </IconButton>
                 <Subheader>Apps</Subheader>
                 {  
-                  applist.map((item,idx)=>{
+                  applist.map(id=>{
 
                   return (
-                    <Link style={theme.link} onClick={this.props.onTap} key={item.delta} to={ item.delta==0 ? '/' : '/'+item.id}>
-                      <MenuItem primaryText={item.name} key={item.id} disabled={this.props.curAppId===item.id}>
+                    <Link style={theme.link} onClick={this.props.onTap} key={id} to={this.props.deltas[id]==0 ? '/' : '/'+id}>
+                      <MenuItem primaryText={this.props.names[id]} key={id} disabled={this.props.curAppId===id}>
                       </MenuItem>
                     </Link>
                   )
@@ -64,18 +64,16 @@ class MainMenu extends React.Component {
                 <Divider/> 
 
                 {  
-                  pagelist.map((item,idx)=>{
+                  pagelist.map(id=>{
 
                   return (
-                    <Link style={theme.link} onClick={this.props.onTap} key={item.delta} to={ item.delta===0? '/' : '/'+item.id}>
-                      <MenuItem primaryText={item.name} key={item.id} disabled={this.props.curAppId===item.id}>
+                    <Link style={theme.link} onClick={this.props.onTap} key={id} to={this.props.deltas[id]===0? '/' : '/'+id}>
+                      <MenuItem primaryText={this.props.names[id]} key={id} disabled={this.props.curAppId===id}>
                       </MenuItem>
                     </Link>
                   )
 
                 })}
-
-
                   
               </Menu>
               

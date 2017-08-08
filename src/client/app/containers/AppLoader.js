@@ -62,8 +62,8 @@ class AppLoader extends React.Component {
 
             <div style={theme.fullpage}>
             {
-              this.props.apps.map(item=>(
-                <AppContainer key={item.id} appId={item.id} />
+              this.props.ids.map(id=>(
+                <AppContainer key={id} appId={id} />
               ))
             }
             </div>
@@ -88,8 +88,10 @@ class AppLoader extends React.Component {
 const mapStateToProps = state => {
   return {
     curAppId : state.curAppId,
-    apps: state.apps,
-    appsMap: state.appsMap,
+    deltas: state.deltas,
+    ids: state.ids,
+    names:state.names,
+    descriptions:state.descriptions,
     menuOpen:state.menuOpen,
     infoOpen:state.infoOpen,
   }

@@ -23,13 +23,13 @@ class InfoDialog extends React.Component {
 
   render() {
 
-    if (!this.props.appsMap[this.props.curAppId] || !this.props.appsMap[this.props.curAppId].description) return <span/>
+    if (this.props.deltas[this.props.curAppId]===undefined || !this.props.descriptions[this.props.curAppId]) return <span/>
     
     return (
       <Dialog
           title={
             <div>
-            <span>{this.props.appsMap[this.props.curAppId].name}</span>
+            <span>{this.props.descriptions[this.props.curAppId].name}</span>
               <IconButton 
               style={{
                 position:'absolute',
@@ -54,7 +54,7 @@ class InfoDialog extends React.Component {
           onRequestClose={()=>{this.props.setInfoOpen(false)}}
           >
           
-          {this.props.appsMap[this.props.curAppId].description}
+          {this.props.descriptions[this.props.curAppId]}
       </Dialog>
     )
   }

@@ -79,35 +79,27 @@ let apps = [
 ]
 
 
-let appsMap={}
+let appsMap={deltas:{},ids:[],names:{},descriptions:{},loadfuncs:{},appDatas:{}}
 for (let i in apps) {
-  apps[i].id = apps[i].id.toLowerCase()
-  apps[i].delta = i
-  appsMap[apps[i].id] = apps[i]
+  let id = apps[i].id.toLowerCase()
+  appsMap['deltas'][id] = Number(i)
+  appsMap['ids'][i] = id
+  appsMap['names'][id] = apps[i].name
+  appsMap['descriptions'][id] = apps[i].description
+  appsMap['loadfuncs'][id] = apps[i].loadfunc
 }
-
-const id = new schema.Entity('ids');
-
-const delta = new schema.Entity('deltas', {
-  id: delta
-});
-
-const data1 = normalize(appsMap, id);
-
-console.log(data1)
 
 let curAppId = window.appid ? window.appid.toLowerCase() : apps[0].id;
 
-if (!appsMap[curAppId]) curAppId = '404'
-
-// console.log('appData.js run')
+if (appsMap['deltas'][curAppId]===undefined) curAppId = '404'
 
 const initState = {
+  ...appsMap,
   curAppId:curAppId,
-  apps:apps,
-  appsMap:appsMap,
   menuOpen:false,
   infoOpen:false
 }
 
 export default initState
+
+console.log('initState',initState)

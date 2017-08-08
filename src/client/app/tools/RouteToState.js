@@ -11,10 +11,10 @@ class RouteToState extends React.Component {
 
     let id = this.props.match.params.id;
 
-    if (!id) id = this.props.apps[0].id;
+    if (!id) id = this.props.ids[0]
     id = id.toLowerCase();
 
-    if (!this.props.appsMap[id]) id = '404'
+    if (this.props.deltas[id]===undefined) id = '404'
 
     console.log('RouteToState ::',id);
     
@@ -30,8 +30,8 @@ class RouteToState extends React.Component {
 const mapStateToProps = state => {
   return {
     curAppId : state.curAppId,
-    apps: state.apps,
-    appsMap: state.appsMap
+    deltas: state.deltas,
+    ids: state.ids,
   }
 }
 

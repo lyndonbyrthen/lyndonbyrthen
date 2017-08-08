@@ -62,13 +62,13 @@ class AppContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
 
-    let prevDelta = this.props.appsMap[this.props.curAppId] ? 
-    this.props.appsMap[this.props.curAppId].delta : 0;
+    let prevDelta = this.props.deltas[this.props.curAppId] !== undefined ? 
+    this.props.deltas[this.props.curAppId] : 0;
     
-    let nextDelta = this.props.appsMap[nextProps.curAppId] ?
-    this.props.appsMap[nextProps.curAppId].delta : 0;
+    let nextDelta = this.props.deltas[nextProps.curAppId] !== undefined ?
+    this.props.deltas[nextProps.curAppId] : 0;
 
-    let thisDelta = this.props.appsMap[this.props.appId].delta;
+    let thisDelta = this.props.deltas[this.props.appId];
     /*console.log('nextProps.curAppId',nextProps.curAppId)
     console.log('prevDelta',prevDelta,'thisDelta',thisDelta,'nextDelta',nextDelta)*/
 
@@ -102,7 +102,7 @@ class AppContainer extends React.Component {
 
     if (this.state.component) return
 
-    let loadfunc = this.props.appsMap[this.props.appId].loadfunc
+    let loadfunc = this.props.loadfuncs[this.props.appId]
     let scope = this
 
     loadfunc(mod=>{
@@ -136,8 +136,9 @@ class AppContainer extends React.Component {
 const mapStateToProps = state => {
   return {
     curAppId : state.curAppId,
-    apps: state.apps,
-    appsMap: state.appsMap
+    deltas: state.deltas,
+    ids: state.ids,
+    loadfuncs: state.loadfuncs,
   }
 }
 
