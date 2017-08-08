@@ -51,41 +51,34 @@ class MovieBuff extends React.Component {
   }
 
   onRouteChange(routeData) {
-    if (this.props.curAppId !== this.props.appId) {
-      // return
-      routeData.history.location.pathname = '/'+this.props.appId
-      return
-    }
     // console.log('MovieBuff :: Route Change =============>',routeData)
-
     let id = routeData.match.params.id;
     console.log('MovieBuff :: Route Change =============>',id)
   }
 
   render() {
 
+    // if (this.props.appId !== this.props.curAppId) return <span/>
+
   	return (
       <Provider store={appstore}>
         <Router>
            <div style={{...theme.fullpage,backgroundColor:'gray'}}>
-           <Route path={"/:appId/:id?"} render={routeProps=>{
+           
+           {/*<Route path={"/"+this.props.appId+"/:id?"} render={routeProps=>{
               return (
-                <RouteToState 
+                <RouteToState
                 onChange={this.onRouteChange}
                 {...routeProps} 
               />)
-           }}/>
-           
-           <div  style={{top:'100px',position:'absolute'}}>
-             <MovieAdder {...this.props} label='add movie 1' title='title 1'/>
-             <Link style={theme.link} to={'/'+this.props.appId+'/movielist'}>
-                <RaisedButton label='movie list'/>
-             </Link>
-             <Link style={theme.link} to={'/'+this.props.appId+'/tvlist'}>
-                <RaisedButton label='tv list'/>
-             </Link>
+           }}/>*/}
 
+           <div style={{top:'100px',position:'absolute'}}>
+             <MovieAdder {...this.props} label='add movie 1' title='title 1'/>
+                <RaisedButton label='movie list'/>
+                <RaisedButton label='tv list'/>
            </div>
+
            </div>
         </Router>
       </Provider>

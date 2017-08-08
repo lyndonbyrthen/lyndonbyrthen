@@ -7,6 +7,10 @@ class RouteToState extends React.Component {
     this.props.onChange(nextProps)  
   }
 
+  componentDidMount() {
+    this.props.onChange(this.props)
+  }
+
   render(){
     return <span/>
   }
