@@ -61,20 +61,24 @@ class AppContainer extends React.Component {
   }*/
 
   componentWillReceiveProps(nextProps) {
-    // console.log('AppContainer :: nextProps',nextProps)
-    // console.log('AppContainer :: isCurApp',this.isCurApp())
+
+    let prevDelta = this.props.appsMap[this.props.curAppId] ? 
+    this.props.appsMap[this.props.curAppId].delta : 0;
     
-    if (nextProps.curAppId === '404') return
-    
-    let curDelta = this.props.appsMap[this.props.appId].delta;
-    let nextDelta = this.props.appsMap[this.props.appId].delta;
+    let nextDelta = this.props.appsMap[nextProps.curAppId] ?
+    this.props.appsMap[nextProps.curAppId].delta : 0;
+
+    let thisDelta = this.props.appsMap[this.props.appId].delta;
+    /*console.log('nextProps.curAppId',nextProps.curAppId)
+    console.log('prevDelta',prevDelta,'thisDelta',thisDelta,'nextDelta',nextDelta)*/
 
     //if isCurApp but new curApp is different
     if (this.isCurApp() && nextProps.curAppId !== this.props.appId) {
-      let dir = nextDelta > curDelta ? 'up' : 'down';
+      let dir = nextDelta > prevDelta ? 'up' : 'down';
       this.transOut(dir);
+      console.log()
     } else if (!this.isCurApp() && nextProps.curAppId === this.props.appId) {
-      let dir = curDelta > nextDelta ? 'down' : 'up';
+      let dir = thisDelta < prevDelta ? 'down' : 'up';
       this.transIn(dir);
       this.loadComponent()
     }

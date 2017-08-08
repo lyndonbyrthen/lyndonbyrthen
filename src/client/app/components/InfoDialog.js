@@ -23,7 +23,7 @@ class InfoDialog extends React.Component {
 
   render() {
 
-    if (!this.props.appsMap[this.props.curAppId]) return <span/>
+    if (!this.props.appsMap[this.props.curAppId] || !this.props.appsMap[this.props.curAppId].description) return <span/>
     
     return (
       <Dialog

@@ -37,7 +37,7 @@ class About extends React.Component {
             This site is built on React with a PHP backend.
 
             The main building blocks also include
-            Router, Router and Greensock. Other tools used are more individual to each app,
+            Redux, Router and Greensock. Other tools used are more individual to each app,
             so they are mentioned in each app's own info section.
 
             <p/>This site demonstrates:

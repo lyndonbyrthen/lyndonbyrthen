@@ -55,6 +55,21 @@ let apps = [
    },
 
    { 
+     name: 'Movie Buff',
+     id: 'MovieBuff',
+     description: (
+      <div>
+        This app connects to "The Movie DB"
+        <p/>
+        <p/>
+        {infoFootnote}
+
+      </div>
+      ),
+     loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/MovieBuff.js"),
+   },
+
+   { 
    	 name: 'About',
    	 id: 'About',
    	 description: '',
