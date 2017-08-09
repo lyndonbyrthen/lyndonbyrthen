@@ -2,22 +2,18 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Matter from '../libs/matter'
 import debounce from 'debounce'
-import RaisedButton from 'material-ui/RaisedButton';
-import IconButton from 'material-ui/IconButton';
-import FlatButton from 'material-ui/FlatButton';
-
-import VolumeOff from 'material-ui/svg-icons/AV/volume-off';
-import VolumeMute from 'material-ui/svg-icons/AV/volume-mute';
-import VolumeUp from 'material-ui/svg-icons/AV/volume-up';
-import FileUpload from 'material-ui/svg-icons/file/file-upload';
-
-import { default as theme} from '../styles/ui-theme'
-import Paper from 'material-ui/Paper';
-
-import ToolBarButton from '../components/ToolBarButton'
-
 
 import 'whatwg-fetch';
+
+import Paper from 'material-ui/Paper';
+
+import VolumeOff from 'material-ui-icons/VolumeOff';
+import VolumeMute from 'material-ui-icons/VolumeMute';
+import VolumeUp from 'material-ui-icons/VolumeUp';
+import FileUpload from 'material-ui-icons/FileUpload';
+
+import { default as styles} from '../styles/styles'
+import ToolBarButton from '../components/ToolBarButton'
 
 const {
     Engine,
@@ -451,17 +447,16 @@ class AudioVisualizer extends React.Component {
 
   render() {
 
-    let icon = this.state.isMute ? <VolumeOff color={theme.icon.color}/> : <VolumeMute color={theme.icon.color}/>
+    let icon = this.state.isMute ? <VolumeOff color={styles.icon.color}/> : <VolumeMute color={styles.icon.color}/>
     if (!this.state.audioLoaded) icon = null
 
   	return (
   		<div ref='root' style={this.style.fullpage} >
-  		  {/*<RaisedButton style={this.style.play} label='pause/play' onTouchTap={this.toggle}/>*/}
         
         <audio ref="audio"></audio>
-        <Paper style={this.style.controls} zDepth={2}>
+        <Paper style={this.style.controls} elevation={4}>
 
-          <ToolBarButton onTouchTap={this.onToggleMute}>
+          <ToolBarButton onClick={this.onToggleMute}>
             {icon}
           </ToolBarButton>
         
