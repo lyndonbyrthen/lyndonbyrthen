@@ -8,6 +8,8 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 
+import Typography from 'material-ui/Typography';
+
 import IconButton from 'material-ui/IconButton';
 import HighlightOff from 'material-ui-icons/HighlightOff';
 
@@ -38,9 +40,9 @@ class InfoDialog extends React.Component {
         </DialogTitle>
 
           <DialogContent>
-            <DialogContentText>
+            <Typography paragraph component="div" type="body1">
               {this.props.descriptions[this.props.curAppId]}
-            </DialogContentText>
+            </Typography>
           </DialogContent>
         </Dialog>
     )

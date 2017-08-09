@@ -1,10 +1,13 @@
 import createMuiTheme from 'material-ui/styles/theme';
 import createPalette from 'material-ui/styles/palette';
 import blueGrey from 'material-ui/colors/blueGrey';
+import amber from 'material-ui/colors/amber';
+
 const MainTheme = createMuiTheme({
 
   palette: createPalette({
-    primary: blueGrey
+    primary: blueGrey,
+    accent:amber
   }),
   
   overrides: {
@@ -21,7 +24,7 @@ const MainTheme = createMuiTheme({
         border: 0,
         // color: 'white',
         // height: 42,
-        padding: '0px',
+        // padding: '0px',
         // boxShadow: '',
       },
     },

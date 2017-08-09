@@ -37,7 +37,7 @@ let apps = [
      loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer.js"),
    },
 
-/*   { 
+   { 
      name: 'Movie Buff',
      id: 'moviebuff',
      description: (
@@ -50,7 +50,7 @@ let apps = [
       </div>
       ),
      loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/MovieBuff.js"),
-   },*/
+   },
 
    { 
    	 name: 'About',
