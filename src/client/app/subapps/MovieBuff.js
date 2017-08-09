@@ -5,22 +5,11 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducer from './MovieBuff/reducers'
 
+import Button from 'material-ui/Button';
+import { default as styles} from '../styles/styles'
 
-import { default as theme} from '../styles/ui-theme'
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton';
-import Drawer from 'material-ui/Drawer';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
-import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
-import Dialog from 'material-ui/Dialog';
-import Paper from 'material-ui/Paper';
-import FlatButton from 'material-ui/FlatButton';
-
-import MovieAdder from './MovieBuff/containers/MovieAdder';
-import MoviesContainer from './MovieBuff/containers/MoviesContainer';
+import MediaLoader from './MovieBuff/containers/MediaLoader';
+import MediaContainer from './MovieBuff/containers/MediaContainer';
 
 
 import {
@@ -51,7 +40,6 @@ class MovieBuff extends React.Component {
     this.onRouteChange = this.onRouteChange.bind(this)
   }
 
-
   onRouteChange(routeData) {
     // console.log('MovieBuff :: Route Change =============>',routeData)
     let id = routeData.match.params.id;
@@ -65,7 +53,7 @@ class MovieBuff extends React.Component {
   	return (
       <Provider store={appstore}>
         <Router>
-           <div style={{...theme.fullpage,backgroundColor:'gray'}}>
+           <div style={{position:'fixed', width:'100%',height:'100%',overflow:'hidden'}}>
            
            {/*<Route path={"/"+this.props.appId+"/:id?"} render={routeProps=>{
               return (
@@ -74,14 +62,20 @@ class MovieBuff extends React.Component {
                 {...routeProps} 
               />)
            }}/>*/}
-          <div style={{top:'100px',position:'absolute', width:'100%'}}>
-             <MoviesContainer />
+
+           <MediaLoader/>
+
+          <div style={{height:'100%',overflowY:'auto',backgroundColor:'black'}}>
+             <MediaContainer />
           </div>
 
-           <div style={{top:'80px',position:'absolute', width:'100%', backgroundColor:"transparent"}}>
-             <MovieAdder label='add movie 1'/>
-             <RaisedButton label='movie list'/>
-             <RaisedButton label='tv list'/>
+           <div style={{top:'10px', right:'10px',position:'fixed', width:'auto', backgroundColor:"transparent"}}>
+             <Button raised color="accent">
+               movie list
+             </Button>
+             <Button raised color="accent">
+               tv list
+             </Button>
            </div>
 
            </div>

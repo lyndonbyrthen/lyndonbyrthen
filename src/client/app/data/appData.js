@@ -1,39 +1,25 @@
 import React from 'react'
 import { normalize, schema } from 'normalizr';
 
-import { default as theme} from '../styles/ui-theme'
-
-import RaisedButton from 'material-ui/RaisedButton';
-import Drawer from 'material-ui/Drawer';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
-import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
-import Dialog from 'material-ui/Dialog';
-import Paper from 'material-ui/Paper';
-import FlatButton from 'material-ui/FlatButton';
-
-import InfoOutline from 'material-ui/svg-icons/action/info-outline';
-import HighlightOff from 'material-ui/svg-icons/action/Highlight-off';
-import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-
 import {
   BrowserRouter as Router,
   Route,
   Link
 } from 'react-router-dom'
 
+import Button from 'material-ui/Button';
+import { default as styles} from '../styles/styles'
+
 let infoFootnote = (
-    <div>
+    <span>
     This site is build on React with a PHP backend. To read more about it,
     please see the 
-    <Link style={theme.link} to='/about'>
-    <FlatButton primary={true} style={theme.inlineButton}>
+    <Link style={styles.link} to='/about'>
+    <Button color="primary" style={styles.inlineButton}>
       About
-    </FlatButton>
+    </Button>
     </Link> section.
-    </div>
+    </span>
   )
 
 let apps = [
@@ -42,14 +28,11 @@ let apps = [
    	 name: 'Audio Visualizer',
    	 id: 'audiovisualizer',
    	 description: (
-      <div>
+      <span>
         This app uses Matter.js, a physics engine and the AnalyserNode in javascript.
-        <p/>
         The music used is a remix from a 1990 Super Nintendo game, ActRaiser.
-        <p/>
         {infoFootnote}
-
-      </div>
+      </span>
       ),
      loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer.js"),
    },

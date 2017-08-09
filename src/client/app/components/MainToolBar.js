@@ -1,22 +1,10 @@
 import React from 'react'
-import { default as theme} from '../styles/ui-theme'
 
-
-import RaisedButton from 'material-ui/RaisedButton';
-import Drawer from 'material-ui/Drawer';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
-import FlatButton from 'material-ui/FlatButton';
-
-import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
-import Dialog from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
 
-import InfoOutline from 'material-ui/svg-icons/action/info-outline';
-import HighlightOff from 'material-ui/svg-icons/action/Highlight-off';
-import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import InfoOutline from 'material-ui-icons/InfoOutline';
+import NavigationMenu from 'material-ui-icons/Menu';
+
 import ToolBarButton from '../components/ToolBarButton'
 
 
@@ -25,7 +13,7 @@ class MainToolBar extends React.Component {
   render() {
 
     let infoButton = (
-      <ToolBarButton onTouchTap={(e)=>{this.props.setInfoOpen(true)}}>
+      <ToolBarButton onClick={(e)=>{this.props.setInfoOpen(true)}}>
         <InfoOutline/>
       </ToolBarButton>
     )
@@ -37,10 +25,10 @@ class MainToolBar extends React.Component {
   		<Paper
        style={{position:'fixed',
        width:'auto'}}
-       zDepth={2}
+       elevation={4}
        >
        
-       <ToolBarButton onTouchTap={()=>{this.props.setMenuOpen(true)}}>
+       <ToolBarButton onClick={()=>{this.props.setMenuOpen(true)}}>
         <NavigationMenu/>
        </ToolBarButton>
 

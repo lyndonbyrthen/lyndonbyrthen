@@ -1,23 +1,17 @@
 import React from 'react'
-import { default as theme} from '../styles/ui-theme'
+import { default as styles} from '../styles/styles'
 
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from 'material-ui/Dialog';
 
-import RaisedButton from 'material-ui/RaisedButton';
-import Drawer from 'material-ui/Drawer';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
+import Typography from 'material-ui/Typography';
+
 import IconButton from 'material-ui/IconButton';
-import FlatButton from 'material-ui/FlatButton';
-
-import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
-import Dialog from 'material-ui/Dialog';
-import Paper from 'material-ui/Paper';
-
-import InfoOutline from 'material-ui/svg-icons/action/info-outline';
-import HighlightOff from 'material-ui/svg-icons/action/Highlight-off';
-import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-
+import HighlightOff from 'material-ui-icons/HighlightOff';
 
 class InfoDialog extends React.Component {
 
@@ -26,36 +20,31 @@ class InfoDialog extends React.Component {
     if (this.props.deltas[this.props.curAppId]===undefined || !this.props.descriptions[this.props.curAppId]) return <span/>
     
     return (
-      <Dialog
-          title={
-            <div>
-            <span>{this.props.descriptions[this.props.curAppId].name}</span>
-              <IconButton 
-              style={{
-                position:'absolute',
-                right: 0,
-                top:0
-              }}
-              onTouchTap={() => {this.props.setInfoOpen(false)}}
+      <Dialog 
+      open={this.props.infoOpen}
+      onRequestClose={() => {this.props.setInfoOpen(false)}}
+      >
+        <IconButton 
+        style={{
+          position:'absolute',
+          right: 0,
+          top:0
+        }}
+        onClick={() => {this.props.setInfoOpen(false)}}
 
-              >
-              <HighlightOff color={theme.icon.color}/>
-              </IconButton>
+        >
+        <HighlightOff/>
+        </IconButton>
+        <DialogTitle>
+            {this.props.descriptions[this.props.curAppId].name}
+        </DialogTitle>
 
-            </div>
-          }
-          overlayStyle={{backgroundColor:'transparent'}}
-          bodyStyle={{backgroundColor:'transparent'}}
-          style={{backgroundColor:'transparent'}}
-          // actions={actions}
-          paperProps={{zDepth:2}}
-          modal={false}
-          open={this.props.infoOpen}
-          onRequestClose={()=>{this.props.setInfoOpen(false)}}
-          >
-          
-          {this.props.descriptions[this.props.curAppId]}
-      </Dialog>
+          <DialogContent>
+            <Typography paragraph component="div" type="body1">
+              {this.props.descriptions[this.props.curAppId]}
+            </Typography>
+          </DialogContent>
+        </Dialog>
     )
   }
 }

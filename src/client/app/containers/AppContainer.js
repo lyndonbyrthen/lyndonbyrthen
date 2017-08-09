@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 
-import LinearProgress from 'material-ui/LinearProgress'
-import { default as theme} from '../styles/ui-theme'
+import { LinearProgress } from 'material-ui/Progress';
+import { default as styles} from '../styles/styles'
 
 import TweenMax from '../libs/gasp/TweenMax.min'
 import debounce from 'debounce'
@@ -119,7 +119,7 @@ class AppContainer extends React.Component {
     if (this.state.component) content = (<this.state.component appId={this.props.appId} isCurApp={this.isCurApp()} />)
     else content = (<LinearProgress/>)
     return (
-      <div ref='page' style={theme.fullpage} >
+      <div ref='page' style={styles.fullpage} >
           {content}
       </div>
     )

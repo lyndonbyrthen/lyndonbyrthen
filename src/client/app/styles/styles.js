@@ -46,6 +46,7 @@ export default {
     "toolBarButton": {
         "minWidth":'42px',
         "minHeight":'42px',
+        padding:"0px"
     },
 
     hiddenInput: {

@@ -1,8 +1,8 @@
 export default {
     posterImg: {
-        width:"100px",
+        width:"100%",
         height:"auto",
-        margin:"0px"
+        margin:"0px",
     },
 
     listItem: {
@@ -12,4 +12,17 @@ export default {
     	display: "inline-block",
     	backgroundColor:"transparent"
     },
+
+    gridItem: {
+        star: {
+            left:'10px',
+            top:'5px',
+            position:"absolute",
+            color:"red",
+            maxWidth:'42',
+            maxHeight:'42',
+            backgroundColor:"rgba(50,50,50,.2)",
+            borderRadius: 0,
+        }
+    }
 }
