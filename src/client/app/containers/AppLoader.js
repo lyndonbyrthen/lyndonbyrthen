@@ -65,8 +65,9 @@ class AppLoader extends React.Component {
               ))
             }
             <Page404Dialog {...this.props}/>
-
+            
             <InfoDialog {...this.props}/>
+            
 
             <MainMenu menuOpen={()=>{this.props.setMenuOpen(true)}} {...this.props} />
             

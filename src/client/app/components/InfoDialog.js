@@ -18,25 +18,25 @@ class InfoDialog extends React.Component {
     if (this.props.deltas[this.props.curAppId]===undefined || !this.props.descriptions[this.props.curAppId]) return <span/>
     
     return (
+      <Dialog 
+      open={this.props.infoOpen}
+      onRequestClose={() => {this.props.setInfoOpen(false)}}
+      >
+        <IconButton 
+        style={{
+          position:'absolute',
+          right: 0,
+          top:0
+        }}
+        onClick={() => {this.props.setInfoOpen(false)}}
 
-      <Dialog open={this.props.infoOpen} onRequestClose={() => {this.props.setInfoOpen(false)}}>
-          <DialogTitle>
-            <div>
-            <span>{this.props.descriptions[this.props.curAppId].name}</span>
-              <IconButton 
-              style={{
-                position:'absolute',
-                right: 0,
-                top:0
-              }}
-              onClick={() => {this.props.setInfoOpen(false)}}
+        >
+        <HighlightOff/>
+        </IconButton>
+        <DialogTitle>
+            {this.props.descriptions[this.props.curAppId].name}
+        </DialogTitle>
 
-              >
-              <HighlightOff/>
-              </IconButton>
-
-            </div>
-          </DialogTitle>
           <DialogContent>
             <DialogContentText>
               {this.props.descriptions[this.props.curAppId]}

@@ -11,7 +11,7 @@ import Button from 'material-ui/Button';
 import { default as styles} from '../styles/styles'
 
 let infoFootnote = (
-    <div>
+    <span>
     This site is build on React with a PHP backend. To read more about it,
     please see the 
     <Link style={styles.link} to='/about'>
@@ -19,7 +19,7 @@ let infoFootnote = (
       About
     </Button>
     </Link> section.
-    </div>
+    </span>
   )
 
 let apps = [
@@ -28,14 +28,11 @@ let apps = [
    	 name: 'Audio Visualizer',
    	 id: 'audiovisualizer',
    	 description: (
-      <div>
+      <span>
         This app uses Matter.js, a physics engine and the AnalyserNode in javascript.
-        <p/>
         The music used is a remix from a 1990 Super Nintendo game, ActRaiser.
-        <p/>
         {infoFootnote}
-
-      </div>
+      </span>
       ),
      loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer.js"),
    },

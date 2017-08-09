@@ -1,7 +1,18 @@
 import createMuiTheme from 'material-ui/styles/theme';
-
+import createPalette from 'material-ui/styles/palette';
+import blueGrey from 'material-ui/colors/blueGrey';
 const MainTheme = createMuiTheme({
+
+  palette: createPalette({
+    primary: blueGrey
+  }),
+  
   overrides: {
+    
+    MuiDialog: {
+      
+    },
+
     MuiButton: {
       // Name of the styleSheet
       root: {
