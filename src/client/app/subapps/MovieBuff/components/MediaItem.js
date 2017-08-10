@@ -64,6 +64,7 @@ class MediaItem extends React.Component {
       // console.log('componentDidUpdate')
       el.style.maxWidth = '100%'
       el.style.overflowY = 'hidden'
+
       TweenMax.to(el, dur, {delay:delay, 'flex-basis':'100%', onUpdate:()=>{
          window.scrollDiv.scrollTop = this.getOffset(el).top
       }});
