@@ -3,6 +3,7 @@ export default {
         width:"100%",
         height:"auto",
         margin:"0px",
+        display:'block',
     },
 
     listItem: {
@@ -15,14 +16,23 @@ export default {
 
     gridItem: {
         star: {
-            left:'10px',
-            top:'5px',
-            position:"absolute",
-            color:"red",
-            maxWidth:'42',
-            maxHeight:'42',
-            backgroundColor:"rgba(50,50,50,.2)",
+            display:'inline-block',
+            color:"#ccc",
+            maxWidth:'32px',
+            maxHeight:'32px',
+            backgroundColor:"rgba(0,0,0,.55)",
             borderRadius: 0,
         }
+    },
+
+    viewSelector: {
+        position:'fixed',
+        top: '10px',
+        right: '10px',
+        zIndex:'2000'
+    },
+
+    posterText: {
+        color:"#ccc",
     }
 }

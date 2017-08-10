@@ -42,7 +42,11 @@ let apps = [
      id: 'moviebuff',
      description: (
       <div>
-        This app connects to "The Movie DB"
+        This app connects to "The Movie DB" and retrieves recently released titles.
+        And you may also add titles to your favorite list.
+        The app state is persisted in a separate Redux store nested within, since
+        the app is dynamically loaded. This demonstrates that multiple instances of
+        redux stores can work well together.
         <p/>
         <p/>
         {infoFootnote}

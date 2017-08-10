@@ -1,16 +1,19 @@
 import React from 'react'
+import ReactDOM from 'react-dom';
 
 import { connect } from 'react-redux'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducer from './MovieBuff/reducers'
 
+import { MuiThemeProvider } from 'material-ui/styles';
+import MainTheme from '../styles/MainTheme'
 import Button from 'material-ui/Button';
+
 import { default as styles} from '../styles/styles'
 
 import MediaLoader from './MovieBuff/containers/MediaLoader';
 import MediaContainer from './MovieBuff/containers/MediaContainer';
-
 
 import {
   BrowserRouter as Router,
@@ -23,7 +26,10 @@ import RouteToState from '../tools/RouteToState'
 
 
 let initState = {
-  movies:{}
+  media:{},
+  mediaList:{},
+  viewType:'ALL',
+  focus:null
 }
 
 const appstore = createStore(
@@ -46,6 +52,10 @@ class MovieBuff extends React.Component {
     console.log('MovieBuff :: Route Change =============>',id)
   }
 
+  componentDidMount() {
+    window.scrollDiv = ReactDOM.findDOMNode(this.refs.scrollDiv);
+  }
+
   render() {
 
     // if (this.props.appId !== this.props.curAppId) return <span/>
@@ -65,18 +75,18 @@ class MovieBuff extends React.Component {
 
            <MediaLoader/>
 
-          <div style={{height:'100%',overflowY:'auto',backgroundColor:'black'}}>
+          <div ref='scrollDiv' style={{height:'100%',overflowY:'auto',backgroundColor:'black'}}>
              <MediaContainer />
           </div>
 
-           <div style={{top:'10px', right:'10px',position:'fixed', width:'auto', backgroundColor:"transparent"}}>
+           {/*<div style={{top:'10px', right:'10px',position:'fixed', width:'auto', backgroundColor:"transparent"}}>
              <Button raised color="accent">
                movie list
              </Button>
              <Button raised color="accent">
                tv list
              </Button>
-           </div>
+           </div>*/}
 
            </div>
         </Router>

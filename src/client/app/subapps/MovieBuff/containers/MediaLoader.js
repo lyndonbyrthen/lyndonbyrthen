@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
-import { addMovies } from '../actions'
+import { addMedia } from '../actions'
 
 import { normalize, schema } from 'normalizr';
 
@@ -17,7 +17,7 @@ class MediaLoader extends React.Component {
     super(props)
     // console.log(props)
     this.loadMedia = this.loadMedia.bind(this)
-    this.moviePageLoaded = 1
+    this.pageLoaded = 1
     
     this.date = new Date()
     this.yearStr = this.date.getFullYear()
@@ -29,32 +29,32 @@ class MediaLoader extends React.Component {
   loadMedia() {
     let dispatch = this.props.dispatch;
     let scope = this;
-      console.log(this.dateStr)
-      console.log(this.yearStr)
 
-      let myHeaders = new Headers();
-      let myInit = { method: 'GET',
-       headers: myHeaders,
-      };
-      let myRequest = 
-      new Request('https://api.themoviedb.org/3/discover/movie?api_key=9ceb030330a7d13c7e200d7d7489a442&language=en-US&sort_by=primary_release_date.desc&include_adult=false&include_video=true&page=1&primary_release_year='+this.yearStr+'&primary_release_date.gte='+this.yearStr+'-01-01&primary_release_date.lte='+this.dateStr+'&year='+this.yearStr+'&with_original_language=en&page='+this.moviePageLoaded, myInit);
+    let myHeaders = new Headers();
+    let myInit = { method: 'GET',
+     headers: myHeaders,
+    };
+    let myRequest = 
+    new Request('https://api.themoviedb.org/3/discover/movie?api_key=9ceb030330a7d13c7e200d7d7489a442&language=en-US&sort_by=primary_release_date.desc&include_adult=false&include_video=true&page=1&primary_release_year='+this.yearStr+'&primary_release_date.gte='+this.yearStr+'-01-01&primary_release_date.lte='+this.dateStr+'&year='+this.yearStr+'&with_original_language=en&page='+this.pageLoaded, myInit);
 
-      fetch(myRequest).then(function(response) {
-        return response.json();
-      }).then(function(json) {
-        console.log(json)
-        let res = json.results
-        let movies = {}
+    fetch(myRequest).then(function(response) {
+      return response.json();
+    }).then(function(json) {
 
-        for (let i in res) {
-          movies[res[i].id] = res[i]
-        }
+      console.log(json)
 
-        scope.moviePageLoaded++;
-        if (scope.moviePageLoaded < 4) scope.loadMedia()
-        
-        dispatch(addMovies(movies))
-      });
+      let res = json.results
+      let movies = {}
+
+      for (let i in res) {
+        movies[res[i].id] = res[i]
+      }
+
+      scope.pageLoaded++;
+      if (scope.pageLoaded < 7) scope.loadMedia()
+      
+      dispatch(addMedia(movies))
+    });
       
   }
 

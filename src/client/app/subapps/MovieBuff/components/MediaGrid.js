@@ -9,33 +9,24 @@ import Grid from 'material-ui/Grid';
 import { default as styles} from '../styles'
 import MediaItem from './MediaItem'
 
+import css1 from 'react-grid-layout/css/styles.css'
+import css2 from 'react-resizable/css/styles.css'
 
 class MediaGrid extends React.Component {
-	// console.log(props)
-
+  
   render() {
 
-    console.log(this.props.items)
-
     let children = []
-
-    for (let i in this.props.items) {
-
-        let mov = this.props.items[i]
-
-        if (!mov.poster_path) continue
-
-        children.push(
-         (
-          <MediaItem data={mov} key={i} /> 
-         )
-      )
+    for (let i in this.props.media) {
+        let mov = this.props.media[i]
+        if (this.props.viewType === 'FAVORED' && !this.props.mediaList[mov.id]) continue
+        if (!mov.poster_path || !mov.backdrop_path) continue
+        children.push(<MediaItem {...this.props} data={mov} key={i} />)
     }
 
     return (
-      <Grid container spacing={0} direction="row" align='top' justify="center" >
+      <Grid ref='mediaGrid' container spacing={0} direction="row" align='baseline' justify="center" >
         {children}
-        
       </Grid>
     )
   }
