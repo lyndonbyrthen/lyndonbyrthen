@@ -29,7 +29,8 @@ let initState = {
   media:{},
   mediaList:{},
   viewType:'ALL',
-  focus:null
+  focus:null,
+  mediaDelta:[]
 }
 
 const appstore = createStore(

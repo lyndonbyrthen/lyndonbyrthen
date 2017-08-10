@@ -8,8 +8,7 @@ const reducer = (state = {}, action) => {
       return newState
     case 'ADD_MEDIA':
       var newState = {...state};
-      if (action.media.id) newState.media[action.media.id] = action.media
-      else newState.media = {...newState.media, ...action.media}
+      prepMedia(newState,action.media)
       return newState
     case 'ADD_TO_LIST':
       var newState = {...state};
@@ -28,6 +27,35 @@ const reducer = (state = {}, action) => {
     default:
       return state
   }
+}
+
+const filterMedia=(media)=>{
+   let movs = [] 
+    for (let i in media) {
+      let mov = media[i]
+      if (!mov.poster_path || !mov.backdrop_path) continue
+      movs.push(mov)
+    }
+    return movs
+}
+
+const prepMedia=(state,media)=>{
+   state.mediaDelta = state.mediaDelta.concat()
+   state.media = {...state.media}
+   let m = media
+   /*m.sort((a,b)=>{
+      let astr = a.release_date.split('-')
+      let adate = new Date(astr[0],astr[1]-1,astr[2])
+      let bstr = b.release_date.split('-')
+      let bdate = new Date(bstr[0],bstr[1]-1,bstr[2])
+      return bdate.getTime()-adate.getTime()
+   })*/
+    for (let i in m) {
+      if (!m[i].poster_path || !m[i].backdrop_path) continue
+      if (state.media[m[i].id]) continue
+      state.mediaDelta.push(m[i].id)
+      state.media[m[i].id] = m[i]
+    }
 }
 
 export default reducer

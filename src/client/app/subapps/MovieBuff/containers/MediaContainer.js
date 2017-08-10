@@ -30,7 +30,8 @@ const mapStateToProps = state => {
     media:state.media,
     mediaList:state.mediaList,
     viewType:state.viewType,
-    focus:state.focus
+    focus:state.focus,
+    mediaDelta:state.mediaDelta
   }
 }
 const mapDispatchToProps = dispatch => {

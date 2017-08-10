@@ -111,6 +111,9 @@ class MediaItem extends React.Component {
               {mov.title}
           </Typography>
           <Typography style={styles.posterText} component="div" paragraph type="body1">
+              {mov.release_date}
+          </Typography>
+          <Typography style={styles.posterText} component="div" paragraph type="body1">
               {mov.overview}
           </Typography>
         </div>

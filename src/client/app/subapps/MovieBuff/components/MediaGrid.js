@@ -15,13 +15,13 @@ import css2 from 'react-resizable/css/styles.css'
 class MediaGrid extends React.Component {
   
   render() {
-
+    
+    let delta = this.props.mediaDelta
     let children = []
-    for (let i in this.props.media) {
-        let mov = this.props.media[i]
+    for (let i in delta) {
+        let mov = this.props.media[delta[i]]
         if (this.props.viewType === 'FAVORED' && !this.props.mediaList[mov.id]) continue
-        if (!mov.poster_path || !mov.backdrop_path) continue
-        children.push(<MediaItem {...this.props} data={mov} key={i} />)
+        children.push(<MediaItem {...this.props} data={mov} key={mov.id} />)
     }
 
     return (

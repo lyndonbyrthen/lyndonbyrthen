@@ -17,7 +17,7 @@ class Selector extends React.Component {
 
 	constructor(props) {
     super(props)
-    console.log(props)
+    // console.log(props)
     this.onClose = this.onClose.bind(this)
     this.onClick = this.onClick.bind(this)
 
