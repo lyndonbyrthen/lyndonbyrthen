@@ -57,6 +57,18 @@ let apps = [
    },
 
    { 
+     name: 'Audio Visualizer 2',
+     id: 'audiovisualizer2',
+     description: (
+      <span>
+        Another example of using Matter.js, a physics engine and the AnalyserNode.
+        {infoFootnote}
+      </span>
+      ),
+     loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer2.js"),
+   },
+
+   { 
    	 name: 'About',
    	 id: 'about',
    	 description: '',

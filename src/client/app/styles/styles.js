@@ -49,6 +49,14 @@ export default {
         padding:"0px"
     },
 
+    appToolBar: {
+     position:'absolute',
+     top:10,
+     right: 10,
+     zIndex: 999999,
+     width:'auto'
+    },
+
     hiddenInput: {
         cursor: 'pointer',
         position: 'absolute',
