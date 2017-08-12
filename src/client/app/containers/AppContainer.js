@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 
+import { setTransitionState } from '../actions'
+
+
 import { LinearProgress } from 'material-ui/Progress';
 import { default as styles} from '../styles/styles'
 
@@ -33,12 +36,14 @@ class AppContainer extends React.Component {
 
   transIn(dir='up') {
     // console.log(this.props.appData.name,'transin')
+    this.props.setTransitionState('IN_TRANSITION')
     this.refs.page.style.position = 'fixed';
     this.refs.page.style.overflow = 'hidden';
     let y = dir==='up' ? window.innerHeight : -window.innerHeight;
     TweenMax.fromTo(this.refs.page, this.transTime, {y:y}, {y:0, onComplete:()=>{
       this.refs.page.style.position = 'absolute'
       this.refs.page.style.overflow = 'auto'
+      this.props.setTransitionState('INACTIVE')
     }});
   }
 
@@ -116,7 +121,7 @@ class AppContainer extends React.Component {
 
     // console.log('this.state.component',this.state.component)
 
-    if (this.state.component) content = (<this.state.component appId={this.props.appId} isCurApp={this.isCurApp()} />)
+    if (this.state.component) content = (<this.state.component appId={this.props.appId} isCurApp={this.isCurApp()} transitionState={this.props.transitionState}/>)
     else content = (<LinearProgress/>)
     return (
       <div ref='page' style={styles.fullpage} >
@@ -133,9 +138,19 @@ const mapStateToProps = state => {
     deltas: state.deltas,
     ids: state.ids,
     loadfuncs: state.loadfuncs,
+    transitionState:state.transitionState,
   }
 }
 
-AppContainer = connect(mapStateToProps)(AppContainer)
+const mapDispatchToProps = dispatch => {
+  return {
+    setTransitionState : (transState) => {
+      dispatch(setTransitionState(transState))
+    },
+    dispatch:dispatch,
+  }
+}
+
+AppContainer = connect(mapStateToProps,mapDispatchToProps)(AppContainer)
 
 export default AppContainer;

@@ -5,9 +5,9 @@ export const setCurApp = (appId) => ({
    curAppId:appId
 })
 
-export const setTransState = (state) => ({
-   type: 'SET_TRANS_STATE',
-   transState:state
+export const setTransitionState = (transState) => ({
+   type: 'SET_TRANSITION_STATE',
+   transitionState:transState
 })
 
 export const setMenuOpen = (bool)=> ({

@@ -5,10 +5,10 @@ const lbapp = (state = {}, action) => {
         ...state,
         curAppId: action.curAppId,
       }
-    case 'SET_TRANS_STATE':
+    case 'SET_TRANSITION_STATE':
       return {
         ...state,
-        transState: action.transState,
+        transitionState: action.transitionState,
       }
     case 'SET_MENU_OPEN':
       return {

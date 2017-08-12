@@ -85,6 +85,7 @@ class AudioVisualizer2 extends React.Component {
     }
 
     this.vis.start()
+    this.vis.pause()
 
 
   }
@@ -120,20 +121,34 @@ class AudioVisualizer2 extends React.Component {
     if (!this.props.isCurApp) return
     this.kill();
     this.start();
+    this.vis.pause(false)
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
+
     if (this.props.isCurApp && !nextProps.isCurApp) {
         this.kill();
     } else if (!this.props.isCurApp && nextProps.isCurApp) {
         this.start();
         if (!this.state.isMute) this.audio.play();
     }
+
+    
+
+    if (this.props.isCurApp && nextProps.transitionState === 'INACTIVE')
+      this.vis.pause(false)
+  }
+
+  componentDidUpdate() {
+    
   }
 
   componentDidMount() {
     this.vis.setParent(this.refs.root)
     this.start()
+    this.vis.pause(false)
+
   }
 
   componentWillMount() {

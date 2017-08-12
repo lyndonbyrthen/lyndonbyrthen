@@ -97,7 +97,8 @@ const initState = {
   ...appsMap,
   curAppId:curAppId,
   menuOpen:false,
-  infoOpen:false
+  infoOpen:false,
+  transitionState:'INACTIVE'
 }
 
 export default initState

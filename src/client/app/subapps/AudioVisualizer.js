@@ -79,8 +79,9 @@ class AudioVisualizer extends React.Component {
       fullpage: {
         width:'100%',
         height:'100%',
-        position: 'fixed',
-        overflow:'hidden'
+        position: 'absolute',
+        overflow:'hidden',
+        backgroundColor:'rgba(0,172,193,.08)'
       },
       controls: {
         position:'absolute',
@@ -279,8 +280,8 @@ class AudioVisualizer extends React.Component {
 
       rgba.push(Math.round(barHeight + (22 * (i/this.barsNum))));
       rgba.push(Math.round(200 * (i/this.barsNum)));
-      rgba.push(205)
-      rgba.push(.20)
+      rgba.push(150)
+      rgba.push(.2)
 
       this.bars[i].render.fillStyle = 'rgba('+rgba.join(',')+')'
 

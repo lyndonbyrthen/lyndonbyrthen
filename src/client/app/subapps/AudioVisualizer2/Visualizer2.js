@@ -38,6 +38,7 @@ class Visualizer2 {
 
     this.dataArray = new Uint8Array(256);
     this.isMute = true
+    this.paused = false;
 
     /*this.start = this.start.bind(this);
     this.kill = this.kill.bind(this);
@@ -102,7 +103,7 @@ class Visualizer2 {
       rgba.push(Math.round(20 * ((i)/this.bars.length)));
       rgba.push(Math.round(barHeight + (300 * ((i)/this.bars.length))));
 
-      rgba.push(.2)
+      rgba.push(.4)
 
       this.bars[i].render.fillStyle = 'rgba('+rgba.join(',')+')'
        
@@ -127,7 +128,7 @@ class Visualizer2 {
       rgba.push(Math.round(20 * ((len-i)/this.bars.length)));
       rgba.push(Math.round(barHeight + (300 * ((len-i)/this.bars.length))));
 
-      rgba.push(.2)
+      rgba.push(.4)
 
       this.bars[i].render.fillStyle = 'rgba('+rgba.join(',')+')'
 
@@ -270,6 +271,23 @@ class Visualizer2 {
 
     this.updateInterval = setInterval(this.update,this.refreshTime);
     this.auditInterval = setInterval(this.auditBodies,2000);
+	}
+
+	pause(bool=true) {
+		// console.log('pause',bool)
+		if (bool === this.paused) return
+		this.paused = bool
+    if (bool) {
+    	// Render.stop(this.render);
+		  Runner.stop(this.runner);
+		  clearInterval(this.updateInterval);
+      clearInterval(this.auditInterval);
+    } else {
+    	// Render.run(this.render)
+      Runner.run(this.runner, this.engine);
+      this.updateInterval = setInterval(this.update,this.refreshTime);
+      this.auditInterval = setInterval(this.auditBodies,2000);
+    }
 	}
 
 	kill() {
