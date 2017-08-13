@@ -72,24 +72,21 @@ export default {
 
       "fullpage": {
         "width":"100%",
-        "height":"100%",
-        "position": "absolute",
+        height:"100%",
+        "position": "fixed",
         "top": 0,
         "left": 0,
-        backgroundColor:'rgba(255,110,64 ,.2)'
+        backgroundColor:'rgba(255,110,64 ,.2)',
+        overflowY:'auto'
       },
 
       "root": {
         "maxWidth":"600px",
         "position":"relative",
         "margin":"50px auto 20px auto",
-        padding:'10px'
+         padding:'10px'
       },
 
     }
-
-    
-
-    
 
 };
