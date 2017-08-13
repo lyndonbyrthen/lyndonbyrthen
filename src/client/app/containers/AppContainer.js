@@ -27,6 +27,8 @@ class AppContainer extends React.Component {
     
     this.state = {component:null}
 
+    this.transitionStage = 'INIT'
+
     this.transTime = .5
   }
 
@@ -75,12 +77,25 @@ class AppContainer extends React.Component {
     if (this.isCurApp() && nextProps.curAppId !== this.props.appId) {
       let dir = nextDelta > prevDelta ? 'up' : 'down';
       this.transOut(dir);
-      console.log()
     } else if (!this.isCurApp() && nextProps.curAppId === this.props.appId) {
       let dir = thisDelta < prevDelta ? 'down' : 'up';
       this.transIn(dir);
       this.loadComponent()
     }
+
+    if (this.isCurApp() && nextProps.curAppId !== this.props.appId) {
+        //transition out start
+        this.transitionStage = 'OUT_START'
+    } else if (!this.isCurApp() && nextProps.curAppId === this.props.appId) {
+        //transition in start
+        this.transitionStage = 'IN_START'
+    } else if (this.isCurApp() && this.props.transitionState==='IN_TRANSITION' && nextProps.transitionState === 'INACTIVE') {
+        //transition in finished
+        this.transitionStage = 'IN_COMPLETE'
+    } else if(!this.isCurApp() && this.props.transitionState==='IN_TRANSITION' && nextProps.transitionState === 'INACTIVE') {
+      //transition out finished
+      this.transitionStage = 'OUT_COMPLETE'
+    } 
     
   }
 
@@ -121,8 +136,13 @@ class AppContainer extends React.Component {
 
     // console.log('this.state.component',this.state.component)
 
-    if (this.state.component) content = (<this.state.component appId={this.props.appId} isCurApp={this.isCurApp()} transitionState={this.props.transitionState}/>)
-    else content = (<LinearProgress/>)
+    if (this.state.component) {
+      content = (<this.state.component 
+        appId={this.props.appId} 
+        isCurApp={this.isCurApp()} 
+        transitionStage={this.transitionStage} />)
+    } else content = (<LinearProgress/>)
+
     return (
       <div ref='page' style={styles.fullpage} >
           {content}

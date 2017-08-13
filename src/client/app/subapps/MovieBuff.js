@@ -45,6 +45,7 @@ class MovieBuff extends React.Component {
     super(props)
     // console.log(props)
     this.onRouteChange = this.onRouteChange.bind(this)
+    this.ready = false
   }
 
   onRouteChange(routeData) {
@@ -53,13 +54,20 @@ class MovieBuff extends React.Component {
     console.log('MovieBuff :: Route Change =============>',id)
   }
 
+  componentWillReceiveProps(nextProps) {
+    // console.log(nextProps)
+  }
+
   componentDidMount() {
     window.scrollDiv = ReactDOM.findDOMNode(this.refs.scrollDiv);
-  }
+  } 
 
   render() {
 
-    // if (this.props.appId !== this.props.curAppId) return <span/>
+    let loader
+    if (this.props.transitionStage === 'INIT' || this.props.transitionStage === 'IN_COMPLETE')
+       loader = <MediaLoader/>
+    else loader = null
 
   	return (
       <Provider store={appstore}>
@@ -74,20 +82,11 @@ class MovieBuff extends React.Component {
               />)
            }}/>*/}
 
-           <MediaLoader/>
+           { loader }
 
           <div ref='scrollDiv' style={{height:'100%',overflowY:'auto',backgroundColor:'black'}}>
              <MediaContainer />
           </div>
-
-           {/*<div style={{top:'10px', right:'10px',position:'fixed', width:'auto', backgroundColor:"transparent"}}>
-             <Button raised color="accent">
-               movie list
-             </Button>
-             <Button raised color="accent">
-               tv list
-             </Button>
-           </div>*/}
 
            </div>
         </Router>
@@ -96,7 +95,7 @@ class MovieBuff extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+/*const mapStateToProps = state => {
   return {
     curAppId : state.curAppId,
   }
@@ -111,6 +110,6 @@ const mapDispatchToProps = dispatch => {
 MovieBuff = connect(
   mapStateToProps,
   mapDispatchToProps
-)(MovieBuff)
+)(MovieBuff)*/
 
 export default MovieBuff
