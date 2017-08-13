@@ -39,6 +39,7 @@ class Visualizer {
     this.minBarHeight = 3
     this.barWidth = 20
     this.yOffset = .75
+    this.barRes = 128
 
     this.dataArray = new Uint8Array(256);
     this.isMute = true
@@ -172,13 +173,13 @@ class Visualizer {
       //add bars
       //==================================================================================
 
-      this.barWidth = (WIDTH / 256)
+      this.barWidth = (WIDTH / this.barRes)
     
       let x = 0;
 
       this.bars = []
 
-      for (let i = 0; i < 256; i++) {
+      for (let i = 0; i < this.barRes; i++) {
           
           this.bars.push(Bodies.rectangle(x, 500, this.barWidth, this.minBarHeight, { 
             isStatic: true,
