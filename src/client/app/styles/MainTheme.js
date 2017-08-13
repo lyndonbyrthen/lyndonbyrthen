@@ -1,12 +1,12 @@
 import createMuiTheme from 'material-ui/styles/theme';
 import createPalette from 'material-ui/styles/palette';
-import lime from 'material-ui/colors/blueGrey';
+import pink from 'material-ui/colors/pink';
 import amber from 'material-ui/colors/amber';
 
 const MainTheme = createMuiTheme({
 
   palette: createPalette({
-    primary: lime,
+    primary: pink,
     accent:amber
   }),
   

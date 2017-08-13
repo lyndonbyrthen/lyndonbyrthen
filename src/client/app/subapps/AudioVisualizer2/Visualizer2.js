@@ -67,7 +67,6 @@ class Visualizer2 {
 	update() {
 
     if (!this.recordedMap && !this.analyser) return
-    console.log('update')
     let arr
 
     if (this.isMute && this.recordedMap) {

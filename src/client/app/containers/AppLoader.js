@@ -40,6 +40,7 @@ class AppLoader extends React.Component {
       // console.log('=============>',id,' <===>',this.props.curAppId)
       if (id === this.props.curAppId) return
       console.log('Route Change =============>',id)
+      this.props.setInfoOpen(false) 
       this.props.dispatch(setCurApp(id))
    }
     

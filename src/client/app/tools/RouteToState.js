@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 class RouteToState extends React.Component {
   
   componentWillReceiveProps(nextProps) {
-    this.props.onChange(nextProps)  
+    this.props.onChange(nextProps) 
   }
 
   componentDidMount() {
