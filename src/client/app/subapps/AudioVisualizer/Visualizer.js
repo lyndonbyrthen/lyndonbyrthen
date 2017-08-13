@@ -264,7 +264,7 @@ class Visualizer {
 	}
 
 	pause(bool=true) {
-		console.log('pause',bool)
+		// console.log('pause',bool)
 		if (bool === this.paused) return
 		this.paused = bool
     if (bool) {

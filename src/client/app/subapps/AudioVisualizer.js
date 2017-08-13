@@ -90,7 +90,6 @@ class AudioVisualizer extends React.Component {
     fetch('./assets/recording.json').then(function(response) {
       return response.json()
     }).then((json)=>{
-      console.log(json)
       scope.vis.setRecordedMap(json)
     })
   }
@@ -107,7 +106,7 @@ class AudioVisualizer extends React.Component {
   }
 
   onResize(event) {
-    console.log('onResize')
+    // console.log('onResize')
     if (!this.props.isCurApp) return
     this.vis.kill()
     this.vis.create()
@@ -117,16 +116,18 @@ class AudioVisualizer extends React.Component {
   componentWillReceiveProps(nextProps) {
     console.log(nextProps)
 
-    if (this.props.isCurApp && !nextProps.isCurApp) {
-        //transition in start
-        this.vis.pause()
-        this.audio.pause();
-    } else if (!this.props.isCurApp && nextProps.isCurApp) {
-        //transition out start
-    } else if (this.props.isCurApp && this.props.transitionState==='IN_TRANSITION' && nextProps.transitionState === 'INACTIVE') {
-      //transition in finished
-      //if window resized while on other pages
+    if (this.props.transitionStage == nextProps.transitionStage) return
 
+    if (nextProps.transitionStage == 'INIT') {
+        
+      
+    } else if (nextProps.transitionStage == 'IN_START') {
+      
+    } else if (nextProps.transitionStage == 'OUT_START') {
+      this.vis.pause()
+      this.audio.pause();
+    } else if (nextProps.transitionStage == 'IN_COMPLETE') {
+      //if window resized while on other pages
       if (window.innerWidth != this.vis.render.canvas.offsetWidth ||
         window.innerHeight != this.vis.render.canvas.offsetHeight) {
         this.vis.kill()
@@ -134,9 +135,11 @@ class AudioVisualizer extends React.Component {
       }
       this.vis.pause(false)
       if (!this.state.isMute) this.audio.play();
-    } else if(!this.props.isCurApp && this.props.transitionState==='IN_TRANSITION' && nextProps.transitionState === 'INACTIVE') {
-      //transition out finished
+
+    } else if (nextProps.transitionStage == 'OUT_COMPLETE') {
+
     }
+    
   }
 
   componentDidUpdate() {
@@ -147,7 +150,8 @@ class AudioVisualizer extends React.Component {
     this.vis.setParent(this.refs.root)
     this.initialize()
     this.vis.create()
-    this.vis.pause(false)
+    if (!this.transitionStage)
+      this.vis.pause(false)
   }
 
   componentWillMount() {

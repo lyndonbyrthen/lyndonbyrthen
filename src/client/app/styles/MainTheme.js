@@ -1,17 +1,17 @@
 import createMuiTheme from 'material-ui/styles/theme';
 import createPalette from 'material-ui/styles/palette';
-import pink from 'material-ui/colors/pink';
+import cyan from 'material-ui/colors/cyan';
 import amber from 'material-ui/colors/amber';
 
 const MainTheme = createMuiTheme({
 
   palette: createPalette({
-    primary: pink,
+    primary: cyan,
     accent:amber
   }),
   
   overrides: {
-    
+
     MuiDialog: {
       
     },
