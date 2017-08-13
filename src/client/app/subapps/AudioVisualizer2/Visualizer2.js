@@ -28,7 +28,12 @@ class Visualizer2 {
 	constructor(ops) {
 		this.ops = ops
     this.update = this.update.bind(this);
-    this.start = this.start.bind(this);
+    this.create = this.create.bind(this);
+    this.pause = this.pause.bind(this);
+    this.kill = this.kill.bind(this);
+    this.start = this.start.bind(this)
+
+
     this.mapIdx = 0;
     this.refreshTime = 30
     this.minBarHeight = 3
@@ -38,7 +43,7 @@ class Visualizer2 {
 
     this.dataArray = new Uint8Array(256);
     this.isMute = true
-    this.paused = false;
+    this.paused = true;
 
     /*this.start = this.start.bind(this);
     this.kill = this.kill.bind(this);
@@ -62,7 +67,7 @@ class Visualizer2 {
 	update() {
 
     if (!this.recordedMap && !this.analyser) return
-    // console.log(this.analyser)
+    console.log('update')
     let arr
 
     if (this.isMute && this.recordedMap) {
@@ -154,7 +159,7 @@ class Visualizer2 {
   }
 
 
-	start() {
+	create() {
 
 		this.engine = Engine.create()
         this.world = this.engine.world
@@ -175,7 +180,7 @@ class Visualizer2 {
 	    Render.run(this.render)
 
 	    this.runner = Runner.create();
-      Runner.run(this.runner, this.engine);
+      // Runner.run(this.runner, this.engine);
 
       let WIDTH = window.innerWidth;
       let HEIGHT = window.innerHeight;
@@ -185,7 +190,7 @@ class Visualizer2 {
 
       this.bouncers = []
 
-	    let bcount = 55 * window.innerWidth/1000;
+	    let bcount = 35 * window.innerWidth/1000;
 
 	    for (let i=0; i<bcount; i++) {
          this.bouncers.push(
@@ -269,12 +274,30 @@ class Visualizer2 {
 
     Events.on(this.engine, 'collisionStart', this.onCollisionStart);
 
-    this.updateInterval = setInterval(this.update,this.refreshTime);
-    this.auditInterval = setInterval(this.auditBodies,2000);
+    this.mouse = Mouse.create(this.render.canvas),
+    this.mouseConstraint = MouseConstraint.create(this.engine, {
+            mouse: this.mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: {
+                    visible: false
+                }
+            }
+        });
+
+    World.add(this.world, this.mouseConstraint);
+
+    /*window.Runner = Runner
+    window.runner = this.runner
+    window.engine = this.engine*/
+	}
+
+	start() {
+		this.pause(false)
 	}
 
 	pause(bool=true) {
-		// console.log('pause',bool)
+		console.log('pause',bool)
 		if (bool === this.paused) return
 		this.paused = bool
     if (bool) {
@@ -299,6 +322,7 @@ class Visualizer2 {
 		this.render.canvas.remove();
 		clearInterval(this.updateInterval);
     clearInterval(this.auditInterval);
+    this.paused = true
 	}
 
 

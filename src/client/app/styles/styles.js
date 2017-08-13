@@ -22,11 +22,6 @@ export default {
       "left": 0,
     },
 
-    "aboutRoot": {
-    	"maxWidth":"600px",
-    	"position":"relative",
-    	"margin":"50px auto 20px auto",
-    },
 
     "inlineButton": {
         "minWidth":"0",
@@ -46,7 +41,8 @@ export default {
     "toolBarButton": {
         "minWidth":'42px',
         "minHeight":'42px',
-        padding:"0px"
+        padding:"0px",
+        backgroundColor:'rgba(255,255,255,.7)'
     },
 
     appToolBar: {
@@ -67,5 +63,33 @@ export default {
         width: '100%',
         opacity: 0,
     },
+
+
+
+    //About page
+
+    aboutPage: {
+
+      "fullpage": {
+        "width":"100%",
+        "height":"100%",
+        "position": "absolute",
+        "top": 0,
+        "left": 0,
+        backgroundColor:'rgba(255,110,64 ,.2)'
+      },
+
+      "root": {
+        "maxWidth":"600px",
+        "position":"relative",
+        "margin":"50px auto 20px auto",
+        padding:'10px'
+      },
+
+    }
+
+    
+
+    
 
 };

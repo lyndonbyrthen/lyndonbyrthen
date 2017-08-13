@@ -5,7 +5,6 @@ import {
   Link
 } from 'react-router-dom'
 
-import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 
@@ -17,10 +16,9 @@ class About extends React.Component {
   render() {
 
   	return (
-      <div style={styles.aboutRoot} >
+      <div style={styles.aboutPage.fullpage}>
+      <div style={styles.aboutPage.root} >
 
-       <Card>
-        <CardContent>
           <Typography paragraph type="title">
             Lyndon Byrthen
           </Typography>
@@ -74,12 +72,8 @@ class About extends React.Component {
             </Link>
             can be found on GitHub.
           </Typography>
-
-        </CardContent>
-       
-      </Card>
-
    
+      </div>
       </div>
     )
   }

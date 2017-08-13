@@ -23,21 +23,22 @@ let infoFootnote = (
   )
 
 let apps = [
-   
+
+
    { 
-   	 name: 'Audio Visualizer',
-   	 id: 'audiovisualizer',
-   	 description: (
+     name: 'Audio Visualizer 2',
+     id: 'audiovisualizer2',
+     description: (
       <span>
-        This app uses Matter.js, a physics engine and the AnalyserNode in javascript.
+        Another example of using Matter.js, a physics engine and the AnalyserNode.
         The music used is a remix from a 1990 Super Nintendo game, ActRaiser.
         {infoFootnote}
       </span>
       ),
-     loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer.js"),
+     loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer2.js"),
    },
 
-   { 
+    { 
      name: 'Movie Buff',
      id: 'moviebuff',
      description: (
@@ -55,25 +56,29 @@ let apps = [
       ),
      loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/MovieBuff.js"),
    },
-
+   
    { 
-     name: 'Audio Visualizer 2',
-     id: 'audiovisualizer2',
-     description: (
+   	 name: 'Audio Visualizer',
+   	 id: 'audiovisualizer',
+   	 description: (
       <span>
-        Another example of using Matter.js, a physics engine and the AnalyserNode.
+        This app uses Matter.js, a physics engine and the AnalyserNode in javascript.
+        The music used is a remix from a 1990 Super Nintendo game, ActRaiser.
         {infoFootnote}
       </span>
       ),
-     loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer2.js"),
+     loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/AudioVisualizer.js"),
    },
 
+  
+
    { 
-   	 name: 'About',
-   	 id: 'about',
-   	 description: '',
+     name: 'About',
+     id: 'about',
+     description: '',
      loadfunc: require("bundle-loader?lazy&name=[name]!../subapps/About.js"),
    },
+
    
 ]
 

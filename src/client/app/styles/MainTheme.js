@@ -1,12 +1,12 @@
 import createMuiTheme from 'material-ui/styles/theme';
 import createPalette from 'material-ui/styles/palette';
-import blueGrey from 'material-ui/colors/blueGrey';
+import lime from 'material-ui/colors/blueGrey';
 import amber from 'material-ui/colors/amber';
 
 const MainTheme = createMuiTheme({
 
   palette: createPalette({
-    primary: blueGrey,
+    primary: lime,
     accent:amber
   }),
   
@@ -32,6 +32,12 @@ const MainTheme = createMuiTheme({
     MuiBackdrop: {
       root: {
         backgroundColor:'transparent'
+      }
+    },
+
+    MuiPaper: {
+      root: {
+        // backgroundColor:'rgba(255,255,255,.8)'
       }
     }
   },

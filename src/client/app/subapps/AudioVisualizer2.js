@@ -23,8 +23,7 @@ class AudioVisualizer2 extends React.Component {
   
   constructor(props) {
     super(props);
-    this.start = this.start.bind(this);
-    this.kill = this.kill.bind(this);
+    this.initialize = this.initialize.bind(this);
 
     this.onToggleMute = this.onToggleMute.bind(this);
     
@@ -46,9 +45,9 @@ class AudioVisualizer2 extends React.Component {
     this.vis = new Visualizer2();
   }
 
-  start() {
+  initialize() {
     
-    // this.audio.currentTime = Math.random()*90;
+    // this.audio.currentTime = Math.random(initialize)*90;
 
     if (!this.audioInitialized) {
       this.file = this.refs.audiofile;
@@ -83,16 +82,6 @@ class AudioVisualizer2 extends React.Component {
     } catch (e) {
 
     }
-
-    this.vis.start()
-    this.vis.pause()
-
-
-  }
-
-  kill() {
-    this.vis.kill();
-    this.audio.pause();
   }
 
   loadjson() {
@@ -118,9 +107,10 @@ class AudioVisualizer2 extends React.Component {
   }
 
   onResize(event) {
+    console.log('onResize')
     if (!this.props.isCurApp) return
-    this.kill();
-    this.start();
+    this.vis.kill()
+    this.vis.create()
     this.vis.pause(false)
   }
 
@@ -128,16 +118,25 @@ class AudioVisualizer2 extends React.Component {
     console.log(nextProps)
 
     if (this.props.isCurApp && !nextProps.isCurApp) {
-        this.kill();
+        //transition in start
+        this.vis.pause()
+        this.audio.pause();
     } else if (!this.props.isCurApp && nextProps.isCurApp) {
-        this.start();
-        if (!this.state.isMute) this.audio.play();
-    }
+        //transition out start
+    } else if (this.props.isCurApp && this.props.transitionState==='IN_TRANSITION' && nextProps.transitionState === 'INACTIVE') {
+      //transition in finished
+      //if window resized while on other pages
 
-    
-
-    if (this.props.isCurApp && nextProps.transitionState === 'INACTIVE')
+      if (window.innerWidth != this.vis.render.canvas.offsetWidth ||
+        window.innerHeight != this.vis.render.canvas.offsetHeight) {
+        this.vis.kill()
+        this.vis.create()
+      }
       this.vis.pause(false)
+      if (!this.state.isMute) this.audio.play();
+    } else if(!this.props.isCurApp && this.props.transitionState==='IN_TRANSITION' && nextProps.transitionState === 'INACTIVE') {
+      //transition out finished
+    }
   }
 
   componentDidUpdate() {
@@ -146,9 +145,9 @@ class AudioVisualizer2 extends React.Component {
 
   componentDidMount() {
     this.vis.setParent(this.refs.root)
-    this.start()
+    this.initialize()
+    this.vis.create()
     this.vis.pause(false)
-
   }
 
   componentWillMount() {
