@@ -118,7 +118,7 @@ class Visualizer {
       
       if (b.position.x < 0 || b.position.x > window.innerWidth
         || b.position.y < 0 || b.position.y > window.innerHeight) {
-        Body.set(b,{position:{x:window.innerWidth/2,y:window.innerHeight/2}});
+        Body.set(b,{position:{x:Common.random(15, window.innerWidth-15),y:0}});
       }
     }
   }
@@ -149,9 +149,6 @@ class Visualizer {
 
       let WIDTH = window.innerWidth;
       let HEIGHT = window.innerHeight;
-
-      let centerX = WIDTH>>1
-      let centerY = HEIGHT>>1
 
       //add bouncing balls
       //==================================================================================
@@ -227,7 +224,7 @@ class Visualizer {
           for (var i = 0; i < pairs.length; i++) {
               var pair = pairs[i];
               if (pair.bodyB.label == 'bwall') {
-                Body.set(pair.bodyA,{position:{x:window.innerWidth/2,y:window.innerHeight/2}})
+                Body.set(pair.bodyA,{position:{x:Common.random(15, window.innerWidth-15),y:0}})
                 if (pair.bodyA.render.fillStyle == appSS.ballFillStyle) {
                   pair.bodyA.render.fillStyle = appSS.ballFillStyle2
                 } else {
