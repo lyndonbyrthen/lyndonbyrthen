@@ -65,7 +65,7 @@ class About extends React.Component {
 
           <Typography paragraph component="p" type="body1">
                     The
-            <Link style={styles.link} to='https://github.com/lyndonbyrthen/lyndonbyrthen' target="_blank">
+            <Link style={styles.link} to='https://github.com/lyndonbyrthen/lyndonbyrthen/tree/lb_production' target="_blank">
             <Button color="primary" style={styles.inlineButton}>
               source code
             </Button>
