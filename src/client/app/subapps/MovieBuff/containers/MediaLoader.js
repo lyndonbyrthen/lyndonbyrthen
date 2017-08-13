@@ -9,13 +9,14 @@ import { normalize, schema } from 'normalizr';
 import 'whatwg-fetch';
 
 import Button from 'material-ui/Button';
-
+import { LinearProgress } from 'material-ui/Progress'
 
 class MediaLoader extends React.Component {
 	
   constructor(props) {
     super(props)
     // console.log(props)
+    this.state = {ready:false}
     this.loadMedia = this.loadMedia.bind(this)
     this.pageLoaded = 1
     this.movs = []
@@ -23,7 +24,6 @@ class MediaLoader extends React.Component {
     this.yearStr = this.date.getFullYear()
     this.dateStr = ([this.date.getFullYear(),this.date.getMonth()+1,this.date.getDate()]).join('-')
     this.loadMedia()
-    
   }
 
   loadMedia() {
@@ -43,7 +43,7 @@ class MediaLoader extends React.Component {
 
       dispatch(addMedia(json.results))
       // scope.movs = scope.movs.concat(json.results)
-      
+      scope.setState({ready:true})
       scope.pageLoaded++;
       if (scope.pageLoaded < 15) scope.loadMedia()
       /*else {
@@ -55,9 +55,15 @@ class MediaLoader extends React.Component {
   }
 
 	render()
-  {
+  { 
+
+    let content
+    if (this.state.ready) content = null
+    else content = (<LinearProgress/>)
     return (
-      <span></span>
+      <span>
+      {content}
+      </span>
     )
   }
 }
