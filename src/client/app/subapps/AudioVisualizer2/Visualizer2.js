@@ -204,9 +204,10 @@ class Visualizer2 {
 	    }
 
 	    World.add(this.world, this.bouncers);
+
+
       this.radius = WIDTH>HEIGHT ? HEIGHT*.4 : WIDTH*.4
-        
-        this.bars = [];
+      this.bars = [];
 
         let sides=200, r=this.radius, 
             h=40, 
