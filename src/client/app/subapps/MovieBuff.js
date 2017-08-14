@@ -65,8 +65,11 @@ class MovieBuff extends React.Component {
   render() {
 
     let loader
-    if (this.props.transitionStage === 'INIT' || this.props.transitionStage === 'IN_COMPLETE')
+    if ((this.props.transitionStage === 'INIT' || this.props.transitionStage === 'IN_COMPLETE')
+      && !this.loaded){
        loader = <MediaLoader/>
+       this.loaded = true
+    }
     else loader = null
 
   	return (
