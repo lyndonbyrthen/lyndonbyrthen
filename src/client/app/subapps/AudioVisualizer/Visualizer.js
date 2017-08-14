@@ -21,7 +21,12 @@ const {
     Events
 } = Matter
 
-const rad=degree=>degree*Math.PI/180
+let vendors = ['webkit', 'moz'];
+for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame =
+      window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+}
 
 class Visualizer {
 
@@ -32,7 +37,7 @@ class Visualizer {
     this.pause = this.pause.bind(this);
     this.kill = this.kill.bind(this);
     this.start = this.start.bind(this)
-
+    this.step = this.step.bind(this)
 
     this.mapIdx = 0;
     this.refreshTime = 30
@@ -111,6 +116,18 @@ class Visualizer {
     }
 
 	}
+
+  step() {
+    if (this.paused) return
+    
+    let now = new Date().getTime()
+    if (!this.timeStamp || now-this.timeStamp > this.refreshTime) {
+      this.timeStamp = now
+      this.update()
+    }
+    window.requestAnimationFrame(this.step);
+
+  }
 
   auditBodies() {
     for (let i in this.bouncers) {
@@ -268,12 +285,14 @@ class Visualizer {
     if (bool) {
     	// Render.stop(this.render);
 		  Runner.stop(this.runner);
-		  clearInterval(this.updateInterval);
+      window.cancelAnimationFrame(this.updateInterval)
+		  // clearInterval(this.updateInterval);
       clearInterval(this.auditInterval);
     } else {
     	// Render.run(this.render)
       Runner.run(this.runner, this.engine);
-      this.updateInterval = setInterval(this.update,this.refreshTime);
+      this.updateInterval = window.requestAnimationFrame(this.step);
+      // this.updateInterval = setInterval(this.update,this.refreshTime);
       this.auditInterval = setInterval(this.auditBodies,2000);
     }
 	}
