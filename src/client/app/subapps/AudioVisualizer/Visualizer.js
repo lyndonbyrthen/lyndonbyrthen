@@ -21,7 +21,12 @@ const {
     Events
 } = Matter
 
-const rad=degree=>degree*Math.PI/180
+let vendors = ['webkit', 'moz'];
+for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame =
+      window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+}
 
 class Visualizer {
 
@@ -32,13 +37,14 @@ class Visualizer {
     this.pause = this.pause.bind(this);
     this.kill = this.kill.bind(this);
     this.start = this.start.bind(this)
-
+    this.step = this.step.bind(this)
 
     this.mapIdx = 0;
     this.refreshTime = 30
     this.minBarHeight = 3
     this.barWidth = 20
     this.yOffset = .75
+    this.barRes = 128
 
     this.dataArray = new Uint8Array(256);
     this.isMute = true
@@ -111,13 +117,25 @@ class Visualizer {
 
 	}
 
+  step() {
+    if (this.paused) return
+    
+    let now = new Date().getTime()
+    if (!this.timeStamp || now-this.timeStamp > this.refreshTime) {
+      this.timeStamp = now
+      this.update()
+    }
+    window.requestAnimationFrame(this.step);
+
+  }
+
   auditBodies() {
     for (let i in this.bouncers) {
       let b = this.bouncers[i];
       
       if (b.position.x < 0 || b.position.x > window.innerWidth
         || b.position.y < 0 || b.position.y > window.innerHeight) {
-        Body.set(b,{position:{x:window.innerWidth/2,y:window.innerHeight/2}});
+        Body.set(b,{position:{x:Common.random(15, window.innerWidth-15),y:0}});
       }
     }
   }
@@ -149,9 +167,6 @@ class Visualizer {
       let WIDTH = window.innerWidth;
       let HEIGHT = window.innerHeight;
 
-      let centerX = WIDTH>>1
-      let centerY = HEIGHT>>1
-
       //add bouncing balls
       //==================================================================================
 
@@ -172,13 +187,13 @@ class Visualizer {
       //add bars
       //==================================================================================
 
-      this.barWidth = (WIDTH / 256)
+      this.barWidth = (WIDTH / this.barRes)
     
       let x = 0;
 
       this.bars = []
 
-      for (let i = 0; i < 256; i++) {
+      for (let i = 0; i < this.barRes; i++) {
           
           this.bars.push(Bodies.rectangle(x, 500, this.barWidth, this.minBarHeight, { 
             isStatic: true,
@@ -226,7 +241,7 @@ class Visualizer {
           for (var i = 0; i < pairs.length; i++) {
               var pair = pairs[i];
               if (pair.bodyB.label == 'bwall') {
-                Body.set(pair.bodyA,{position:{x:window.innerWidth/2,y:window.innerHeight/2}})
+                Body.set(pair.bodyA,{position:{x:Common.random(15, window.innerWidth-15),y:0}})
                 if (pair.bodyA.render.fillStyle == appSS.ballFillStyle) {
                   pair.bodyA.render.fillStyle = appSS.ballFillStyle2
                 } else {
@@ -270,12 +285,14 @@ class Visualizer {
     if (bool) {
     	// Render.stop(this.render);
 		  Runner.stop(this.runner);
-		  clearInterval(this.updateInterval);
+      window.cancelAnimationFrame(this.updateInterval)
+		  // clearInterval(this.updateInterval);
       clearInterval(this.auditInterval);
     } else {
     	// Render.run(this.render)
       Runner.run(this.runner, this.engine);
-      this.updateInterval = setInterval(this.update,this.refreshTime);
+      this.updateInterval = window.requestAnimationFrame(this.step);
+      // this.updateInterval = setInterval(this.update,this.refreshTime);
       this.auditInterval = setInterval(this.auditBodies,2000);
     }
 	}

@@ -114,7 +114,7 @@ class AudioVisualizer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
+    // console.log(nextProps)
 
     if (this.props.transitionStage == nextProps.transitionStage) return
 

@@ -23,7 +23,7 @@ class About extends React.Component {
             Lyndon Byrthen
           </Typography>
           <Typography paragraph type="body1">
-            I am a software engineer and a few other things in life. Just so you have a vague idea, I have a Bachelor's in Fine Arts (Sculpture) and a Master's in Computer Science.
+            I am a software engineer and a few other things in life.
             I am reachable via email, LyndonByrthen@gmail.com.
           </Typography>
 
