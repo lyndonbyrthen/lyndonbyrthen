@@ -14,7 +14,7 @@ let typography = createTypography(palette, {
                   fontFamily:
                     '"Roboto Slab",Roboto,"Helvetica Neue",Arial,sans-serif',
                 })
-
+// console.log(typography)
 const MainTheme = createMuiTheme({
 
   palette: palette,
@@ -23,8 +23,13 @@ const MainTheme = createMuiTheme({
   typography: {
 
       ...typography,
-     
+      title: {
+        ...typography.title,
+        color:'#333',
+        fontWeight:'300'
+      },
       body1: {
+        ...typography.body1,
         fontFamily:'Roboto,"Helvetica Neue",Arial,sans-serif',
         color:'#333',
         fontWeight:'300'
