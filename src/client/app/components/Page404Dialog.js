@@ -19,15 +19,15 @@ class Page404Dialog extends React.Component {
       if (this.props.curAppId !== '404') return <span/>
 
       const actions = [
-        <Link style={styles.link} to='/'>
-        <Button raised color="primary">OK</Button>
+        <Link key='404ok' style={styles.link} to='/'>
+          <Button color="primary" style={styles.inlineButton}>OK</Button>
         </Link>
       ];
 
      return(
       <Dialog style={{backgroundColor:'transparent'}} open={this.props.curAppId==='404'}>
           <DialogTitle>
-            {"404 Page not found"}
+            {"Page not found"}
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
