@@ -15,6 +15,7 @@ class API_Controller extends REST_Controller
     $filepath = 'assets/moviebuff/moviebuff_'.date("Y-m-d").'.json';
     if (file_exists($filepath)) {
     	$data = json_decode(file_get_contents($filepath));
+    	// $this->response($filepath);
     	$this->response($data);
     } else {
     	$this->loadPage = 1;

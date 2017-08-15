@@ -12,7 +12,7 @@ import { default as styles} from '../styles/styles'
 
 let infoFootnote = (
     <span>
-    This site is build on React with a PHP backend. To read more about it,
+    This site is build on React with a PHP backend. To learn more,
     please see the 
     <Link style={styles.link} to='/about'>
     <Button color="primary" style={styles.inlineButton}>
