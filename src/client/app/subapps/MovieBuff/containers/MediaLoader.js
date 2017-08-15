@@ -36,17 +36,22 @@ class MediaLoader extends React.Component {
      headers: myHeaders,
     };
     let myRequest = 
-    new Request('https://api.themoviedb.org/3/discover/movie?api_key=9ceb030330a7d13c7e200d7d7489a442&language=en-US&sort_by=primary_release_date.desc&include_adult=false&include_video=true&primary_release_year='+this.yearStr+'&primary_release_date.gte='+this.yearStr+'-01-01&primary_release_date.lte='+this.dateStr+'&year='+this.yearStr+'&with_original_language=en&page='+this.pageLoaded, myInit);
+    new Request('/api/moviebuff', myInit);
 
     fetch(myRequest).then(function(response) {
       return response.json();
     }).then(function(json) {
+      
+      let res = []
 
-      dispatch(addMedia(json.results))
-      scope.pageLoaded++;
-      if (scope.pageLoaded < 15) scope.loadMedia()
-      else if (!scope.updateCancel) {
-        scope.ready = true
+      for (let i in json) {
+        res = res.concat(json[i].results)
+      }
+
+      dispatch(addMedia(res))
+
+      scope.ready = true
+      if (!scope.updateCancel) {
         scope.forceUpdate()
       }
     });
