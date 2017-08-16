@@ -38,6 +38,7 @@ class Visualizer {
     this.kill = this.kill.bind(this);
     this.start = this.start.bind(this)
     this.step = this.step.bind(this)
+    this.auditBodies = this.auditBodies.bind(this)
 
     this.mapIdx = 0;
     this.refreshTime = 30
